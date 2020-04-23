@@ -1,4 +1,4 @@
-# berthy
+# Berthy.me
 
 ## Project setup
 ```

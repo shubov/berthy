@@ -1,5 +1,6 @@
 # Berthy.me
-
+[Demonstration of this project online](https://egehackbot.cf:8080/berth/).
+[Backend RESTful API Documentation in Swagger](https://egehackbot.cf:8080/swagger-ui.html#/).
 ## Project setup
 ```
 npm install

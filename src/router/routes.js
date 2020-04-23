@@ -7,6 +7,8 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 
+const projectName = 'Berthy';
+
 const routes =
     [
         {
@@ -19,7 +21,7 @@ const routes =
                 content: () => import('../views/Dashboard'),
             },
             meta: {
-                title: 'Siemens - Dashboard',
+                title: projectName + ' - Dashboard',
                 metaTags: [
                     {
                         name: 'description',
@@ -42,7 +44,7 @@ const routes =
                 content: () => import('../views/Map'),
             },
             meta: {
-                title: 'Siemens - Map',
+                title: projectName + ' - Map',
                 metaTags: [
                     {
                         name: 'description',
@@ -66,7 +68,7 @@ const routes =
                 content: () => import('../views/SignUp'),
             },
             meta: {
-                title: 'Siemens - Sign Up',
+                title: projectName + ' - Sign Up',
                 metaTags: [
                     {
                         name: 'description',
@@ -89,7 +91,7 @@ const routes =
                 content: () => import('../views/SignIn'),
             },
             meta: {
-                title: 'Siemens - Sign In',
+                title: projectName + ' - Sign In',
                 metaTags: [
                     {
                         name: 'description',
@@ -112,7 +114,7 @@ const routes =
                 content: () => import('../views/FourOFour'),
             },
             meta: {
-                title: '404 - Not Found',
+                title: projectName + ' - 404 Not Found',
                 metaTags: [
                     {
                         name: 'description',

@@ -13,7 +13,7 @@
             color="grey darken-2"
             class="white--text"
     >
-        <span>Siemens Mobility</span>
+        <span>Berthy</span>
         <v-spacer ></v-spacer>
         <span>&copy; 2020</span>
     </v-footer>

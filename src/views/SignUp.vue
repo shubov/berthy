@@ -27,7 +27,7 @@
                                     dark
                                     flat
                             >
-                                <v-toolbar-title class="font-weight-light">Sign In</v-toolbar-title>
+                                <v-toolbar-title class="font-weight-light">Sign Up</v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
@@ -44,7 +44,7 @@
                                 </v-tooltip>
                             </v-toolbar>
                             <v-card-text class="pb-0 mb-0">
-                                <SignInForm :user.sync="signUpData"></SignInForm>
+                                <SignInForm :user.sync="signUpData" :restore_password="false"></SignInForm>
                             </v-card-text>
                             <v-card-actions class="pt-0 mt-0">
                                 <v-row>

@@ -83,6 +83,7 @@
     import LocoDashboardCard from "../components/Cards/LocoDashboardCard";
     import MapCard from "../components/Cards/MapCard";
     import Table from "../components/Table";
+    import BerthyAPI from "../services/berthy-api";
     export default {
         name: "Dashboard",
         components: {Table, MapCard, HighlightCard, LocoDashboardCard},
@@ -126,6 +127,7 @@
                 this.setIntervalID = setInterval( () => {
                     this.loco=this.fleet[index];
                 }, 3000);
+                console.log(BerthyAPI.get('test'));
             }
         },
         beforeDestroy () {

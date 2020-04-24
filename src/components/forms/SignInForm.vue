@@ -26,13 +26,13 @@
                 label="Password"
                 name="password"
                 prepend-icon="mdi-lock"
-                :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.required, rules.min]"
                 :type="show ? 'text' : 'password'"
                 v-model="user.password"
                 @click:append="show = !show"
         />
-        <router-link to="#">
+        <router-link v-if="restore_password" to="#">
             <p class="caption text-center">Forgotten account?</p>
         </router-link>
     </v-form>
@@ -49,6 +49,10 @@
                         email: "john@email.com",
                         password: "12345678",
                     }}
+            },
+            restore_password: {
+                type: Boolean,
+                default: true
             }
         },
         data: function () {

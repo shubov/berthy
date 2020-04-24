@@ -9,14 +9,31 @@
 
 import Vue from 'vue';
 
+import router from './router';
+import store from './store';
+import vuetify from './plugins/vuetify';
+import App from './App.vue';
+import AuthService from '@/services/auth.service';
 import "./components/Base/_globals";
 import 'leaflet/dist/leaflet.css';
 
-// import Axios from 'axios';
-// Vue.prototype.$http = Axios;
 
 Vue.config.productionTip = false;
+Vue.prototype.$auth = AuthService;
 
+
+//********************************** Sentry ********************************************
+import * as Sentry from '@sentry/browser';
+import { Vue as VueIntegration } from '@sentry/integrations';
+Sentry.init({
+    dsn: 'https://ebe70e3d42494fca8d2660baea73eaaf@o382880.ingest.sentry.io/5212428',
+    integrations: [new VueIntegration({Vue, attachProps: true, logErrors: true})],
+});
+//********************************** Sentry ********************************************
+
+
+
+//************************ Google OAuth 2.0 ********************************************
 import GAuth from 'vue-google-oauth2';
 const gauthOption = {
     clientId: '265366447857-s71rp9r5t5ff8qa2nqhfku21rq9kk929.apps.googleusercontent.com',
@@ -24,10 +41,9 @@ const gauthOption = {
     prompt: 'select_account',
 };
 Vue.use(GAuth, gauthOption);
-import router from './router';
-import store from './store';
-import vuetify from './plugins/vuetify';
-import App from './App.vue';
+//************************ Google OAuth 2.0 ********************************************
+
+
 new Vue({
     router,
     store,

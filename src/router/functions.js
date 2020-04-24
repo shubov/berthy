@@ -7,6 +7,8 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 
+import AuthService from '@/services/auth.service';
+
 export default {
     updatePageTitleAndMeta(document, to, next) {
         const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
@@ -27,10 +29,8 @@ export default {
     handleUnauthotirizedAccess(publicPages, to, next) {
         const authRequired = !publicPages.includes(to.path);
 
-        const loggedIn = localStorage.getItem('user');
-
-        if (authRequired && !loggedIn) {
-            next('/sign-in');
+        if (authRequired) {
+            AuthService.checkAccessToken();
         } else {
             next();
         }

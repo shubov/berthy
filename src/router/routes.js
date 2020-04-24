@@ -105,7 +105,7 @@ const routes =
             }
         },
         {
-            path: '*',
+            path: '/404',
             name: 'NotFound',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
@@ -127,6 +127,10 @@ const routes =
                 ]
             }
         },
+        {
+            path: '*',
+            redirect: '/404'
+        }
     ];
 
 export default routes

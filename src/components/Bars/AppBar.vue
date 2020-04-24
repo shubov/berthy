@@ -61,9 +61,7 @@
         methods: {
             async onSignOut() {
                 try {
-                    await this.$gAuth.signOut();
-                    localStorage.removeItem('user');
-                    await this.$router.push('/sign-in');
+                    this.$auth.logout();
                 } catch (e) {
                     console.log('error', e);
                 }

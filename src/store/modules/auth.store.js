@@ -9,19 +9,22 @@
 
 import AuthService from '@/services/auth.service';
 
-const user = JSON.parse(localStorage.getItem('user'));
-
-// State initial object
-const initialState = user
-    ? { status: { loggedIn: true }, user }
-    : { status: { loggedIn: false }, user: null };
+const auth_state_model = {
+        user: null,
+    }
+//
+// // State initial object
+// const initialState = AuthService.checkAccessToken()
+//     ? Object.defineProperty(auth_state_model, 'loggedIn', true)
+//     : Object.defineProperty(auth_state_model, 'loggedIn', false);
+//
 
 
 /* Module auth.store.js */
 
 
 // VUEX STATE
-const state = initialState;
+const state = auth_state_model;
 
 
 // VUEX GETTERS

@@ -46,8 +46,8 @@
                 type: Object,
                 default: function () {
                     return {
-                        email: "email@gmail.com",
-                        password: "123456",
+                        email: "john@email.com",
+                        password: "12345678",
                     }}
             }
         },

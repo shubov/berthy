@@ -8,38 +8,116 @@
  ******************************************************************************/
 
 import axios from 'axios';
+import router from '../router';
+import storage from '@/services/web-storage'
 
-const API_URL = 'http://localhost:8080/api/auth/';
+
+const API_URL = 'https://egehackbot.cf:8080/api/auth/';
+
 
 class AuthService {
-    login(user) {
-        return axios
-                .post(API_URL + 'signin', {
-                email: user.email,
-                password: user.password
-            })
+
+
+    onLoginSuccess(data) {
+
+        if (data.accessToken)
+            storage.setAccessToken(data.accessToken);
+
+        if (data.refreshToken)
+            storage.setRefreshToken(data.refreshToken);
+
+        if (data.expiresIn) {
+            let t = Date.now() + data.expiresIn;
+            storage.setExpiry(t);
+        }
+
+        router.push('/');
+    }
+
+
+    checkAccessToken() {
+        if (!storage.getAccessToken()
+            || !storage.getExpiry()
+            || !(Date.now() < storage.getExpiry()))
+        {
+            if (this.token_refresh() !== true)
+            {
+                this.logout();
+                return null;
+            }
+        }
+        return storage.getAccessToken();
+    }
+
+
+    login_email({email, password})
+    {
+        let data =
+            {
+                email: email,
+                password: password
+            };
+
+        return axios.post(API_URL + 'login/email', data)
             .then(response => {
-                if (response.data.accessToken) {
-                    localStorage.setItem('access-token', JSON.stringify(response.data.accessToken));
-                }
-                if (response.data.refreshToken) {
-                    localStorage.setItem('refresh-token', JSON.stringify(response.data.refreshToken));
-                }
-                return response.data;
+                this.onLoginSuccess(response.data);
+                return true;
             });
     }
 
-    logout() {
-        localStorage.removeItem('access-token');
-        localStorage.removeItem('refresh-token');
+
+    login_google(code)
+    {
+        let data =
+        {
+            code: code,
+            redirectUri: 'postmessage'
+        };
+        return axios.post(API_URL + 'login/google', data)
+            .then(response => {
+                this.onLoginSuccess(response.data);
+                return true;
+            });
     }
 
-    register(user) {
-        return axios.post(API_URL + 'signup', {
-            email: user.email,
-            password: user.password
-        });
+
+    registration({email, password}) {
+        let data =
+            {
+                email: email,
+                password: password
+            };
+        return axios.post(API_URL + 'registration', data)
+            .then(() => {
+                this.logout();
+                return true;
+            });
+    }
+
+
+    token_refresh() {
+        if (!storage.getRefreshToken()) {
+            return false;
+        }
+        let data = {
+            refreshToken: storage.getRefreshToken()
+        }
+
+        return axios.post(API_URL + 'token/refresh', data)
+            .then(response => {
+                this.onLoginSuccess(response.data);
+                return true;
+            }).catch(()=> {return false;})
+    }
+
+
+    logout() {
+        storage.removeAccessToken();
+        storage.removeRefreshToken();
+        storage.removeExpiry();
+        router.push('/sign-in');
     }
 }
+
 
 export default new AuthService();

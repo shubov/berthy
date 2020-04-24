@@ -127,8 +127,10 @@
                 this.setIntervalID = setInterval( () => {
                     this.loco=this.fleet[index];
                 }, 3000);
-                console.log(BerthyAPI.get('test'));
             }
+        },
+        mounted() {
+            console.log(BerthyAPI.get('test'));
         },
         beforeDestroy () {
             clearInterval(this.setIntervalID);

@@ -16,7 +16,7 @@ const BerthyAPI = axios.create({
 });
 
 BerthyAPI.interceptors.request.use(function (config) {
-    config.headers.Authorization = 'Bearer ' + AuthService.checkAccessToken();
+    config.headers.Authorization = AuthService.checkAccessToken();
 
     return config;
 }, function(error) {

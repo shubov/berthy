@@ -27,37 +27,65 @@
             ></v-img>
 
             <v-spacer></v-spacer>
-
-            <v-btn icon>
-                <v-icon>mdi-help-circle</v-icon>
-            </v-btn>
-
-            <v-btn icon>
-                <v-icon>mdi-cog</v-icon>
-            </v-btn>
-
-            <v-menu
-                    left
-                    bottom
-            >
+            
+            <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on">
-                        <v-icon>mdi-dots-vertical</v-icon>
+                    <v-btn icon to="faq" v-on="on">
+                        <v-icon>mdi-help-circle</v-icon>
                     </v-btn>
                 </template>
+                <span>FAQ</span>
+            </v-tooltip>
+            
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                    <v-btn icon to="profile" v-on="on">
+                        <v-icon>mdi-account</v-icon>
+                    </v-btn>
+                </template>
+                <span>Profile</span>
+            </v-tooltip>
+    
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on" @click="onSignOut">
+                        <v-icon>mdi-logout</v-icon>
+                    </v-btn>
+                </template>
+                <span>Sign Out</span>
+            </v-tooltip>
 
-                <v-list>
-                    <v-list-item @click="onSignOut">
-                        <v-list-item-title>Sign Out</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+<!--            <v-menu-->
+<!--                    left-->
+<!--                    bottom-->
+<!--            >-->
+<!--                <template v-slot:activator="{ on }">-->
+<!--                    <v-btn icon v-on="on">-->
+<!--                        <v-icon>mdi-dots-vertical</v-icon>-->
+<!--                    </v-btn>-->
+<!--                </template>-->
+
+<!--                <v-list>-->
+<!--                    <v-list-item @click="onSignOut">-->
+<!--                        <v-list-item-title>Sign Out</v-list-item-title>-->
+<!--                    </v-list-item>-->
+<!--                </v-list>-->
+<!--            </v-menu>-->
         </v-app-bar>
 </template>
 
 <script>
     export default {
         name: "AppBar",
+        data: function() {
+            return {
+                icons: [
+                    { icon: "mdi-help-circle", path:"", tip:""},
+                    { icon: "mdi-account", path:"", tip:""},
+                    { icon: "", path:"", tip:""}
+                ]
+            }
+        },
         methods: {
             async onSignOut() {
                 try {

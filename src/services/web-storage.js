@@ -7,9 +7,16 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 
+
+import { v4 as uuidv4 } from 'uuid';
+
+
 const accessTokenKey  = 'accessToken';
 const refreshTokenKey = 'refreshToken';
-const expiryKey = 'expiresAt';
+const accessTokenExpiryKey = 'accessTokenExpiresAt';
+const refreshTokenExpiryKey = 'refreshTokenExpiresAt';
+const deviceIdKey = 'uuid';
+
 
 class WebStorage {
     #storage;
@@ -35,6 +42,8 @@ class WebStorage {
                 'Some settings may not save or some features may not work properly for you.');
         }
     }
+
+
     // GETTERS
     getAccessToken() {
         return JSON.parse(this.#storage.getItem(accessTokenKey));
@@ -42,8 +51,17 @@ class WebStorage {
     getRefreshToken() {
         return JSON.parse(this.#storage.getItem(refreshTokenKey));
     }
-    getExpiry() {
-        return JSON.parse(this.#storage.getItem(expiryKey));
+    getAccessExpiry() {
+        return JSON.parse(this.#storage.getItem(accessTokenExpiryKey));
+    }
+    getRefreshExpiry() {
+        return JSON.parse(this.#storage.getItem(refreshTokenExpiryKey));
+    }
+    getDeviceId() {
+        if (!this.#storage.getItem(deviceIdKey)) {
+            this.#storage.setItem(deviceIdKey, uuidv4());
+        }
+        return this.#storage.getItem(deviceIdKey);
     }
 
 
@@ -54,8 +72,11 @@ class WebStorage {
     setRefreshToken(refreshToken) {
         this.#storage.setItem(refreshTokenKey, JSON.stringify(refreshToken));
     }
-    setExpiry(expiry) {
-        this.#storage.setItem(expiryKey, JSON.stringify(expiry));
+    setAccessTokenExpiry(access_expiry) {
+        this.#storage.setItem(accessTokenExpiryKey, JSON.stringify(access_expiry));
+    }
+    setRefreshTokenExpiry(refresh_expiry) {
+        this.#storage.setItem(refreshTokenExpiryKey, JSON.stringify(refresh_expiry));
     }
 
     // REMOVERS
@@ -65,8 +86,14 @@ class WebStorage {
     removeRefreshToken() {
         this.#storage.removeItem(refreshTokenKey);
     }
-    removeExpiry() {
-        this.#storage.removeItem(expiryKey);
+    removeAccessExpiry() {
+        this.#storage.removeItem(accessTokenExpiryKey);
+    }
+    removeRefreshExpiry() {
+        this.#storage.removeItem(refreshTokenExpiryKey);
+    }
+    removeDeviceId() {
+        this.#storage.removeItem(deviceIdKey);
     }
 }
 

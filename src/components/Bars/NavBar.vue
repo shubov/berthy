@@ -23,14 +23,19 @@
                              exact
                              class="router-link-nav-bar"
                 >
-                    <v-list-item>
-                        <v-list-item-icon>
-                            <v-icon>{{page.icon}}</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title>{{page.title}}</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+                    <v-tooltip right>
+                        <template v-slot:activator="{ on }">
+                            <v-list-item v-on="on">
+                                <v-list-item-icon>
+                                    <v-icon>{{page.icon}}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{page.title}}</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </template>
+                        <span>{{page.title}}</span>
+                    </v-tooltip>
                 </router-link>
             </v-list-item-group>
         </v-list>
@@ -44,7 +49,10 @@
             return {
                 pages: [
                     { title: 'Dashboard', path: "/",icon: 'mdi-view-dashboard' },
-                    { title: 'Map', path: "/map",icon: 'mdi-map' }
+                    { title: 'Requests', path: "requests",icon: 'mdi-clipboard-list' },
+                    { title: 'Messages', path: "messages",icon: 'mdi-forum' },
+                    { title: 'Team', path: "team",icon: 'mdi-account-group' },
+                    { title: 'Marina Settings', path: "/settings", icon: 'mdi-cog' },
                 ]
             }
         },

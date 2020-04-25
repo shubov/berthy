@@ -12,12 +12,10 @@ import AuthService from '@/services/auth.service';
 
 const BerthyAPI = axios.create({
     baseURL: 'https://egehackbot.cf:8080/api/',
-    withCredentials: true
 });
 
 BerthyAPI.interceptors.request.use(function (config) {
-    config.headers.Authorization = AuthService.checkAccessToken();
-
+    config.headers.Authorization = 'Bearer ' + AuthService.checkAccessToken();
     return config;
 }, function(error) {
     return Promise.reject(error);

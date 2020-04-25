@@ -78,12 +78,12 @@
 </template>
 
 <script>
-    import HighlightCard from "../components/Cards/HighlightCard";
+    import HighlightCard from "../../components/Cards/HighlightCard";
     import {mapGetters} from "vuex";
-    import LocoDashboardCard from "../components/Cards/LocoDashboardCard";
-    import MapCard from "../components/Cards/MapCard";
-    import Table from "../components/Table";
-    import BerthyAPI from "../services/berthy-api";
+    import LocoDashboardCard from "../../components/Cards/LocoDashboardCard";
+    import MapCard from "../../components/Cards/MapCard";
+    import Table from "../../components/Table";
+
     export default {
         name: "Dashboard",
         components: {Table, MapCard, HighlightCard, LocoDashboardCard},
@@ -128,9 +128,6 @@
                     this.loco=this.fleet[index];
                 }, 3000);
             }
-        },
-        mounted() {
-            console.log(BerthyAPI.get('test'));
         },
         beforeDestroy () {
             clearInterval(this.setIntervalID);

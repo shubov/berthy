@@ -18,17 +18,33 @@ const API_URL = 'https://egehackbot.cf:8080/api/auth/';
 class AuthService {
 
 
-    onLoginSuccess(data) {
+    generateDeviceId() {
+        let navigator_info = window.navigator;
+        let screen_info = window.screen;
+        let uid = navigator_info.mimeTypes.length;
+        uid += navigator_info.userAgent.replace(/\D+/g, '');
+        uid += navigator_info.plugins.length;
+        uid += screen_info.height || '';
+        uid += screen_info.width || '';
+        uid += screen_info.pixelDepth || '';
+        return uid;
+    }
 
+    onLoginSuccess(data) {
         if (data.accessToken)
             storage.setAccessToken(data.accessToken);
 
         if (data.refreshToken)
             storage.setRefreshToken(data.refreshToken);
 
-        if (data.expiresIn) {
-            let t = Date.now() + data.expiresIn;
-            storage.setExpiry(t);
+        if (data.accessExpiresIn) {
+            let t = Date.now() + data.accessExpiresIn - 5000;
+            storage.setAccessTokenExpiry(t);
+        }
+
+        if (data.refreshExpiresIn) {
+            let t = Date.now() + data.refreshExpiresIn - 5000;
+            storage.setRefreshTokenExpiry(t);
         }
 
         router.push('/');
@@ -37,8 +53,8 @@ class AuthService {
 
     checkAccessToken() {
         if (!storage.getAccessToken()
-            || !storage.getExpiry()
-            || !(Date.now() < storage.getExpiry()))
+            || !storage.getAccessExpiry()
+            || !(Date.now() < storage.getAccessExpiry()))
         {
             if (this.token_refresh() !== true)
             {
@@ -49,35 +65,58 @@ class AuthService {
         return storage.getAccessToken();
     }
 
+    // USED BY Login and Refresh
+    authentication({url, data}) {
+        storage.getDeviceId();
+        let uid = this.generateDeviceId();
+        let config = {headers:{DeviceId:uid}};
+        return axios.post(url, data, config)
+            .then(response => {
+                if (response.data.success) {
+                    this.onLoginSuccess(response.data.data);
+                } else {
+                    console.log("auth error: " + response.data.error);
+                }
+                return response.data.success;
+            })
+            .catch(()=> {
+                return false;
+            });
+    }
 
     login_email({email, password})
     {
-        let data =
-            {
-                email: email,
-                password: password
-            };
-
-        return axios.post(API_URL + 'login/email', data)
-            .then(response => {
-                this.onLoginSuccess(response.data);
-                return true;
-            });
+        return this.authentication({
+            url:API_URL + 'login/email',
+            data: { email, password}
+        });
     }
 
 
     login_google(code)
     {
-        let data =
-        {
-            code: code,
-            redirectUri: 'postmessage'
-        };
-        return axios.post(API_URL + 'login/google', data)
-            .then(response => {
-                this.onLoginSuccess(response.data);
-                return true;
-            });
+        return this.authentication({
+            url: API_URL + 'login/google',
+            data:  {
+                code: code,
+                redirectUri: 'postmessage'
+            }
+        });
+    }
+
+
+    token_refresh() {
+        if (!storage.getRefreshToken()
+            || !storage.getRefreshExpiry()
+            || !(Date.now() < storage.getRefreshExpiry())) {
+            return false;
+        }
+        return this.authentication({
+            url: API_URL + 'token/refresh',
+            data: {
+                refreshToken: storage.getRefreshToken()
+            }
+        });
     }
 
 
@@ -91,30 +130,21 @@ class AuthService {
             .then(() => {
                 this.logout();
                 return true;
+            })
+            .catch(()=> {
+                return false;
             });
     }
 
 
-    token_refresh() {
-        if (!storage.getRefreshToken()) {
-            return false;
-        }
-        let data = {
-            refreshToken: storage.getRefreshToken()
-        }
-
-        return axios.post(API_URL + 'token/refresh', data)
-            .then(response => {
-                this.onLoginSuccess(response.data);
-                return true;
-            }).catch(()=> {return false;})
-    }
-
-
     logout() {
+
         storage.removeAccessToken();
         storage.removeRefreshToken();
-        storage.removeExpiry();
+        storage.removeAccessExpiry();
+        storage.removeRefreshExpiry();
+        storage.removeDeviceId();
+
         router.push('/sign-in');
     }
 }

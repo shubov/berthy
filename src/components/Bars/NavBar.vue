@@ -49,7 +49,7 @@
             return {
                 pages: [
                     { title: 'Dashboard', path: "/dashboard",icon: 'mdi-view-dashboard' },
-                    { title: 'Moderator', path: "requests",icon: 'mdi-clipboard-list' },
+                    { title: 'Requests', path: "requests",icon: 'mdi-clipboard-list' },
                     { title: 'Messages', path: "messages",icon: 'mdi-forum' },
                     { title: 'Team', path: "team",icon: 'mdi-account-group' },
                     { title: 'Marina Settings', path: "/settings", icon: 'mdi-cog' },

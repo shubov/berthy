@@ -6,10 +6,17 @@
  * as well as the project itself is strictly prohibited.                      *
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
-
 import AuthService from '@/services/auth.service';
+// import store from '../store';
+//
+// const roles = {
+//     user: 'USER',
+//     moderator: 'MODERATOR',
+//     admin: 'ADMIN',
+// };
 
 export default {
+
     updatePageTitleAndMeta(document, to, next) {
         const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
         const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
@@ -26,13 +33,38 @@ export default {
         }).forEach(tag => document.head.appendChild(tag));
         next();
     },
-    handleUnauthotirizedAccess(publicPages, to, next) {
-        const authRequired = !publicPages.includes(to.path);
 
-        if (authRequired) {
-            AuthService.checkAccessToken();
-        } else {
-            next();
+
+    async handleUnauthotirizedAccess(publicPages, to, next) {
+        let authRequired = !publicPages.includes(to.path);
+        let loggedIn = !!AuthService.checkAccessToken();
+
+        if (authRequired && !loggedIn) {
+            next('/sign-in');
         }
+        // else {
+        //     let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+        //     if (userRoles.length === 0) {
+        //         await store.dispatch('User/updateAccountInfo');
+        //         userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+        //     }
+        //     let rolesNeeded = to.meta.roles;
+        //
+        //     let moderator = false;
+        //     let user = false;
+        //
+        //     for (let i =0; i<userRoles.length; i++){
+        //         moderator = moderator ? true: userRoles[i] === roles.moderator;
+        //         user = user ? true: userRoles[i] === roles.user;
+        //         for (let j =0; j<rolesNeeded.length; j++){
+        //             if (rolesNeeded[j]===userRoles[i]){
+        //                 next();
+        //                 return;
+        //             }
+        //         }
+        //     }
+        //     if (moderator) next('/moderator')
+        //     else if(user) next('/');
+        // }
     }
 };

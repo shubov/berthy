@@ -36,15 +36,26 @@
                 </template>
                 <span>FAQ</span>
             </v-tooltip>
-            
-            <v-tooltip bottom>
+    
+            <v-menu
+                    left
+                    bottom
+            >
                 <template v-slot:activator="{ on }">
-                    <v-btn icon to="profile" v-on="on">
+                    <v-btn icon v-on="on">
                         <v-icon>mdi-account</v-icon>
                     </v-btn>
                 </template>
-                <span>Profile</span>
-            </v-tooltip>
+        
+                <v-list>
+                    <v-list-item>
+                        <v-list-item-title @click="onSwitch()">Switch role</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-title  @click="onProfileClick()">Profile</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
     
             <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
@@ -55,26 +66,13 @@
                 <span>Sign Out</span>
             </v-tooltip>
 
-<!--            <v-menu-->
-<!--                    left-->
-<!--                    bottom-->
-<!--            >-->
-<!--                <template v-slot:activator="{ on }">-->
-<!--                    <v-btn icon v-on="on">-->
-<!--                        <v-icon>mdi-dots-vertical</v-icon>-->
-<!--                    </v-btn>-->
-<!--                </template>-->
-
-<!--                <v-list>-->
-<!--                    <v-list-item @click="onSignOut">-->
-<!--                        <v-list-item-title>Sign Out</v-list-item-title>-->
-<!--                    </v-list-item>-->
-<!--                </v-list>-->
-<!--            </v-menu>-->
+            
         </v-app-bar>
 </template>
 
 <script>
+    import router from "../../router";
+
     export default {
         name: "AppBar",
         data: function() {
@@ -90,9 +88,16 @@
             async onSignOut() {
                 try {
                     this.$auth.logout();
+                    router.push('sign-in');
                 } catch (e) {
                     console.log('error', e);
                 }
+            },
+            onSwitch() {
+                router.push('/');
+            },
+            onProfileClick() {
+                router.push('/profile')
             }
         }
     }

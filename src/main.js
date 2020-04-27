@@ -21,6 +21,17 @@ import 'leaflet/dist/leaflet.css';
 Vue.config.productionTip = false;
 Vue.prototype.$auth = AuthService;
 
+Vue.prototype.$roles = {
+    user: 'USER',
+    moderator: 'MODERATOR',
+    admin: 'ADMIN',
+}
+
+Vue.prototype.$userGUI = {
+    dockmaster: 'DOCKMASTER',
+    boater: 'BOATER',
+}
+
 
 // //********************************** Sentry ********************************************
 // import * as Sentry from '@sentry/browser';
@@ -30,7 +41,6 @@ Vue.prototype.$auth = AuthService;
 //     integrations: [new VueIntegration({Vue, attachProps: true, logErrors: true})],
 // });
 // //********************************** Sentry ********************************************
-
 
 
 //************************ Google OAuth 2.0 ********************************************

@@ -8,21 +8,21 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row justify="center">
+    <v-row>
         <v-col cols="12" sm="8" md="6">
             <v-card>
                 <v-toolbar color="orange lighten-1" dark>
                     <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                    
+                
                     <v-toolbar-title>Message Board</v-toolbar-title>
-                    
+                
                     <v-spacer></v-spacer>
-                    
+                
                     <v-btn icon>
                         <v-icon>mdi-magnify</v-icon>
                     </v-btn>
                 </v-toolbar>
-                
+            
                 <v-list two-line>
                     <template v-for="(item, index) in items">
                         <v-subheader
@@ -32,13 +32,13 @@
                         >
                             {{ item.header }}
                         </v-subheader>
-                        
+                    
                         <v-divider
                                 v-else-if="item.divider"
                                 :key="index"
                                 inset
                         ></v-divider>
-                        
+                    
                         <v-list-item
                                 v-else
                                 :key="item.title"

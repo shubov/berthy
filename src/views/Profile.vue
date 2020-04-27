@@ -8,11 +8,11 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-container fluid>
+    <v-row>
         <v-col>
             <v-row justify="center">
                 <v-subheader>Today</v-subheader>
-        
+            
                 <v-expansion-panels popout>
                     <v-expansion-panel
                             v-for="(message, i) in messages"
@@ -45,7 +45,7 @@
                                         ></v-icon>
                                     </v-avatar>
                                 </v-col>
-                        
+                            
                                 <v-col
                                         class="hidden-xs-only"
                                         sm="5"
@@ -59,7 +59,7 @@
                   &nbsp;({{ message.total }})
                 </span>
                                 </v-col>
-                        
+                            
                                 <v-col
                                         class="text-no-wrap"
                                         cols="5"
@@ -76,7 +76,7 @@
                                     </v-chip>
                                     <strong v-html="message.title"></strong>
                                 </v-col>
-                        
+                            
                                 <v-col
                                         v-if="message.excerpt"
                                         class="grey--text text-truncate hidden-sm-and-down"
@@ -86,7 +86,7 @@
                                 </v-col>
                             </v-row>
                         </v-expansion-panel-header>
-                
+                    
                         <v-expansion-panel-content>
                             <v-divider></v-divider>
                             <v-card-text v-text="lorem"></v-card-text>
@@ -95,7 +95,7 @@
                 </v-expansion-panels>
             </v-row>
         </v-col>
-    </v-container>
+    </v-row>
 </template>
 
 <script>

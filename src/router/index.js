@@ -25,9 +25,9 @@ const publicPages = [
     '/sign-up',
 ];
 
-router.beforeEach((to, from, next) => {
+router.beforeEach( async (to, from, next) => {
   functions.updatePageTitleAndMeta(document, to, next);
-  functions.handleUnauthotirizedAccess(publicPages, to, next);
+  await functions.handleUnauthotirizedAccess(publicPages, to, next);
 });
 
 

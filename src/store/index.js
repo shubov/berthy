@@ -9,7 +9,7 @@
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-//import createLogger from 'vuex/dist/logger'
+import createLogger from 'vuex/dist/logger'
 
 // import the auto exporter
 import modules from './modules';
@@ -28,5 +28,5 @@ export default new Vuex.Store({
         }
     },
     strict: debug,
-    //plugins: debug ? [createLogger()] : [] // set logger only for development
+    plugins: debug ? [createLogger()] : [] // set logger only for development
 });

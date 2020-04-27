@@ -8,6 +8,11 @@
  ******************************************************************************/
 
 const projectName = 'Berthy';
+const roles = {
+    user: 'USER',
+    moderator: 'MODERATOR',
+    admin: 'ADMIN',
+};
 
 const routes =
     [
@@ -21,6 +26,7 @@ const routes =
                 content: () => import('../views/SignUp'),
             },
             meta: {
+                roles: [roles.user, roles.moderator, roles.admin],
                 title: projectName + ' - Sign Up',
                 metaTags: [
                     {
@@ -44,6 +50,7 @@ const routes =
                 content: () => import('../views/SignIn'),
             },
             meta: {
+                roles: [roles.user, roles.moderator, roles.admin],
                 title: projectName + ' - Sign In',
                 metaTags: [
                     {
@@ -68,6 +75,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - FAQ',
+                roles: [roles.user, roles.moderator, roles.admin],
                 metaTags: [
                     {
                         name: 'description',
@@ -91,6 +99,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Profile',
+                roles: [roles.user, roles.moderator, roles.admin],
                 metaTags: [
                     {
                         name: 'description',
@@ -104,7 +113,79 @@ const routes =
             }
         },
         {
+            path: '/moderator',
+            name: 'Marina Registrations',
+            components: {
+                appbar: () => import('../components/Bars/AppBar'),
+                navbar: () => import('../components/Bars/NavBar'),
+                footer: () => import('../components/Bars/FooterBar'),
+                content: () => import('../views/Moderator/Requests'),
+            },
+            meta: {
+                title: projectName + ' - Marina Registrations',
+                roles: [roles.moderator],
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Moderators page.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Moderators page.'
+                    }
+                ]
+            },
+        },
+        {
             path: '/',
+            name: 'Role',
+            components: {
+                appbar: () => import('../components/Bars/AppBar'),
+                navbar: () => import('../components/Bars/NavBar'),
+                footer: () => import('../components/Bars/FooterBar'),
+                content: () => import('../views/Role'),
+            },
+            meta: {
+                title: projectName + ' - Role',
+                roles: new Array(roles.user),
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Page.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Page.'
+                    }
+                ]
+            }
+        },
+        {
+            path: '/marina',
+            name: 'Marina',
+            components: {
+                appbar: () => import('../components/Bars/AppBar'),
+                navbar: () => import('../components/Bars/NavBar'),
+                footer: () => import('../components/Bars/FooterBar'),
+                content: () => import('../views/Dockmaster/MarinaRegistration'),
+            },
+            meta: {
+                title: projectName + ' - Marina',
+                roles: new Array(roles.user),
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Page.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Page.'
+                    }
+                ]
+            }
+        },
+        {
+            path: '/dashboard',
             name: 'Dashboard',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
@@ -114,6 +195,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Dashboard',
+                roles: new Array(roles.user),
                 metaTags: [
                     {
                         name: 'description',
@@ -137,6 +219,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Messages',
+                roles: new Array(roles.user),
                 metaTags: [
                     {
                         name: 'description',
@@ -151,7 +234,7 @@ const routes =
         },
         {
             path: '/requests',
-            name: 'Requests',
+            name: 'Booking requests',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
                 navbar: () => import('../components/Bars/NavBar'),
@@ -159,15 +242,16 @@ const routes =
                 content: () => import('../views/Dockmaster/Requests'),
             },
             meta: {
-                title: projectName + ' - Requests',
+                title: projectName + ' - Booking requests',
+                roles: new Array(roles.user),
                 metaTags: [
                     {
                         name: 'description',
-                        content: 'Requests page.'
+                        content: 'Booking requests page.'
                     },
                     {
                         property: 'og:description',
-                        content: 'Requests page.'
+                        content: 'Booking requests page.'
                     }
                 ]
             }
@@ -183,6 +267,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Team',
+                roles: new Array(roles.user),
                 metaTags: [
                     {
                         name: 'description',
@@ -206,6 +291,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Settings',
+                roles: new Array(roles.user),
                 metaTags: [
                     {
                         name: 'description',
@@ -229,6 +315,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Book',
+                roles: new Array(roles.user),
                 metaTags: [
                     {
                         name: 'description',
@@ -252,6 +339,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - 404 Not Found',
+                roles: [roles.user, roles.moderator, roles.admin],
                 metaTags: [
                     {
                         name: 'description',
@@ -266,7 +354,10 @@ const routes =
         },
         {
             path: '*',
-            redirect: '/404'
+            redirect: '/404',
+            meta: {
+                roles: [roles.user, roles.moderator, roles.admin],
+            }
         }
     ];
 

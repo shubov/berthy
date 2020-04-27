@@ -8,8 +8,8 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import router from '../router';
 import storage from '@/services/web-storage'
+//import store from '../store'
 
 
 const API_URL = 'https://egehackbot.cf:8080/api/auth/';
@@ -30,7 +30,7 @@ class AuthService {
         return uid;
     }
 
-    onLoginSuccess(data) {
+    async onLoginSuccess(data) {
         if (data.accessToken)
             storage.setAccessToken(data.accessToken);
 
@@ -46,8 +46,6 @@ class AuthService {
             let t = Date.now() + data.refreshExpiresIn - 5000;
             storage.setRefreshTokenExpiry(t);
         }
-
-        router.push('/');
     }
 
 
@@ -138,14 +136,14 @@ class AuthService {
 
 
     logout() {
-
+        //Session Store reset
         storage.removeAccessToken();
         storage.removeRefreshToken();
         storage.removeAccessExpiry();
         storage.removeRefreshExpiry();
         storage.removeDeviceId();
-
-        router.push('/sign-in');
+        //VUEX RESET
+        //store.dispatch('reset', null, { root: true });
     }
 }
 

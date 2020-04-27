@@ -13,7 +13,9 @@
         <router-view name="navbar"/>
         <router-view name="footer"/>
         <v-content>
-            <router-view name="content" :key="$route.fullPath"/>
+            <v-container fill-height>
+                    <router-view name="content" :key="$route.fullPath"/>
+            </v-container>
         </v-content>
     </v-app>
 </template>
@@ -38,20 +40,21 @@
             ]),
         },
         mounted: function() {
-            let self = this;
-            this.ws = new WebSocket('ws://uralchem-navigator.southcentralus.cloudapp.azure.com');
-            this.ws.onopen = function() {
-                self.SOCKET_CONNECT();
-            };
-            this.ws.onclose = function(event) {
-                self.SOCKET_DISCONNECT(event);
-            };
-            this.ws.onmessage = function(message) {
-                self.SOCKET_MESSAGE(message);
-            };
-            this.ws.onerror = function(message) {
-                self.SOCKET_ERROR(message);
-            }
+        
+        //     let self = this;
+        //     this.ws = new WebSocket('ws://uralchem-navigator.southcentralus.cloudapp.azure.com');
+        //     this.ws.onopen = function() {
+        //         self.SOCKET_CONNECT();
+        //     };
+        //     this.ws.onclose = function(event) {
+        //         self.SOCKET_DISCONNECT(event);
+        //     };
+        //     this.ws.onmessage = function(message) {
+        //         self.SOCKET_MESSAGE(message);
+        //     };
+        //     this.ws.onerror = function(message) {
+        //         self.SOCKET_ERROR(message);
+        //     }
         },
     }
 </script>

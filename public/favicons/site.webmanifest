@@ -38,7 +38,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#01293a",
-    "background_color": "#01293a",
+    "theme_color": "#002a3a",
+    "background_color": "#002a3a",
+    "start_url": "https://berthy.now.sh/",
     "display": "standalone"
 }

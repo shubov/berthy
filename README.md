@@ -1,7 +1,15 @@
 # Berthy.me
-[Demonstration of this project online](https://egehackbot.cf:8080/berth/).
+## Demo
+[Demonstration of this project online (new version)](https://berthy.now.sh/).
 
+[Demonstration of this project online (old version)](https://egehackbot.cf:8080/berth/).
+
+## API
 [Backend RESTful API Documentation in Swagger](https://egehackbot.cf:8080/swagger-ui.html#/).
+
+## Wireframing Figma
+[Figma prototype](https://www.figma.com/file/ApoQHZCHfrmkz5hbC83T8J/Prototyping-in-Figma?node-id=6%3A19).
+
 ## Project setup
 ```
 npm install

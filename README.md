@@ -1,4 +1,6 @@
 # Berthy.me
+[Google Drive со всеми файлами ВКР и Преддипломной практики](https://drive.google.com/drive/folders/1lEZ5bNS6R5q4UChn4YCMf90mq1mN8ore?usp=sharing).
+
 ## Demo
 [Demonstration of this project online (new version)](https://berthy.now.sh/).
 

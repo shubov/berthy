@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import AuthService from '@/services/auth.service';
+import AuthService from '../services/auth.service';
 
 const BerthyAPI = axios.create({
     baseURL: 'https://egehackbot.cf:8080/api/',

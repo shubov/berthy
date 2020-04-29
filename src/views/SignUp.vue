@@ -12,7 +12,7 @@
         <v-col>
             <v-card class="elevation-4">
                 <v-toolbar
-                        color="grey darken-2"
+                        color="#01121E"
                         dark
                         flat
                 >
@@ -40,10 +40,9 @@
                         <v-col cols="12">
                             <v-btn
                                     block
-                                    outlined
                                     large
                                     @click="onSignUp()"
-                                    color="deep-purple accent-4"
+                                    color="primary"
                             >Sign Up</v-btn>
                         </v-col>
                     </v-row>

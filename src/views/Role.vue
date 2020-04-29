@@ -25,9 +25,8 @@
                             <v-btn
                                     to="/book"
                                     block
-                                    outlined
                                     large
-                                    color="deep-purple accent-4"
+                                    color="primary"
                             >Boater</v-btn>
                         </v-col>
                         <v-col cols="12">
@@ -36,7 +35,6 @@
                                     block
                                     outlined
                                     large
-                                    color="deep-purple accent-4"
                             >Dockmaster</v-btn>
                         </v-col>
                     </v-row>

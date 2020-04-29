@@ -8,66 +8,61 @@
   ----------------------------------------------------------------------------->
 
 <template>
-        <v-app-bar
-                color="grey darken-2"
-                dense
-                dark
-                app
-                clippedLeft
-        >
-            <v-btn icon>
-                <v-icon>mdi-apps</v-icon>
-            </v-btn>
-
-            <v-img
-                    id="siemens-logo"
-                    max-width="111"
-                    contain
-                    src="https://new.siemens.com/etc.clientlibs/siemens-sites/components/content/header/clientlibs/resources/logo/siemens-logo-default.svg"
-            ></v-img>
-
-            <v-spacer></v-spacer>
-            
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                    <v-btn icon to="faq" v-on="on">
-                        <v-icon>mdi-help-circle</v-icon>
-                    </v-btn>
-                </template>
-                <span>FAQ</span>
-            </v-tooltip>
+    <v-app-bar
+            color="#01121E"
+            dense
+            dark
+            app
+            clippedLeft
+    >
+        <v-btn icon>
+            <v-icon>mdi-apps</v-icon>
+        </v-btn>
     
-            <v-menu
-                    left
-                    bottom
-            >
-                <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on">
-                        <v-icon>mdi-account</v-icon>
-                    </v-btn>
-                </template>
+        <v-img
+                id="berthy-logo"
+                max-width="150"
+                contain
+                src="../../assets/berthy_logo.png"
+        ></v-img>
+    
+        <v-spacer></v-spacer>
         
-                <v-list>
-                    <v-list-item>
-                        <v-list-item-title @click="onSwitch()">Switch role</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-title  @click="onProfileClick()">Profile</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+                <v-btn icon to="faq" v-on="on">
+                    <v-icon>mdi-help-circle</v-icon>
+                </v-btn>
+            </template>
+            <span>FAQ</span>
+        </v-tooltip>
     
-            <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                    <v-btn icon v-on="on" @click="onSignOut">
-                        <v-icon>mdi-logout</v-icon>
-                    </v-btn>
-                </template>
-                <span>Sign Out</span>
-            </v-tooltip>
-
-            
-        </v-app-bar>
+        <v-menu>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon>mdi-account</v-icon>
+                </v-btn>
+            </template>
+    
+            <v-list>
+                <v-list-item @click="onSwitch()">
+                    <v-list-item-title >Switch role</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="onProfileClick()">
+                    <v-list-item-title>Profile</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
+    
+        <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on" @click="onSignOut">
+                    <v-icon>mdi-logout</v-icon>
+                </v-btn>
+            </template>
+            <span>Sign Out</span>
+        </v-tooltip>
+    </v-app-bar>
 </template>
 
 <script>
@@ -104,9 +99,8 @@
 </script>
 
 <style scoped>
-    #siemens-logo {
-        -webkit-filter: grayscale(100%) brightness(2000%); /* Safari 6.0 - 9.0 */
-        filter: grayscale(100%) brightness(2000%);
+    #berthy-logo {
         margin-left: 5px;
+        margin-top: 5px;
     }
 </style>

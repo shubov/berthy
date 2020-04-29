@@ -104,7 +104,7 @@
         data: () => ({
             messages: [
                 {
-                    avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
+                    //avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
                     name: 'John Leider',
                     title: 'Welcome to Vuetify.js!',
                     excerpt: 'Thank you for joining our community...',

@@ -10,7 +10,7 @@
 <template>
     <v-footer
             app
-            color="grey darken-2"
+            color="#01121E"
             class="white--text"
     >
         <span>Berthy</span>

@@ -21,26 +21,17 @@ import 'leaflet/dist/leaflet.css';
 Vue.config.productionTip = false;
 Vue.prototype.$auth = AuthService;
 
-Vue.prototype.$roles = {
-    user: 'USER',
-    moderator: 'MODERATOR',
-    admin: 'ADMIN',
+
+//********************************** Sentry ********************************************
+import * as Sentry from '@sentry/browser';
+import { Vue as VueIntegration } from '@sentry/integrations';
+if (process.env.NODE_ENV === 'production'){
+    Sentry.init({
+        dsn: 'https://ebe70e3d42494fca8d2660baea73eaaf@o382880.ingest.sentry.io/5212428',
+        integrations: [new VueIntegration({Vue, attachProps: true, logErrors: true})],
+    });
 }
-
-Vue.prototype.$userGUI = {
-    dockmaster: 'DOCKMASTER',
-    boater: 'BOATER',
-}
-
-
-// //********************************** Sentry ********************************************
-// import * as Sentry from '@sentry/browser';
-// import { Vue as VueIntegration } from '@sentry/integrations';
-// Sentry.init({
-//     dsn: 'https://ebe70e3d42494fca8d2660baea73eaaf@o382880.ingest.sentry.io/5212428',
-//     integrations: [new VueIntegration({Vue, attachProps: true, logErrors: true})],
-// });
-// //********************************** Sentry ********************************************
+//********************************** Sentry ********************************************
 
 
 //************************ Google OAuth 2.0 ********************************************

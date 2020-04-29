@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import storage from '@/services/web-storage'
+import storage from '../services/web-storage'
 //import store from '../store'
 
 

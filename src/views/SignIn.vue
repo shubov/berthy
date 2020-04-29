@@ -8,11 +8,17 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row>
-        <v-col>
+    <v-row  align="center" justify="center" >
+        <v-col
+                :xs="12"
+                :sm="10"
+                :md="8"
+                :lg="6"
+                :xl="4"
+        >
             <v-card class="elevation-4">
                 <v-toolbar
-                        color="grey darken-2"
+                        color="#01121E"
                         dark
                         flat
                 >
@@ -50,10 +56,9 @@
                         <v-col cols="6">
                             <v-btn
                                     block
-                                    outlined
                                     large
                                     @click="onSignInEmail()"
-                                    color="deep-purple accent-4"
+                                    color="primary"
                             >Sign In</v-btn>
                         </v-col>
                         <v-col cols="12">

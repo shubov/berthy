@@ -1,10 +1,10 @@
 # Berthy.me
+[Google Drive со всеми файлами ВКР и Преддипломной практики](https://drive.google.com/drive/folders/1lEZ5bNS6R5q4UChn4YCMf90mq1mN8ore?usp=sharing).
+
 ## Demo
 [Demonstration of this project online (new version)](https://berthy.now.sh/).
 
 [Demonstration of this project online (old version)](https://egehackbot.cf:8080/berth/).
-
-[Google Drive со всеми файлами ВКР и Преддипломной практики](https://drive.google.com/drive/folders/1lEZ5bNS6R5q4UChn4YCMf90mq1mN8ore?usp=sharing).
 
 ## API
 [Backend RESTful API Documentation in Swagger](https://egehackbot.cf:8080/swagger-ui.html#/).

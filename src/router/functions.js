@@ -7,13 +7,13 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 import AuthService from '../services/auth.service';
-// import store from '../store';
-//
-// const roles = {
-//     user: 'USER',
-//     moderator: 'MODERATOR',
-//     admin: 'ADMIN',
-// };
+import store from '../store';
+
+const roles = {
+    user: 'USER',
+    moderator: 'MODERATOR',
+    admin: 'ADMIN',
+};
 
 export default {
 
@@ -42,29 +42,29 @@ export default {
         if (authRequired && !loggedIn) {
             next('/sign-in');
         }
-        // else {
-        //     let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-        //     if (userRoles.length === 0) {
-        //         await store.dispatch('User/updateAccountInfo');
-        //         userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-        //     }
-        //     let rolesNeeded = to.meta.roles;
-        //
-        //     let moderator = false;
-        //     let user = false;
-        //
-        //     for (let i =0; i<userRoles.length; i++){
-        //         moderator = moderator ? true: userRoles[i] === roles.moderator;
-        //         user = user ? true: userRoles[i] === roles.user;
-        //         for (let j =0; j<rolesNeeded.length; j++){
-        //             if (rolesNeeded[j]===userRoles[i]){
-        //                 next();
-        //                 return;
-        //             }
-        //         }
-        //     }
-        //     if (moderator) next('/moderator')
-        //     else if(user) next('/');
-        // }
+        else {
+            let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+            if (userRoles.length === 0) {
+                await store.dispatch('User/updateAccountInfo');
+                userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+            }
+            let rolesNeeded = to.meta.roles;
+
+            let moderator = false;
+            let user = false;
+
+            for (let i =0; i<userRoles.length; i++){
+                moderator = moderator ? true: userRoles[i] === roles.moderator;
+                user = user ? true: userRoles[i] === roles.user;
+                for (let j =0; j<rolesNeeded.length; j++){
+                    if (rolesNeeded[j]===userRoles[i]){
+                        next();
+                        return;
+                    }
+                }
+            }
+            if (moderator) next('/moderator')
+            else if(user) next('/');
+        }
     }
 };

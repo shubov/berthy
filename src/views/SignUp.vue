@@ -8,14 +8,10 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row>
+    <v-row  align="center" justify="center" >
         <v-col>
-            <v-card class="elevation-4">
-                <v-toolbar
-                        color="#01121E"
-                        dark
-                        flat
-                >
+            <v-card tile class="mx-auto elevation-4" min-width="400px" style="width: 400px">
+                <v-toolbar flat>
                     <v-toolbar-title class="font-weight-light">Sign Up</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-tooltip bottom>

@@ -181,20 +181,37 @@
             },
             mouseMove (e) {
                 if (!this.isMove) return
-                var mouseX = e.offsetX * this.ratio + this.dx
-                var mouseY = e.offsetY * this.ratio + this.dy
-                var dx = 0
-                var dy = 0
+                let mouseX = e.offsetX * this.ratio + this.dx
+                let mouseY = e.offsetY * this.ratio + this.dy
+                let dx = 0
+                let dy = 0
                 if (this.beforeMouseX && this.beforeMouseY) {
                     dx = mouseX - this.beforeMouseX
                     dy = mouseY - this.beforeMouseY
                 }
                 this.beforeMouseX = mouseX
                 this.beforeMouseY = mouseY
-                var tempX = dx + Number(this.rects[this.selectIdx].x)
-                var tempY = dy + Number(this.rects[this.selectIdx].y)
-                if (tempX > 0 && tempX < this.width - this.rects[this.selectIdx].w) this.rects[this.selectIdx].x = tempX
-                if (tempY > 0 && tempY < this.height - this.rects[this.selectIdx].h) this.rects[this.selectIdx].y = tempY
+                let tempX = dx + Number(this.rects[this.selectIdx].x)
+                let tempY = dy + Number(this.rects[this.selectIdx].y)
+                if (tempX > 0) {
+                    if (tempX < this.width - this.rects[this.selectIdx].w) {
+                        this.rects[this.selectIdx].x = tempX
+                    } else {
+                        this.rects[this.selectIdx].x = this.width - this.rects[this.selectIdx].w
+                    }
+                } else {
+                    this.rects[this.selectIdx].x = 0
+                }
+                
+                if (tempY > 0) {
+                    if (tempY < this.height - this.rects[this.selectIdx].h) {
+                        this.rects[this.selectIdx].y = tempY
+                    } else {
+                        this.rects[this.selectIdx].y = this.height - this.rects[this.selectIdx].h
+                    }
+                } else {
+                    this.rects[this.selectIdx].y = 0
+                }
                 e.preventDefault()
             }
         }

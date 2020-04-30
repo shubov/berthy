@@ -8,20 +8,15 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row>
+    <v-row  align="center" justify="center" >
         <v-col>
-            <v-card class="elevation-4">
-                <v-toolbar
-                        color="grey darken-2"
-                        dark
-                        flat
-                >
-                    <v-toolbar-title class="font-weight-light">Choose your role</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-                <v-card-actions class="pt-0 mt-0">
-                    <v-row>
-                        <v-col cols="12">
+            <v-card tile class="mx-auto elevation-4" min-width="400px" style="width: 400px">
+                <v-card-actions>
+                    <v-row  align="center" justify="center" >
+                        <v-col cols="10">
+                            <v-toolbar-title class="font-weight-light">Choose your role</v-toolbar-title>
+                        </v-col>
+                        <v-col cols="10">
                             <v-btn
                                     to="/book"
                                     block
@@ -29,7 +24,7 @@
                                     color="primary"
                             >Boater</v-btn>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="10">
                             <v-btn
                                     @click="onDockmaster()"
                                     block

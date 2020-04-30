@@ -20,7 +20,7 @@ import 'leaflet/dist/leaflet.css';
 
 Vue.config.productionTip = false;
 Vue.prototype.$auth = AuthService;
-
+Vue.prototype.$berthy_blue = '#000033';
 
 //********************************** Sentry ********************************************
 import * as Sentry from '@sentry/browser';

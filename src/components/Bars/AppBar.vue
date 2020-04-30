@@ -9,7 +9,7 @@
 
 <template>
     <v-app-bar
-            color="#01121E"
+            :color="this.$berthy_blue"
             dense
             dark
             app

@@ -141,7 +141,7 @@ const routes =
             name: 'Role',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
+                navbar: null,
                 footer: () => import('../components/Bars/FooterBar'),
                 content: () => import('../views/Role'),
             },

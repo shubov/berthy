@@ -29,8 +29,8 @@
         <v-spacer></v-spacer>
         
         <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-                <v-btn icon to="faq" v-on="on">
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" to="faq" v-on="on">
                     <v-icon>mdi-help-circle</v-icon>
                 </v-btn>
             </template>
@@ -55,8 +55,8 @@
         </v-menu>
     
         <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-                <v-btn icon v-on="on" @click="onSignOut">
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-on="on" v-bind="attrs" @click="onSignOut">
                     <v-icon>mdi-logout</v-icon>
                 </v-btn>
             </template>

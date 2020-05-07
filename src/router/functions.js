@@ -6,6 +6,7 @@
  * as well as the project itself is strictly prohibited.                      *
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
+
 import AuthService from '../services/auth.service';
 import store from '../store';
 

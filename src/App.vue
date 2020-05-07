@@ -21,40 +21,12 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
-
     export default {
         props: {
             source: String,
         },
         data: () => ({
             name: "Main",
-            ws: null,
         }),
-        methods: {
-            ...mapActions("Sockets", [
-                `SOCKET_CONNECT`,
-                `SOCKET_DISCONNECT`,
-                `SOCKET_MESSAGE`,
-                `SOCKET_ERROR`
-            ]),
-        },
-        mounted: function() {
-        
-        //     let self = this;
-        //     this.ws = new WebSocket('ws://uralchem-navigator.southcentralus.cloudapp.azure.com');
-        //     this.ws.onopen = function() {
-        //         self.SOCKET_CONNECT();
-        //     };
-        //     this.ws.onclose = function(event) {
-        //         self.SOCKET_DISCONNECT(event);
-        //     };
-        //     this.ws.onmessage = function(message) {
-        //         self.SOCKET_MESSAGE(message);
-        //     };
-        //     this.ws.onerror = function(message) {
-        //         self.SOCKET_ERROR(message);
-        //     }
-        },
     }
 </script>

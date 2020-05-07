@@ -10,6 +10,8 @@
 
 // State initial object
 const initialState = () => ({
+    url: 'ws://uralchem-navigator.southcentralus.cloudapp.azure.com',
+    ws: null,
     connected: false,
     error: '',
     message: '',
@@ -37,6 +39,9 @@ const getters = {
     },
     getLastUpdateTime() {
         return state.time;
+    },
+    getWsUrl() {
+        return state.url;
     }
 };
 
@@ -46,18 +51,34 @@ const actions = {
     reset({ commit }) {
         commit('RESET');
     },
-    SOCKET_CONNECT({commit}) {
+    init({getters, dispatch, commit}){
+        let ws = new WebSocket(getters.getWsUrl);
+        ws.onopen = function() {
+            dispatch('onConnect');
+        };
+        ws.onclose = function(event) {
+            dispatch('onDisconnect', event);
+        };
+        ws.onmessage = function(message) {
+            dispatch('onMessage', message);
+        };
+        ws.onerror = function(message) {
+            dispatch('onError', message);
+        };
+        commit('INIT', ws);
+    },
+    onConnect({commit}) {
         commit('SOCKET_CONNECT');
     },
-    SOCKET_DISCONNECT({commit}) {
+    onDisconnect({commit}) {
         commit('SOCKET_DISCONNECT');
     },
-    SOCKET_MESSAGE({dispatch, commit}, payload) {
+    onMessage({dispatch, commit}, payload) {
         let {message, time, device} = JSON.parse(payload.data);
         commit('SOCKET_MESSAGE', {message, time, device});
         dispatch('Fleet/updateFleet', {message, time, device}, {root:true});
     },
-    SOCKET_ERROR({commit}, message) {
+    onError({commit}, message) {
         commit('SOCKET_ERROR', message);
     }
 };
@@ -70,6 +91,9 @@ const mutations = {
         Object.keys(newState).forEach(key => {
             state[key] = newState[key]
         });
+    },
+    INIT(state, ws) {
+        state.ws = ws;
     },
     SOCKET_CONNECT(state) {
         state.connected = true

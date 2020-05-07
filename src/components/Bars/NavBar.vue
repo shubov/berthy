@@ -24,8 +24,8 @@
                              class="router-link-nav-bar"
                 >
                     <v-tooltip right>
-                        <template v-slot:activator="{ on }">
-                            <v-list-item v-on="on">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item v-on="on" v-bind="attrs">
                                 <v-list-item-icon>
                                     <v-icon>{{page.icon}}</v-icon>
                                 </v-list-item-icon>

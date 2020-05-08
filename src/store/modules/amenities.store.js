@@ -14,6 +14,26 @@ const initialState = () => ({
     amenities: [],
     lastUpdate: null,
     length: 0,
+    icons: new Map([
+        ["atm", "mdi-atm"],
+        ["accessible", "mdi-wheelchair-accessibility"],
+        ["bathtub", "mdi-shower-head"],
+        ["wifi", "mdi-wifi"],
+        ["ev_station", "mdi-flash-circle"],
+        ["hotel", "mdi-bed"],
+        ["restaurant", "mdi-silverware-fork-knife"],
+        ["bar", "mdi-glass-cocktail"],
+        ["gas_station", "mdi-gas-station"],
+        ["parking", "mdi-parking"],
+        ["water", "mdi-water"],
+        ["bicycle_rental", "mdi-bike"],
+        ["car_rental", "mdi-car"],
+        ["grocery_store", "mdi-storefront-outline"],
+
+        ["car_electric", "mdi-car-electric"],
+
+        ["default", "mdi-help"]
+    ])
 });
 
 
@@ -26,9 +46,18 @@ const state = initialState();
 
 // VUEX GETTERS
 const getters = {
-    getAmenity: (state) => (index) => {
-        return state.amenities[index];
+    getAmenities(state) {
+        return state.amenities;
     },
+    getIcons(state) {
+        return state.icons;
+    },
+    lastUpdate(state) {
+        return state.lastUpdate;
+    },
+    getLength(state) {
+        return state.length;
+    }
 };
 
 
@@ -56,6 +85,11 @@ const mutations = {
     },
     UPDATE_AMENITIES(state,data) {
         state.amenities = data;
+        state.amenities.forEach(amenity => {
+            let icon = state.icons.get(amenity.key);
+            icon = icon ? icon : state.icons.get("default");
+            Object.defineProperty(amenity, 'icon', {value: icon});
+        });
         state.length = data.length;
         state.lastUpdate = Date.now();
     }

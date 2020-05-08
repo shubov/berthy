@@ -13,7 +13,7 @@
         <router-view name="navbar"/>
         <router-view name="footer"/>
         <v-content>
-            <v-container fill-height>
+            <v-container fluid fill-height>
                     <router-view name="content" :key="$route.fullPath"/>
             </v-container>
         </v-content>

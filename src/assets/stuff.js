@@ -20,88 +20,9 @@
 //         document.body.removeEventListener('click', el.clickOutsideEvent)
 //     },
 // });
-//let loco = {
-//     message:{
-//         locoType:null,
-//         locoNo:null,
-//         trainNo:null,
-//         time:{
-//             hour:null,
-//             min:null,
-//             sec:null,
-//             day:null,
-//             month:null,
-//             year:null,
-//             full:null,
-//         },
-//         tabn:null,
-//         speed:null,
-//         dir:null,
-//         pwr:null,
-//         mileage:null,
-//         wagCount:null,
-//         axisCount:null,
-//         freightMas:null,
-//         press:{
-//             v0:null,
-//             v1:null,
-//             v2:null,
-//         },
-//         als:null,
-//         rc:null,
-//         ifperiod:null,
-//         cock395:null,
-//         km:null,
-//         busdata:null,
-//         falarm:null,
-//         csq:null,
-//         imsi:null,
-//         alarm:null,
-//         genA:null,
-//         genV:null,
-//         akbV:null,
-//         genE:null,
-//         dfreqDis:null,
-//         freqDis:null,
-//         tempWater:null,
-//         tempOil:null,
-//         pressFuel:null,
-//         pressOil:null,
-//         pressTurbo:null,
-//         UTC:{
-//             day:null,
-//             month:null,
-//             year:null,
-//             hour:null,
-//             min:null,
-//             sec:null,
-//         },
-//         GEO:{
-//             lat:null,
-//             lon:null,
-//             ati:null,
-//         },
-//         FUEL:{
-//             vol:null,
-//             vol20:null,
-//             temp:null,
-//             dens:null,
-//             mass:null,
-//         },
-//         esumeng:null,
-//         esumsec:null,
-//         imei:null,
-//         events:[],
-//         stendTimeInSeconds:null,
-//     },
-//     time:null,
-//     device:null,
-// }
-// // State initial object
-// const initialState = () => ({
-// });
-//
-//
+
+
+
 // /* Module XXXXXXX.store.js */
 //
 //
@@ -141,3 +62,17 @@
 //     actions,
 //     mutations
 // };
+
+
+// {
+//     name: '',
+//     length: 0,
+//     draft: 0,
+//     width: 0,
+//     price: 0,
+//     xCoord: 0,
+//     yCoord: 0,
+//     rotate: 0,
+//     color: '',
+// }
+

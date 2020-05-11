@@ -52,7 +52,7 @@
     //***************
 
     export default {
-        name: "Map",
+        name: "Book",
         components: {
             LMap, LTileLayer, LMarker, LTooltip, LControl,
 

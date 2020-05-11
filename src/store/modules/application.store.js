@@ -6,15 +6,20 @@
  * as well as the project itself is strictly prohibited.                      *
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                   *
  ******************************************************************************/
+import BerthyAPI from "../../services/berthy-api";
 
 // State initial object
 const initialState = () => ({
+    success: null,
+    error: null,
     message: '',
     attachments: [],
     name: '',
     description: '',
-    lat: 0,
-    lng: 0,
+    startOfSeason: null,
+    endOfSeason: null,
+    lat: null,
+    lng: null,
     site: '',
     radio: '',
     phCode: '',
@@ -34,7 +39,25 @@ const state = initialState();
 
 // VUEX GETTERS
 const getters = {
-
+    getApplication(state) {
+        return {
+            description: state.message,
+            attachments: state.attachments,
+            berth: {
+                name:  state.name,
+                description:  state.description,
+                lat:  state.lat,
+                lng:  state.lng,
+                site:  state.site,
+                radio:  state.radio,
+                phCode:  state.phCode,
+                phNumber:  state.phNumber,
+                photos:  state.photos,
+                amenities:  state.amenities,
+                places:  state.places,
+            }
+        }
+    }
 };
 
 
@@ -43,39 +66,65 @@ const actions = {
     reset({ commit }) {
         commit('RESET');
     },
+    async submitApplication({getters, commit, dispatch}){
+        commit('SUBMITTING');
+        let data = getters.getApplication;
+        console.log(data.berth.amenities);
+        data.berth.amenities = await dispatch('Amenities/getAmenitiesByKeys', data.berth.amenities, {root:true});
+        console.log(data.berth.amenities);
+        let response = await BerthyAPI.post('berths/applications', data);
+        if (response.data.success) {
+            commit('SUCCESS');
+        } else {
+            commit('ERROR', response.data.error.message);
+        }
+    },
+    async uploadAttachment({ commit, dispatch, rootGetters }, file) {
+        await dispatch('File/uploadFile', file, {root:true});
+        if (rootGetters['File/isUploaded'])
+            commit('ADD_ATTACHMENT', rootGetters['File/getFile']);
+    },
+    async uploadPhoto({commit, dispatch, rootGetters}, file) {
+        await dispatch('File/uploadFile', file, {root:true});
+        if (rootGetters['File/isUploaded'])
+            commit('ADD_PHOTO', rootGetters['File/getFile']);
+    },
+    // editAmenities({commit, dispatch}, value) {
+    //     commit('EDIT_AMENITIES', dispatch('Amenities/getAmenitiesByKeys', value, {root:true}));
+    // },
+    onRemovePhoto({ commit }, index){
+        commit('REMOVE_PHOTO', index);
+    },
+    onRemoveAttachment({ commit }, index){
+        commit('REMOVE_ATTACHMENT', index);
+    },
     onMessage({ commit }) {
         commit('EDIT_MESSAGE');
     },
-    uploadAttachment({ commit }) {
-        commit('EDIT_ATTACHMENTS');
-    },
     onMarinaName({ commit }) {
-        commit('EDIT_MARINA_NAME');
+        commit('EDIT_NAME');
     },
     onMarinaDescription({ commit }) {
-        commit('EDIT_MARINA_DESCRIPTION');
+        commit('EDIT_DESCRIPTION');
     },
     onMarinaLat({ commit }) {
-        commit('EDIT_MARINA_LAT');
+        commit('EDIT_LAT');
     },
     onMarinaLng({ commit }) {
-        commit('EDIT_MARINA_LNG');
+        commit('EDIT_LNG');
     },
     onMarinaSite({ commit }) {
-        commit('EDIT_MARINA_SITE');
+        commit('EDIT_SITE');
     },
     onMarinaRadio({ commit }) {
-        commit('EDIT_MARINA_RADIO');
+        commit('EDIT_RADIO');
     },
     onMarinaPhCode({ commit }) {
-        commit('EDIT_MARINA_PH_CODE');
+        commit('EDIT_PH_CODE');
     },
     onMarinaPhNumber({ commit }) {
-        commit('EDIT_MARINA_PH_NUMBER');
+        commit('EDIT_PH_NUMBER');
     },
-    uploadPhotos({commit}) {
-        commit('EDIT_MARINA_PHOTOS');
-    }
 };
 
 
@@ -87,11 +136,20 @@ const mutations = {
             state[key] = newState[key]
         });
     },
-    EDIT_MESSAGE(state, message) {
-        state.description = message;
+    SUBMITTING(state) {
+        state.success = null;
+        state.error = null;
     },
-    EDIT_ATTACHMENTS() {
-
+    SUCCESS(state) {
+        state.success = true;
+        state.error = null;
+    },
+    ERROR(state, msg) {
+        state.success = false;
+        state.error = msg;
+    },
+    EDIT_MESSAGE(state, message) {
+        state.message = message;
     },
     EDIT_NAME(state, name) {
         state.name = name;
@@ -117,9 +175,30 @@ const mutations = {
     EDIT_PH_NUMBER(state, number) {
         state.phNumber = number;
     },
-    EDIT_PHOTOS() {
-
+    EDIT_START_OF_SEASON(state, date) {
+        state.startOfSeason = date;
     },
+    EDIT_END_OF_SEASON(state, date) {
+        state.endOfSeason = date;
+    },
+    ADD_PHOTO(state, photo) {
+        state.photos.push(photo);
+    },
+    REMOVE_PHOTO(state, index){
+        state.photos.splice(index, 1);
+    },
+    ADD_ATTACHMENT(state, attachment) {
+        state.attachments.push(attachment);
+    },
+    REMOVE_ATTACHMENT(state, index){
+        state.attachments.splice(index, 1);
+    },
+    EDIT_AMENITIES(state, value) {
+        state.amenities = value;
+    },
+    REMOVE_AMENITY(state, index) {
+        state.amenities.splice(index, 1);
+    }
 };
 
 

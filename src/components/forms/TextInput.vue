@@ -1,7 +1,7 @@
 <!-----------------------------------------------------------------------------
   - Copyright (c) - 2020 - Mikhail Shubov.                                    -
   - Berthy project. All Rights Reserved.                                      -
-  - The code in ExpansionInput.vue is proprietary and confidential.           -
+  - The code in StringInput.vue is proprietary and confidential.           -
   - Unauthorized copying of the file and any parts of it                      -
   - as well as the project itself is strictly prohibited.                     -
   - Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                  -
@@ -23,23 +23,27 @@
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-            <v-text-field
+            <v-textarea
                     v-model="model"
                     :placeholder="placeholder"
-            ></v-text-field>
+                    auto-grow
+                    clearable
+                    :prepend-inner-icon="icon"
+            ></v-textarea>
         </v-expansion-panel-content>
     </v-expansion-panel>
 </template>
 
 <script>
     export default {
-        name: "ExpansionInput",
+        name: "TextInput",
         props: {
             title: String,
             placeholder: String,
             caption: String,
             state: String,
             mutation: String,
+            icon: String,
         },
         computed: {
             model: {

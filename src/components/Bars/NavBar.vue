@@ -10,10 +10,10 @@
 <template>
     <v-navigation-drawer
             mini-variant
-            permanent
             app
             clipped
             floating
+            v-model="menu"
     >
         <v-list>
             <v-list-item-group>
@@ -45,8 +45,12 @@
 <script>
     export default {
         name: "NavBar",
+        created() {
+            this.$parent.$on('click-menu-icon', ()=>this.menu = !this.menu);
+        },
         data: function () {
             return {
+                menu: true,
                 pages: [
                     { title: 'Dashboard', path: "/dashboard",icon: 'mdi-view-dashboard' },
                     { title: 'Requests', path: "requests",icon: 'mdi-clipboard-list' },
@@ -65,11 +69,15 @@
         //         return this.pages.findIndex(f);
         //     }
         // },
-        // methods: {
+        methods: {
+            onMenuClick(){
+                this.menu = !this.menu;
+                console.log(this.menu);
+            }
         //     linkNavigation(path) {
         //         this.$router.push(path).catch(() => {});
         //     }
-        // }
+        }
     }
 </script>
 

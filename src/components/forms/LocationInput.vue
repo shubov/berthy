@@ -1,0 +1,113 @@
+<!-----------------------------------------------------------------------------
+  - Copyright (c) - 2020 - Mikhail Shubov.                                    -
+  - Berthy project. All Rights Reserved.                                      -
+  - The code in LocationInput.vue is proprietary and confidential.            -
+  - Unauthorized copying of the file and any parts of it                      -
+  - as well as the project itself is strictly prohibited.                     -
+  - Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                  -
+  ----------------------------------------------------------------------------->
+
+<template>
+    <v-expansion-panel>
+        <v-expansion-panel-header>
+            <template v-slot:default="{ open }">
+                <v-row no-gutters>
+                    <v-col cols="4">{{title}}</v-col>
+                    <v-col cols="8" class="text--secondary">
+                        <v-fade-transition leave-absolute>
+                            <span v-if="open" key="0">{{caption}}</span>
+                            <span v-else key="1">
+                                Latitude: {{ (Math.round(lat * 1000) / 1000).toFixed(3) }}...
+                                Longitude: {{(Math.round(lng * 1000) / 1000).toFixed(3)}}...
+                            </span>
+                        </v-fade-transition>
+                    </v-col>
+                </v-row>
+            </template>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+            <v-text-field
+                    v-model="lat"
+                    :placeholder="placeholder"
+                    prepend-icon="mdi-latitude"
+            ></v-text-field>
+            <v-text-field
+                    v-model="lng"
+                    :placeholder="placeholder"
+                    prepend-icon="mdi-longitude"
+            ></v-text-field>
+            <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+                <template v-slot:activator="{ on }">
+                    <v-btn color="primary" dark v-on="on">Use Map</v-btn>
+                </template>
+                <v-card>
+                    <v-toolbar dark color="primary">
+                        <v-btn icon dark @click="dialog = false">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                        <v-toolbar-title>Location</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-toolbar-items>
+                            <v-btn dark text @click="dialog = false">Close</v-btn>
+                            <v-btn dark text @click="onSave">Save</v-btn>
+                        </v-toolbar-items>
+                    </v-toolbar>
+                    <v-row align="center" justify="center" no-gutters>
+                        <v-col>
+                            <Map :position.sync="position"></Map>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-dialog>
+        </v-expansion-panel-content>
+    </v-expansion-panel>
+</template>
+
+<script>
+    import {latLng} from "leaflet";
+
+    export default {
+        name: "LocationInput",
+        components: {
+            Map: () => import('../../components/Map'),
+        },
+        props: {
+            title: String,
+            placeholder: String,
+            caption: String,
+            state: String,
+            mutation: String,
+        },
+        computed: {
+            lat: {
+                get() {
+                    return this.$store.state.Application.lat;
+                },
+                set(value) {
+                    this.$store.commit('Application/EDIT_LAT', value);
+                },
+            },
+            lng: {
+                get() {
+                    return this.$store.state.Application.lng;
+                },
+                set(value) {
+                    this.$store.commit('Application/EDIT_LNG', value);
+                },
+            },
+        },
+        data: () => ({
+            dialog: false,
+            zoom: 11,
+            position: latLng(50, 13),
+        }),
+        methods: {
+            onSave(){
+                this.lat = this.position.lat;
+                this.lng = this.position.lng;
+                this.dialog = false;
+            }
+        },
+        
+    }
+</script>

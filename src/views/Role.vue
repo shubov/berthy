@@ -12,11 +12,6 @@
         <v-col>
             <v-card tile class="mx-auto elevation-4" min-width="400px" style="width: 400px">
                 <v-card-actions>
-                    <div v-for="(amenity, index) in amenities" :key="index">
-                        
-                        <v-icon>{{amenity.icon}}</v-icon>
-                    </div>
-                    
                     <v-row  align="center" justify="center" >
                         <v-col cols="10">
                             <v-toolbar-title class="font-weight-light">Choose your role</v-toolbar-title>
@@ -31,7 +26,7 @@
                         </v-col>
                         <v-col cols="10">
                             <v-btn
-                                    @click="onDockmaster()"
+                                    @click.stop="onDockmaster()"
                                     block
                                     outlined
                                     large
@@ -47,16 +42,9 @@
 <script>
     import BerthyAPI from "../services/berthy-api";
     import router from "../router";
-    import {mapGetters} from "vuex";
 
     export default {
         name: "Role",
-        async mounted() {
-            await this.$store.dispatch('Amenities/availableAmenities');
-        },
-        computed: {
-            ...mapGetters('Amenities', { amenities: 'getAmenities'})
-        },
         methods: {
             async onDockmaster() {
                 console.log("e");

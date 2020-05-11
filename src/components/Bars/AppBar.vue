@@ -15,8 +15,8 @@
             app
             clippedLeft
     >
-        <v-btn icon>
-            <v-icon>mdi-apps</v-icon>
+        <v-btn icon @click="$parent.$emit('click-menu-icon')">
+            <v-icon>mdi-menu</v-icon>
         </v-btn>
     
         <v-img

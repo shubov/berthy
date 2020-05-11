@@ -71,7 +71,23 @@ const actions = {
         if (response.data.success) {
             commit('UPDATE_AMENITIES', response.data.data);
         }
-    }
+    },
+    async getAmenitiesByKeys({state}, value) {
+        let array = [];
+        for(let i = 0; i< state.amenities.length;i++) {
+            for(let j=0; j<value.length;j++) {
+                if(value[j]===state.amenities[i].key) {
+                    array.push({
+                        key: state.amenities[i].key,
+                        value: state.amenities[i].value
+                    });
+                    break;
+                }
+            }
+        }
+        console.log(array);
+        return array;
+    },
 };
 
 
@@ -88,7 +104,7 @@ const mutations = {
         state.amenities.forEach(amenity => {
             let icon = state.icons.get(amenity.key);
             icon = icon ? icon : state.icons.get("default");
-            Object.defineProperty(amenity, 'icon', {value: icon});
+            amenity.icon = icon;
         });
         state.length = data.length;
         state.lastUpdate = Date.now();

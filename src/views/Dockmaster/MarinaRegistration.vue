@@ -9,12 +9,12 @@
 
 <template>
     <v-row align="baseline" justify="center">
-        
-        <v-col cols="12">
+    
+        <v-col cols="12" sm="9">
             <p class="text-left display-2">Add your marina</p>
             <p class="text-left">Specify the necessary information about your marina to be able to get booking requests from boaters.</p>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" sm="9">
             <v-alert
                     type="info"
                     color="primary"
@@ -25,8 +25,8 @@
                 Only provide the correct information to get approval. We will contact you to verify the information.
             </v-alert>
         </v-col>
-        <v-col cols="12">
-            <v-expansion-panels class="mb-6">
+        <v-col cols="12" sm="9">
+            <v-expansion-panels inset class="mb-6">
                 <StringInput
                         key="1"
                         title= 'Name'
@@ -69,7 +69,7 @@
                         caption="Select a start and end dates of current or upcoming season"
                 ></DateInput>
                 <FileInput
-                        key="5"
+                        key="6"
                         title="Photos"
                         caption="Upload pictures of your marina"
                         placeholder="Select a photo"
@@ -80,7 +80,7 @@
                         remove-action="Application/onRemovePhoto"
                 ></FileInput>
                 <SelectAmenities
-                        key="6"
+                        key="7"
                         title="Amenities"
                         caption="Select additional amenities at your marina"
                         placeholder="Select amenities"
@@ -92,15 +92,23 @@
                         get-amenities-action="Amenities/availableAmenities"
                 ></SelectAmenities>
                 <LocationInput
-                        key="7"
+                        key="8"
                         title="Location"
                         caption="Set the precise location of your marina"
                         placeholder="12.3456789"
                 ></LocationInput>
+                <PlaceInput
+                        key="9"
+                        title="Places"
+                        caption="Sizing and pricing of the places in your marina"
+                        mutation="Application/EDIT_PLACES"
+                        remove-mutation="Application/REMOVE_PLACE"
+                        state="places"
+                ></PlaceInput>
             </v-expansion-panels>
             <v-expansion-panels>
                 <FileInput
-                        key="1"
+                        key="10"
                         title="Attachments"
                         caption="Upload documents"
                         placeholder="Select a file"
@@ -112,7 +120,7 @@
                         remove-action="Application/onRemoveAttachment"
                 ></FileInput>
                 <TextInput
-                        key="2"
+                        key="11"
                         title= 'Comments'
                         placeholder= 'Any comments or questions?'
                         caption= 'Leave a note to us regarding your application'
@@ -122,8 +130,8 @@
                 ></TextInput>
             </v-expansion-panels>
         </v-col>
-        <v-col>
-            <v-btn color="primary" @click="onSubmit()">Submit</v-btn>
+        <v-col cols="12" align="center">
+            <v-btn color="primary" @click="onSubmit()" x-large>Submit</v-btn>
         </v-col>
     </v-row>
 </template>
@@ -136,10 +144,11 @@
     import SelectAmenities from "../../components/forms/SelectAmenities";
     import LocationInput from "../../components/forms/LocationInput";
     import TextInput from "../../components/forms/TextInput";
+    import PlaceInput from "../../components/forms/PlaceInput";
     
     export default {
         name: "MarinaRegistration",
-        components: {TextInput, LocationInput, SelectAmenities, FileInput, DateInput, StringInput},
+        components: {PlaceInput, TextInput, LocationInput, SelectAmenities, FileInput, DateInput, StringInput},
         data: () => ({
         }),
         methods: {

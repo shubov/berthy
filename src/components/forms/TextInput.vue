@@ -12,7 +12,7 @@
         <v-expansion-panel-header>
             <template v-slot:default="{ open }">
                 <v-row no-gutters>
-                    <v-col cols="4">{{title}}</v-col>
+                    <v-col cols="4">{{title}}<small>(optional)</small></v-col>
                     <v-col cols="8" class="text--secondary">
                         <v-fade-transition leave-absolute>
                             <span v-if="open" key="0">{{caption}}</span>

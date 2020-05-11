@@ -198,6 +198,12 @@ const mutations = {
     },
     REMOVE_AMENITY(state, index) {
         state.amenities.splice(index, 1);
+    },
+    EDIT_PLACES(state, value){
+        state.places = value;
+    },
+    REMOVE_PLACE(state, index) {
+        state.places.splice(index, 1);
     }
 };
 

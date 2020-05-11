@@ -13,7 +13,7 @@
             :zoom="zoom"
             :center="position"
             :options="mapOptions"
-            style="height: 911px"
+            style="height: inherit"
     >
         <l-tile-layer
                 :url="url"

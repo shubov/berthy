@@ -15,7 +15,7 @@
             app
             clippedLeft
     >
-        <v-btn icon @click="$parent.$emit('click-menu-icon')">
+        <v-btn v-if="!$vuetify.breakpoint.smAndUp" icon @click="$parent.$emit('click-menu-icon')">
             <v-icon>mdi-menu</v-icon>
         </v-btn>
     
@@ -100,7 +100,6 @@
 
 <style scoped>
     #berthy-logo {
-        margin-left: 5px;
-        margin-top: 5px;
+        margin-top: 4px;
     }
 </style>

@@ -9,10 +9,11 @@
 
 <template>
     <v-navigation-drawer
-            mini-variant
+            :mini-variant="$vuetify.breakpoint.smAndUp"
             app
             clipped
             floating
+            mobile-break-point="600"
             v-model="menu"
     >
         <v-list>
@@ -50,7 +51,7 @@
         },
         data: function () {
             return {
-                menu: true,
+                menu: this.$vuetify.breakpoint.smAndUp,
                 pages: [
                     { title: 'Dashboard', path: "/dashboard",icon: 'mdi-view-dashboard' },
                     { title: 'Requests', path: "requests",icon: 'mdi-clipboard-list' },

@@ -40,8 +40,8 @@
                 <template v-slot:activator="{ on }">
                     <v-btn color="primary" dark v-on="on">Use Map</v-btn>
                 </template>
-                <v-card>
-                    <v-toolbar dark color="primary">
+                <v-card v-resize="updateMapHeight">
+                    <v-toolbar id="toolbar" dark color="primary">
                         <v-btn icon dark @click="dialog = false">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -54,7 +54,7 @@
                     </v-toolbar>
                     <v-row align="center" justify="center" no-gutters>
                         <v-col>
-                            <Map :position.sync="position"></Map>
+                            <Map id='map' :position.sync="position"></Map>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -106,7 +106,12 @@
                 this.lat = this.position.lat;
                 this.lng = this.position.lng;
                 this.dialog = false;
-            }
+            },
+            updateMapHeight() {
+                let h = window.innerHeight - document.getElementById('toolbar').style.height.substr(0,2);
+                console.log(h);
+                document.getElementById('map').style.height = h + 'px';
+            },
         },
         
     }

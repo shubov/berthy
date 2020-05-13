@@ -218,7 +218,6 @@ const mutations = {
     },
     REMOVE_PLACE(state, index) {
         state.places.splice(index, 1);
-        state.defaults.number--;
     },
     UPDATE_PRICE(state,value){
         state.defaults.defaultPrice =value;

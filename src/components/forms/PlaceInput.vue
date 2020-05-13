@@ -93,7 +93,7 @@
                                 :light="!btnActive"
                                 :disabled="!btnActive"
                                 @click="onEditSpots()"
-                        >Edit spots</v-btn>
+                        >Edit spots{{model.length===0 ? '':'('+model.length+')'}}</v-btn>
                         <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
                             <v-card>
                                 <v-toolbar id="toolbar" dark color="primary">
@@ -103,6 +103,14 @@
                                     <v-toolbar-title>Docking spots</v-toolbar-title>
                                     <v-spacer></v-spacer>
                                     <v-toolbar-items>
+                                        <v-btn
+                                                text
+                                                class="white--text"
+                                                @click="$refs.dialog.addPlace()"
+                                        >
+                                            App spot
+                                            <v-icon right dark>mdi-plus-circle</v-icon>
+                                        </v-btn>
                                         <v-btn dark text @click.stop="onSave()">Save</v-btn>
                                     </v-toolbar-items>
                                 </v-toolbar>
@@ -110,7 +118,7 @@
                                         ref="dialog"
                                         :suffix="sizeSuffix"
                                         :currency="currency"
-                                        add-mutation="Application/APP_PLACE"
+                                        add-mutation="Application/ADD_PLACE"
                                         edit-mutation="Application/EDIT_PLACE"
                                         remove-mutation="Application/REMOVE_PLACE"
                                         state="places"
@@ -260,6 +268,7 @@
         }),
         methods: {
             closeDialog() {
+                this.valid = this.model.length === 0 ? null : this.$refs.dialog.validate();
                 this.dialog=false;
             },
             onEditSpots() {
@@ -279,8 +288,8 @@
                 }
             },
             onSave() {
-                this.valid = this.$refs.dialog.validate();
-                this.dialog = !this.valid;
+                this.valid = this.model.length === 0 ? null : this.$refs.dialog.validate();
+                this.dialog = this.valid != null ? !this.valid : false;
             }
         },
     }

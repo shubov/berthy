@@ -120,7 +120,6 @@
             },
             updateMapHeight() {
                 let h = window.innerHeight - document.getElementById('toolbar').style.height.substr(0,2);
-                console.log(h);
                 document.getElementById('map').style.height = h + 'px';
             },
         },

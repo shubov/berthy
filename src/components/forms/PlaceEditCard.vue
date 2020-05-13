@@ -11,8 +11,7 @@
     <v-row align="center" justify="center" class="ma-0">
         <v-col cols="11" sm="9" md="6" lg="4" xl="3"
                v-for="(place, index) in model"
-               :key="place.name"
-           >
+               :key="index+Date.now()">
             <v-form ref="form">
                 <v-card class="mb-5">
                     <v-toolbar dark flat tile color="#0000004d">
@@ -145,7 +144,6 @@
                 this.$store.commit(this.removeMutation, index);
             },
             editPlace(value, index, key) {
-                //if (!this.$refs.form[index].validate()) return;
                 let place = {};
                 Object.assign(place, this.model[index]);
                 switch (key) {
@@ -178,7 +176,7 @@
                 return res;
             },
             resetValidation() {
-                this.$refs.form.forEach(form => form.resetValidation());
+                if (this.$refs.form) this.$refs.form.forEach(form => form.resetValidation());
             }
         }
     }

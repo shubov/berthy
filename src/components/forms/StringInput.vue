@@ -9,7 +9,7 @@
 
 <template>
     <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-header :disable-icon-rotate="valid != null">
             <template v-slot:default="{ open }">
                 <v-row no-gutters>
                     <v-col cols="4">{{title}}</v-col>
@@ -20,6 +20,10 @@
                         </v-fade-transition>
                     </v-col>
                 </v-row>
+            </template>
+            <template v-if="valid != null" v-slot:actions>
+                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
+                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -36,6 +40,10 @@
     export default {
         name: "StringInput",
         props: {
+            required: {
+                type: Boolean,
+                default: false
+            },
             title: String,
             placeholder: String,
             caption: String,
@@ -51,7 +59,12 @@
                 set(value) {
                     this.$store.commit(this.mutation, value)
                 }
+            },
+            valid(){
+                return this.model
+                    ? this.model.toString().length>0
+                    : this.required ? false : null;
             }
-        }
+        },
     }
 </script>

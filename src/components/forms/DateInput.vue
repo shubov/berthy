@@ -9,19 +9,25 @@
 
 <template>
     <v-expansion-panel>
-        <v-expansion-panel-header v-slot="{ open }">
-            <v-row no-gutters>
-                <v-col cols="4">{{title}}</v-col>
-                <v-col cols="8" class="text--secondary">
-                    <v-fade-transition leave-absolute>
-                        <span v-if="open">{{caption}}</span>
-                        <v-row v-else no-gutters style="width: 100%">
-                            <v-col cols="6">Start date: {{ start || 'Not set' }}</v-col>
-                            <v-col cols="6">End date: {{ end || 'Not set' }}</v-col>
-                        </v-row>
-                    </v-fade-transition>
-                </v-col>
-            </v-row>
+        <v-expansion-panel-header :disable-icon-rotate="valid != null">
+            <template v-slot:default="{ open }">
+                <v-row no-gutters>
+                    <v-col cols="4">{{title}}</v-col>
+                    <v-col cols="8" class="text--secondary">
+                        <v-fade-transition leave-absolute>
+                            <span v-if="open">{{caption}}</span>
+                            <v-row v-else no-gutters style="width: 100%">
+                                <v-col cols="6">Start date: {{ start || 'Not set' }}</v-col>
+                                <v-col cols="6">End date: {{ end || 'Not set' }}</v-col>
+                            </v-row>
+                        </v-fade-transition>
+                    </v-col>
+                </v-row>
+            </template>
+            <template v-if="valid != null" v-slot:actions>
+                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
+                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+            </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
             <v-row
@@ -117,6 +123,10 @@
             title: String,
             placeholder: String,
             caption: String,
+            required: {
+                type: Boolean,
+                default: false
+            },
         },
         computed: {
             start: {
@@ -135,6 +145,9 @@
                     this.$store.commit('Application/EDIT_END_OF_SEASON', value)
                 }
             },
+            valid() {
+                return (!!this.start && !!this.end) ? this.start < this.end : null;
+            }
         },
         data: () => ({
             date: null,

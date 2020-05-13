@@ -9,16 +9,22 @@
 
 <template>
     <v-expansion-panel>
-        <v-expansion-panel-header v-slot="{ open }">
-            <v-row no-gutters>
-                <v-col cols="4">{{title}}</v-col>
-                <v-col cols="8" class="text--secondary">
-                    <v-fade-transition leave-absolute>
-                        <span v-if="open" key="0">{{caption}}</span>
-                        <span v-else key="1">{{ model.length }} / {{amenities.length}} amenities selected</span>
-                    </v-fade-transition>
-                </v-col>
-            </v-row>
+        <v-expansion-panel-header :disable-icon-rotate="valid != null">
+            <template v-slot:default="{ open }">
+                <v-row no-gutters>
+                    <v-col cols="4">{{title}}</v-col>
+                    <v-col cols="8" class="text--secondary">
+                        <v-fade-transition leave-absolute>
+                            <span v-if="open" key="0">{{caption}}</span>
+                            <span v-else key="1">{{ model.length }} / {{amenities.length}} amenities selected</span>
+                        </v-fade-transition>
+                    </v-col>
+                </v-row>
+            </template>
+            <template v-if="valid != null" v-slot:actions>
+                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
+                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+            </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
             <v-row no-gutters>
@@ -71,6 +77,10 @@
     export default {
         name: "SelectAmenities",
         props: {
+            required: {
+                type: Boolean,
+                default: false
+            },
             title: {
                 type: String,
                 required: true,
@@ -110,6 +120,7 @@
         },
         async mounted() {
             await this.$store.dispatch(this.getAmenitiesAction);
+            this.valid = this.model.length === 0 ? null : true;
         },
         computed: {
             amenities() {
@@ -120,10 +131,14 @@
                     return this.$store.state[this.module][this.state];
                 },
                 set(value) {
+                    this.valid = value.length === 0 ? null : true;
                     this.$store.commit(this.mutation, value);
                 }
             }
         },
+        data: () => ({
+            valid: null,
+        }),
         methods: {
             remove (index) {
                 this.$store.commit(this.removeMutation, index);

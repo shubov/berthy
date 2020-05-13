@@ -9,7 +9,7 @@
 
 <template>
     <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-header  :disable-icon-rotate="valid != null">
             <template v-slot:default="{ open }">
                 <v-row no-gutters>
                     <v-col cols="4">{{title}}</v-col>
@@ -20,6 +20,10 @@
                         </v-fade-transition>
                     </v-col>
                 </v-row>
+            </template>
+            <template v-if="valid != null" v-slot:actions>
+                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
+                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -52,6 +56,10 @@
     export default {
         name: "FileInput",
         props: {
+            required: {
+                type: Boolean,
+                default: false
+            },
             title: {
                 type: String,
                 required: true,
@@ -107,6 +115,9 @@
                     }
                     this.loading = false;
                 }
+            },
+            valid() {
+                return this.model.length === 0 ? null: true;
             }
         },
         data: () => ({

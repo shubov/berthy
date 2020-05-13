@@ -12,21 +12,30 @@ import BerthyAPI from "../../services/berthy-api";
 const initialState = () => ({
     success: null,
     error: null,
-    message: '',
+    message: null,
     attachments: [],
-    name: '',
-    description: '',
+    name: null,
+    description: null,
     startOfSeason: null,
     endOfSeason: null,
     lat: null,
     lng: null,
-    site: '',
-    radio: '',
-    phCode: '',
-    phNumber: '',
+    site:null,
+    radio: null,
+    phCode: null,
+    phNumber: null,
     photos: [],
     amenities: [],
     places: [],
+    defaults: {
+        updated: false,
+        defaultPrice: null,
+        number: null,
+        defaultLength: null,
+        defaultWidth: null,
+        defaultDraft: null,
+        localization: 'US',
+    }
 });
 
 
@@ -39,6 +48,12 @@ const state = initialState();
 
 // VUEX GETTERS
 const getters = {
+    getDefaultsUpdated(state){
+        return state.defaults.updated;
+    },
+    isValid(state){
+        return state.name && state.lat && state.lng;
+    },
     getApplication(state) {
         return {
             description: state.message,
@@ -68,16 +83,17 @@ const actions = {
     },
     async submitApplication({getters, commit, dispatch}){
         commit('SUBMITTING');
+        if (!getters.isValid) return false;
         let data = getters.getApplication;
-        console.log(data.berth.amenities);
         data.berth.amenities = await dispatch('Amenities/getAmenitiesByKeys', data.berth.amenities, {root:true});
-        console.log(data.berth.amenities);
         let response = await BerthyAPI.post('berths/applications', data);
-        if (response.data.success) {
+        if (response.data ? response.data.success: false) {
             commit('SUCCESS');
+            return true;
         } else {
             commit('ERROR', response.data.error.message);
         }
+        return false;
     },
     async uploadAttachment({ commit, dispatch, rootGetters }, file) {
         await dispatch('File/uploadFile', file, {root:true});
@@ -89,42 +105,23 @@ const actions = {
         if (rootGetters['File/isUploaded'])
             commit('ADD_PHOTO', rootGetters['File/getFile']);
     },
-    // editAmenities({commit, dispatch}, value) {
-    //     commit('EDIT_AMENITIES', dispatch('Amenities/getAmenitiesByKeys', value, {root:true}));
-    // },
+    generatePlaces({state, commit}) {
+        if (state.defaults.number < 1) {
+            console.log('4');
+            return false;
+        }
+        commit('GENERATE_PLACES');
+        for (let i = 0; i < state.defaults.number; i++) {
+            commit("ADD_PLACE");
+        }
+        return true;
+    },
     onRemovePhoto({ commit }, index){
         commit('REMOVE_PHOTO', index);
     },
     onRemoveAttachment({ commit }, index){
         commit('REMOVE_ATTACHMENT', index);
-    },
-    onMessage({ commit }) {
-        commit('EDIT_MESSAGE');
-    },
-    onMarinaName({ commit }) {
-        commit('EDIT_NAME');
-    },
-    onMarinaDescription({ commit }) {
-        commit('EDIT_DESCRIPTION');
-    },
-    onMarinaLat({ commit }) {
-        commit('EDIT_LAT');
-    },
-    onMarinaLng({ commit }) {
-        commit('EDIT_LNG');
-    },
-    onMarinaSite({ commit }) {
-        commit('EDIT_SITE');
-    },
-    onMarinaRadio({ commit }) {
-        commit('EDIT_RADIO');
-    },
-    onMarinaPhCode({ commit }) {
-        commit('EDIT_PH_CODE');
-    },
-    onMarinaPhNumber({ commit }) {
-        commit('EDIT_PH_NUMBER');
-    },
+    }
 };
 
 
@@ -199,12 +196,54 @@ const mutations = {
     REMOVE_AMENITY(state, index) {
         state.amenities.splice(index, 1);
     },
-    EDIT_PLACES(state, value){
-        state.places = value;
+    GENERATE_PLACES(state){
+        state.defaults.updated = false;
+        state.places = [];
+    },
+    ADD_PLACE(state){
+        state.places.push({
+            name: 1 + state.places.length,
+            length: state.defaults.defaultLength,
+            draft: state.defaults.defaultDraft,
+            width: state.defaults.defaultWidth,
+            price: state.defaults.defaultPrice,
+            xCoord: 0,
+            yCoord: 0,
+            rotate: 0,
+            color: 'green'
+        });
+    },
+    EDIT_PLACE(state, {index, place}){
+        state.places[index] = place;
     },
     REMOVE_PLACE(state, index) {
         state.places.splice(index, 1);
-    }
+        state.defaults.number--;
+    },
+    UPDATE_PRICE(state,value){
+        state.defaults.defaultPrice =value;
+        state.defaults.updated = true;
+    },
+    UPDATE_DRAFT(state,value){
+        state.defaults.defaultDraft =value;
+        state.defaults.updated = true;
+    },
+    UPDATE_WIDTH(state,value){
+        state.defaults.defaultWidth =value;
+        state.defaults.updated = true;
+    },
+    UPDATE_LENGTH(state,value){
+        state.defaults.defaultLength =value;
+        state.defaults.updated = true;
+    },
+    UPDATE_NUMBER(state,value){
+        state.defaults.number =value;
+        state.defaults.updated = true;
+    },
+    UPDATE_LOCALIZATION(state,value){
+        state.defaults.localization =value;
+        state.defaults.updated = true;
+    },
 };
 
 

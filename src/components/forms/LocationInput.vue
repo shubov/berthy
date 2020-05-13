@@ -9,7 +9,7 @@
 
 <template>
     <v-expansion-panel>
-        <v-expansion-panel-header>
+        <v-expansion-panel-header  :disable-icon-rotate="valid != null">
             <template v-slot:default="{ open }">
                 <v-row no-gutters>
                     <v-col cols="4">{{title}}</v-col>
@@ -17,12 +17,16 @@
                         <v-fade-transition leave-absolute>
                             <span v-if="open" key="0">{{caption}}</span>
                             <span v-else key="1">
-                                Latitude: {{ (Math.round(lat * 1000) / 1000).toFixed(3) }}...
-                                Longitude: {{(Math.round(lng * 1000) / 1000).toFixed(3)}}...
+                                Latitude: {{ (lat?(Math.round(lat * 1000) / 1000).toFixed(3):'') }}...
+                                Longitude: {{(lng?(Math.round(lng * 1000) / 1000).toFixed(3):'') }}...
                             </span>
                         </v-fade-transition>
                     </v-col>
                 </v-row>
+            </template>
+            <template v-if="valid != null" v-slot:actions>
+                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
+                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -72,6 +76,10 @@
             Map: () => import('../../components/Map'),
         },
         props: {
+            required: {
+                type: Boolean,
+                default: false
+            },
             title: String,
             placeholder: String,
             caption: String,
@@ -95,6 +103,9 @@
                     this.$store.commit('Application/EDIT_LNG', value);
                 },
             },
+            valid() {
+                return !!this.lat && !!this.lng;
+            }
         },
         data: () => ({
             dialog: false,

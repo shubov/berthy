@@ -22,7 +22,7 @@ export default new Vuetify({
                 error: '#FB8C00',
                 info: '#2196F3',
                 success: '#4CAF50',
-                warning: '#FB8C00',
+                warning: '#ffc801',
             }
         },
     },

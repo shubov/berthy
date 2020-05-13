@@ -1,22 +1,21 @@
 <!-----------------------------------------------------------------------------
   - Copyright (c) - 2020 - Mikhail Shubov.                                    -
   - Berthy project. All Rights Reserved.                                      -
-  - The code in StringInput.vue is proprietary and confidential.           -
+  - The code in PhoneInput.vue is proprietary and confidential.               -
   - Unauthorized copying of the file and any parts of it                      -
   - as well as the project itself is strictly prohibited.                     -
   - Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                  -
   ----------------------------------------------------------------------------->
-
 <template>
     <v-expansion-panel>
         <v-expansion-panel-header :disable-icon-rotate="valid != null">
-            <template v-slot:default="{ open }" >
+            <template v-slot:default="{ open }">
                 <v-row no-gutters>
                     <v-col cols="4">{{title}}</v-col>
                     <v-col cols="8" class="text--secondary">
                         <v-fade-transition leave-absolute>
                             <span v-if="open" key="0">{{caption}}</span>
-                            <span v-else key="1">{{ model }}</span>
+                            <span v-else key="1">{{ number }}</span>
                         </v-fade-transition>
                     </v-col>
                 </v-row>
@@ -27,20 +26,21 @@
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-            <v-textarea
-                    v-model="model"
-                    :placeholder="placeholder"
-                    auto-grow
-                    clearable
-                    :prepend-inner-icon="icon"
-            ></v-textarea>
+            <vue-tel-input
+                    :value="number"
+                    @validate="number=$event"
+            ></vue-tel-input>
         </v-expansion-panel-content>
     </v-expansion-panel>
 </template>
 
 <script>
+    import { VueTelInput } from 'vue-tel-input'
     export default {
-        name: "TextInput",
+        name: "PhoneInput",
+        components: {
+            VueTelInput,
+        },
         props: {
             required: {
                 type: Boolean,
@@ -49,24 +49,42 @@
             title: String,
             placeholder: String,
             caption: String,
-            state: String,
-            mutation: String,
-            icon: String
+            numState: String,
+            codeState: String,
+            codeMutation: String,
+            numMutation:String,
+            icon: String,
         },
         computed: {
-            model: {
+            code: {
                 get() {
-                    return this.$store.state.Application[this.state];
+                    return this.$store.state.Application[this.codeState];
                 },
                 set(value) {
-                    this.$store.commit(this.mutation, value)
+                    console.log(value);
+                    this.$store.commit(this.codeMutation, value)
                 }
             },
-            valid() {
-                return this.model ? this.model.toString().length > 0 ? true : null : null;
-            }
+            number: {
+                get() {
+                    return this.$store.state.Application[this.numState];
+                },
+                set(value) {
+                    this.valid = !!value.isValid;
+                    if (this.valid && value.canBeInternationallyDialled) {
+                        this.$store.commit(this.numMutation, value.number.international);
+                    } else {
+                        this.$store.commit(this.numMutation, value.number.input);
+                    }
+                    this.code = value.regionCode;
+                }
+            },
         },
-        data: () => ({
+        data: ()=> ({
+            valid: null,
         }),
+        mounted() {
+            this.valid = this.number ? false : null;
+        }
     }
 </script>

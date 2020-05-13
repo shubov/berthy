@@ -15,7 +15,9 @@ import vuetify from './plugins/vuetify';
 import App from './App.vue';
 import AuthService from '@/services/auth.service';
 import "./components/Base/_globals";
+import VueWorker from 'vue-worker'
 
+Vue.use(VueWorker);
 Vue.config.productionTip = false;
 Vue.prototype.$auth = AuthService;
 Vue.prototype.$berthy_blue = '#000033';

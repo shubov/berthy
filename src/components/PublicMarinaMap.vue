@@ -1,7 +1,7 @@
 <!-----------------------------------------------------------------------------
   - Copyright (c) - 2020 - Mikhail Shubov.                                    -
   - Berthy project. All Rights Reserved.                                      -
-  - The code in Map.vue is proprietary and confidential.                      -
+  - The code in PublicMarinaMap.vue is proprietary and confidential.          -
   - Unauthorized copying of the file and any parts of it                      -
   - as well as the project itself is strictly prohibited.                     -
   - Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                  -
@@ -10,8 +10,8 @@
 <template>
     <l-map
             ref="map"
-            :zoom="zoom"
             :center="position"
+            :zoom="4.5"
             :options="mapOptions"
             style="height: inherit"
     >
@@ -20,7 +20,7 @@
                 :attribution="attribution"
         />
         <l-marker
-                :lat-lng="[lat, lng]"
+                :lat-lng="position"
         ></l-marker>
     </l-map>
 </template>
@@ -37,43 +37,30 @@
         shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
     //***************
-    
+
     export default {
-        name: "Map",
+        name: "PublicMarinaMap",
+        props: ['position'],
         components: {
             LMap, LTileLayer, LMarker
         },
-        props: {
-            position: Object,
+        data: function () {
+            return{
+                url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                attribution: '',
+                mapOptions: {
+                    zoomSnap: 0.5,
+                    boxZoom: false,
+                    scrollWheelZoom: 'center',
+                },
+            }
         },
-        data: () => ({
-            mapOptions: {
-                zoomSnap: 0.5,
-                boxZoom: false,
-                scrollWheelZoom: 'center',
-            },
-            lat: 0,
-            lng: 0,
-            zoom: 4.5,
-            bounds: {},
-            url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            attribution: '',//`Map data &#169; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>`,
-        }),
         mounted() {
             let map = this.$refs.map.mapObject;
             this.$nextTick(() => {
                 map.invalidateSize();
             });
-            map.on('move', () => {
-                let center = map.getCenter();
-                this.lat = center.lat;
-                this.lng = center.lng;
-            });
-            map.on('moveend', () => {
-                let center = map.getCenter();
-                this.$emit('update:position', center);
-            });
-        },
+        }
     }
 </script>
 

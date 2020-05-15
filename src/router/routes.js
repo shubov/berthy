@@ -17,13 +17,37 @@ const roles = {
 const routes =
     [
         {
+            path: '/marina',
+            name: 'Marina',
+            components: {
+                appbar: () => import('../components/Bars/AppBar'),
+                navbar: null,
+                footer: () => import('../components/Bars/FooterBar'),
+                content: () => import('../views/Public/Marina'),
+            },
+            meta: {
+                title: projectName + ' - Marina',
+                roles: [roles.user, roles.moderator, roles.admin],
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Page.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Page.'
+                    }
+                ]
+            }
+        },
+        {
             path: '/sign-up',
             name: 'Sign Up',
             components: {
                 appbar: null,
                 navbar: null,
                 footer: null,
-                content: () => import('../views/SignUp'),
+                content: () => import('../views/Public/SignUp'),
             },
             meta: {
                 roles: [roles.user, roles.moderator, roles.admin],
@@ -47,7 +71,7 @@ const routes =
                 appbar: null,
                 navbar: null,
                 footer: null,
-                content: () => import('../views/SignIn'),
+                content: () => import('../views/Public/SignIn'),
             },
             meta: {
                 roles: [roles.user, roles.moderator, roles.admin],
@@ -71,7 +95,7 @@ const routes =
                 appbar: () => import('../components/Bars/AppBar'),
                 navbar: () => import('../components/Bars/NavBar'),
                 footer: () => import('../components/Bars/FooterBar'),
-                content: () => import('../views/FAQ'),
+                content: () => import('../views/Public/FAQ'),
             },
             meta: {
                 title: projectName + ' - FAQ',
@@ -95,7 +119,7 @@ const routes =
                 appbar: () => import('../components/Bars/AppBar'),
                 navbar: () => import('../components/Bars/NavBar'),
                 footer: () => import('../components/Bars/FooterBar'),
-                content: () => import('../views/Profile'),
+                content: () => import('../views/User/Profile'),
             },
             meta: {
                 title: projectName + ' - Profile',
@@ -143,7 +167,7 @@ const routes =
                 appbar: () => import('../components/Bars/AppBar'),
                 navbar: null,
                 footer: () => import('../components/Bars/FooterBar'),
-                content: () => import('../views/Role'),
+                content: () => import('../views/User/Role'),
             },
             meta: {
                 title: projectName + ' - Role',
@@ -161,8 +185,8 @@ const routes =
             }
         },
         {
-            path: '/marina',
-            name: 'Marina',
+            path: '/marina-registration',
+            name: 'Marina Registration',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
                 navbar: null,
@@ -170,7 +194,7 @@ const routes =
                 content: () => import('../views/Dockmaster/MarinaRegistration'),
             },
             meta: {
-                title: projectName + ' - Marina',
+                title: projectName + ' - Marina Registration',
                 roles: new Array(roles.user),
                 metaTags: [
                     {
@@ -335,7 +359,7 @@ const routes =
                 appbar: () => import('../components/Bars/AppBar'),
                 navbar: () => import('../components/Bars/NavBar'),
                 footer: () => import('../components/Bars/FooterBar'),
-                content: () => import('../views/FourOFour'),
+                content: () => import('../views/Public/FourOFour'),
             },
             meta: {
                 title: projectName + ' - 404 Not Found',

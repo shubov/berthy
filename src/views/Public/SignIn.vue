@@ -60,7 +60,7 @@
                                     @click="onSignInGoogle()"
                             ><v-img contain
                                     class="google-logo mr-3"
-                                    src="../assets/g.svg"/>
+                                    src="../../assets/g.svg"/>
                                 Continue With Google
                             </v-btn>
                         </v-col>
@@ -83,9 +83,9 @@
     
 </template>
 <script>
-    import SignInForm from "../components/forms/SignInForm";
-    import store from "../store";
-    import router from "../router";
+    import SignInForm from "../../components/forms/SignInForm";
+    import store from "../../store";
+    import router from "../../router";
     export default {
         name: "SignIn",
         components: {SignInForm},

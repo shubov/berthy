@@ -4,7 +4,7 @@
   - The code in Role.vue is proprietary and confidential.                     -
   - Unauthorized copying of the file and any parts of it                      -
   - as well as the project itself is strictly prohibited.                     -
-  - Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                  -
+  - Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                  -
   ----------------------------------------------------------------------------->
 
 <template>
@@ -40,25 +40,19 @@
 </template>
 
 <script>
-    import BerthyAPI from "../services/berthy-api";
-    import router from "../router";
+    import router from "../../router";
 
     export default {
         name: "Role",
         methods: {
             async onDockmaster() {
-                console.log("e");
-                try{
-                    let response = await BerthyAPI.get('getMarinas');
-                    if (response.data.success) {
-                        if(response.data.data.marinas.length === 0) {
-                            router.push('/marina');
-                        } else {
-                            router.push('/dashboard');
-                        }
+                if (await this.$store.dispatch('Marina/fetchMarinas')) {
+                    if (this.$store.state.Marina.numOfMarinas === 0) {
+                        router.push('/marina');
+                    } else {
+                        router.push('/dashboard');
                     }
-                } catch (e) {
-                    console.log(e);
+                } else {
                     router.push('/marina');
                 }
             }

@@ -9,7 +9,6 @@
 
 <template>
     <v-row align="baseline" justify="center">
-    
         <v-col cols="12" sm="9" xl="7">
             <p class="text-left display-2">Add your marina</p>
             <p class="text-left">Specify the necessary information about your marina to be able to get booking requests from boaters.</p>

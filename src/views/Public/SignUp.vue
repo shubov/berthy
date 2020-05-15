@@ -48,7 +48,7 @@
     </v-row>
 </template>
 <script>
-    import SignInForm from "../components/forms/SignInForm";
+    import SignInForm from "../../components/forms/SignInForm";
     export default {
         name: "SignUp",
         components: {SignInForm},

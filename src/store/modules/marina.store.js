@@ -107,20 +107,26 @@ const mutations = {
         });
     },
     SET_MY_MARINAS(state, data) {
+        state.success = true;
+        state.error = false;
         state.marinas = data;
         state.length = data.length;
         state.lastUpdate = Date.now();
     },
     SET_MARINA(state, marina) {
+        state.success = true;
+        state.error = false;
         state.publicMarina = marina;
     },
     FETCHING(state) {
         state.success = null;
         state.error = null;
+        state.message = null;
     },
     ERROR(state, msg) {
         state.success = false;
-        state.error = msg;
+        state.error = true;
+        state.message = msg;
     },
     SELECT_MARINA(state, index) {
         state.current = index;

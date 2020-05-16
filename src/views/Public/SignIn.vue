@@ -63,6 +63,7 @@
                         </v-col>
                         <v-col cols="12">
                             <v-btn
+                                    :disabled="!isInit"
                                     block
                                     outlined
                                     large
@@ -100,6 +101,7 @@
         components: {SignInForm},
         data: function () {
             return {
+                isInit: false,
                 signInData: {
                     email: "john@email.com",
                     password: "12345678",
@@ -111,14 +113,15 @@
                 alert("Facebook login doesn't work. YET!");
             },
             async onSignInGoogle() {
-                try {
-                    const authCode = await this.$gAuth.getAuthCode();
-                    if(await this.$auth.login_google(authCode)) {
-                        await this.onSignInSuccess();
+                this.$gAuth.getAuthCode().then(async authCode => {
+                    try {
+                        if(await this.$auth.login_google(authCode)) {
+                            this.onSignInSuccess();
+                        }
+                    } catch (e) {
+                        console.log('Authorization Error', e)
                     }
-                } catch (e) {
-                    console.log('error', e);
-                }
+                }).catch(e=>console.log('GAuth error', e));
             },
             onSignInEmail() {
                 if(this.$auth.login_email(this.signInData)) {
@@ -126,10 +129,16 @@
                 }
             },
             async onSignInSuccess(){
-                console.log('success login')
-                router.push('/');
+                router.push('/roles');
             }
         },
+        mounted(){
+            let checkGauthLoad = setInterval(()=>{
+                this.isInit = this.$gAuth.isInit;
+                if (this.isInit)
+                    clearInterval(checkGauthLoad);
+            }, 300);
+        }
     }
 </script>
 <style scoped>

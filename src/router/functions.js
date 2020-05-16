@@ -39,7 +39,6 @@ export default {
     async handleUnauthotirizedAccess(to, next) {
         let authRequired = to.meta.public !== true;
         let loggedIn = !!AuthService.checkAccessToken();
-        console.log(authRequired, loggedIn);
         if (!authRequired)
             next();
         else

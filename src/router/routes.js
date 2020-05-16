@@ -17,6 +17,30 @@ const roles = {
 const routes =
     [
         {
+            path: '/',
+            name: 'Berthy',
+            components: {
+                appbar: () => import('../components/Bars/AppBar'),
+                navbar: null,
+                footer: () => import('../components/Bars/FooterBar'),
+                content: () => import('../views/Public/LandingPage'),
+            },
+            meta: {
+                public: true,
+                title: projectName,
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Landing Page.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Landing Page.'
+                    }
+                ]
+            }
+        },
+        {
             path: '/marina/:id',
             name: 'Marina',
             components: {
@@ -26,7 +50,7 @@ const routes =
                 content: () => import('../views/Public/Marina'),
             },
             meta: {
-                public: true,
+                roles: [roles.user, roles.moderator, roles.admin],
                 title: projectName + ' - Marina',
                 metaTags: [
                     {
@@ -74,6 +98,7 @@ const routes =
                 content: () => import('../views/Public/SignIn'),
             },
             meta: {
+                public: true,
                 title: projectName + ' - Sign In',
                 metaTags: [
                     {
@@ -92,7 +117,7 @@ const routes =
             name: 'FAQ',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
+                navbar: null,
                 footer: () => import('../components/Bars/FooterBar'),
                 content: () => import('../views/Public/FAQ'),
             },
@@ -160,7 +185,7 @@ const routes =
             },
         },
         {
-            path: '/',
+            path: '/roles',
             name: 'Role',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
@@ -356,13 +381,13 @@ const routes =
             name: 'NotFound',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
+                navbar: null,
                 footer: () => import('../components/Bars/FooterBar'),
                 content: () => import('../views/Public/FourOFour'),
             },
             meta: {
+                public: true,
                 title: projectName + ' - 404 Not Found',
-                roles: [roles.user, roles.moderator, roles.admin],
                 metaTags: [
                     {
                         name: 'description',
@@ -377,10 +402,7 @@ const routes =
         },
         {
             path: '*',
-            redirect: '/404',
-            meta: {
-                roles: [roles.user, roles.moderator, roles.admin],
-            }
+            redirect: '/404'
         }
     ];
 

@@ -19,25 +19,33 @@
             <v-icon>mdi-menu</v-icon>
         </v-btn>
     
-        <v-img
-                id="berthy-logo"
-                max-width="150"
-                contain
-                src="../../assets/berthy_logo.png"
-        ></v-img>
+        <router-link to="/">
+            <v-img
+                    id="berthy-logo"
+                    max-width="150"
+                    contain
+                    src="../../assets/berthy_logo.png"
+            ></v-img>
+        </router-link>
     
         <v-spacer></v-spacer>
         
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" to="/faq" v-on="on">
+                <v-btn icon v-bind="attrs" v-on="on" @click="toFaq()">
                     <v-icon>mdi-help-circle</v-icon>
                 </v-btn>
             </template>
             <span>FAQ</span>
         </v-tooltip>
     
-        <v-menu>
+        <v-btn
+                v-if="!loggedIn"
+                to="/sign-in"
+                color="primary"
+        >Sign In</v-btn>
+        
+        <v-menu v-if="loggedIn">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" v-on="on">
                     <v-icon>mdi-account</v-icon>
@@ -54,7 +62,7 @@
             </v-list>
         </v-menu>
     
-        <v-tooltip bottom>
+        <v-tooltip bottom v-if="loggedIn">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-on="on" v-bind="attrs" @click="onSignOut">
                     <v-icon>mdi-logout</v-icon>
@@ -70,6 +78,11 @@
 
     export default {
         name: "AppBar",
+        computed: {
+            loggedIn() {
+                return this.$store.state.User.roles.length > 0;
+            }
+        },
         data: function() {
             return {
                 icons: [
@@ -83,16 +96,20 @@
             async onSignOut() {
                 try {
                     this.$auth.logout();
-                    router.push('sign-in');
+                    if (this.$route.meta.public !== true) router.go('/');
+                    else router.go();
                 } catch (e) {
                     console.log('error', e);
                 }
             },
             onSwitch() {
-                router.push('/');
+                router.push('/roles');
             },
             onProfileClick() {
                 router.push('/profile')
+            },
+            toFaq() {
+                router.push('/faq');
             }
         }
     }

@@ -17,7 +17,7 @@ const roles = {
 const routes =
     [
         {
-            path: '/marina',
+            path: '/marina/:id',
             name: 'Marina',
             components: {
                 appbar: () => import('../components/Bars/AppBar'),
@@ -26,8 +26,8 @@ const routes =
                 content: () => import('../views/Public/Marina'),
             },
             meta: {
+                public: true,
                 title: projectName + ' - Marina',
-                roles: [roles.user, roles.moderator, roles.admin],
                 metaTags: [
                     {
                         name: 'description',
@@ -50,7 +50,7 @@ const routes =
                 content: () => import('../views/Public/SignUp'),
             },
             meta: {
-                roles: [roles.user, roles.moderator, roles.admin],
+                public: true,
                 title: projectName + ' - Sign Up',
                 metaTags: [
                     {
@@ -74,7 +74,6 @@ const routes =
                 content: () => import('../views/Public/SignIn'),
             },
             meta: {
-                roles: [roles.user, roles.moderator, roles.admin],
                 title: projectName + ' - Sign In',
                 metaTags: [
                     {
@@ -99,7 +98,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - FAQ',
-                roles: [roles.user, roles.moderator, roles.admin],
+                public: true,
                 metaTags: [
                     {
                         name: 'description',

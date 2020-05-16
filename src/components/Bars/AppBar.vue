@@ -30,7 +30,7 @@
         
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" to="faq" v-on="on">
+                <v-btn icon v-bind="attrs" to="/faq" v-on="on">
                     <v-icon>mdi-help-circle</v-icon>
                 </v-btn>
             </template>

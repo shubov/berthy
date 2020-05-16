@@ -79,7 +79,7 @@
     import {mapGetters} from "vuex";
     import LocoDashboardCard from "../../components/Cards/LocoDashboardCard";
     import MapCard from "../../components/Cards/MapCard";
-    import Table from "../../components/Table";
+    import Table from "../../components/Tables/Table";
 
     export default {
         name: "Dashboard",

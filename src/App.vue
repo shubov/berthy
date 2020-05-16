@@ -13,8 +13,13 @@
         <router-view name="navbar"/>
         <router-view name="footer"/>
         <v-content>
-            <v-container fluid fill-height>
-                    <router-view name="content" :key="$route.fullPath"/>
+            <v-container
+                    fluid
+                    fill-height
+                    class="py-2"
+                    :style="pagesWithBg.includes($route.fullPath) ? bg :''"
+            >
+                <router-view name="content" :key="$route.fullPath"/>
             </v-container>
         </v-content>
     </v-app>
@@ -27,6 +32,8 @@
         },
         data: () => ({
             name: "Main",
+            bg: {'background-image': `url(${require('./assets/background.jpg')})`},
+            pagesWithBg: ['/sign-in', '/sign-up']
         }),
     }
 </script>

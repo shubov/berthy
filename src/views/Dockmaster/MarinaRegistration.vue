@@ -153,14 +153,14 @@
 
 <script>
     import router from "../../router";
-    import StringInput from "../../components/forms/StringInput";
-    import DateInput from "../../components/forms/DateInput";
-    import FileInput from "../../components/forms/FileInput";
-    import SelectAmenities from "../../components/forms/SelectAmenities";
-    import LocationInput from "../../components/forms/LocationInput";
-    import TextInput from "../../components/forms/TextInput";
-    import PlaceInput from "../../components/forms/PlaceInput";
-    import PhoneInput from "../../components/forms/PhoneInput";
+    import StringInput from "../../components/Forms/StringInput";
+    import DateInput from "../../components/Forms/DateInput";
+    import FileInput from "../../components/Forms/FileInput";
+    import SelectAmenities from "../../components/Forms/SelectAmenities";
+    import LocationInput from "../../components/Forms/LocationInput";
+    import TextInput from "../../components/Forms/TextInput";
+    import PlaceInput from "../../components/Forms/PlaceInput";
+    import PhoneInput from "../../components/Forms/PhoneInput";
     
     export default {
         name: "MarinaRegistration",

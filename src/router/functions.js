@@ -36,36 +36,38 @@ export default {
     },
 
 
-    async handleUnauthotirizedAccess(publicPages, to, next) {
-        let authRequired = !publicPages.includes(to.path);
+    async handleUnauthotirizedAccess(to, next) {
+        let authRequired = to.meta.public !== true;
         let loggedIn = !!AuthService.checkAccessToken();
+        console.log(authRequired, loggedIn);
+        if (!authRequired)
+            next();
+        else
+            if (!loggedIn)
+                next('/sign-in');
+            else {
+                let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+                if (userRoles.length === 0) {
+                    await store.dispatch('User/updateAccountInfo');
+                    userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+                }
+                let rolesNeeded = to.meta.roles;
 
-        if (authRequired && !loggedIn) {
-            next('/sign-in');
-        }
-        else {
-            let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-            if (userRoles.length === 0) {
-                await store.dispatch('User/updateAccountInfo');
-                userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-            }
-            let rolesNeeded = to.meta.roles;
+                let moderator = false;
+                let user = false;
 
-            let moderator = false;
-            let user = false;
-
-            for (let i =0; i<userRoles.length; i++){
-                moderator = moderator ? true: userRoles[i] === roles.moderator;
-                user = user ? true: userRoles[i] === roles.user;
-                for (let j =0; j<rolesNeeded.length; j++){
-                    if (rolesNeeded[j]===userRoles[i]){
-                        next();
-                        return;
+                for (let i = 0; i < userRoles.length; i++) {
+                    moderator = moderator ? true : userRoles[i] === roles.moderator;
+                    user = user ? true : userRoles[i] === roles.user;
+                    for (let j = 0; j < rolesNeeded.length; j++) {
+                        if (rolesNeeded[j] === userRoles[i]) {
+                            next();
+                            return;
+                        }
                     }
                 }
+                if (moderator) next('/moderator')
+                else if (user) next('/');
             }
-            if (moderator) next('/moderator')
-            else if(user) next('/');
-        }
     }
 };

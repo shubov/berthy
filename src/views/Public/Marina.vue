@@ -78,6 +78,7 @@
                                     x-large
                                     class="mr-3 mb-3"
                                     :block="!$vuetify.breakpoint.smAndUp"
+                                    to="/marina/7"
                             >
                                 <v-icon>mdi-calendar-check</v-icon>
                                 Reserve a docking spot
@@ -85,9 +86,9 @@
                             <v-dialog
                                     v-model="dialog"
                                     :fullscreen="!$vuetify.breakpoint.mdAndUp"
-                                    hide-overlay
                                     max-width="700px"
-                                    transition="scale-transition">
+                                    persistent
+                                    transition="dialog-bottom-transition">
                                 <template v-slot:activator="{ on }">
                                     <v-btn
                                             :block="!$vuetify.breakpoint.smAndUp"
@@ -182,15 +183,19 @@
 <script>
     import BerthyAPI from "../../services/berthy-api";
     import {mapGetters} from 'vuex';
-    import PublicMarinaMap from "../../components/PublicMarinaMap";
+    import PublicMarinaMap from "../../components/Maps/PublicMarinaMap";
     
     export default {
         name: "Marina",
         components: {PublicMarinaMap},
+        async beforeCreate() {
+            if (await this.$store.dispatch("Marina/fetchMarina", this.$route.params.id))
+                document.title = this.$store.getters['Marina/getPublicMarina'].name;
+            else this.$router.push('/404');
+        },
         data: function () {
             return {
                 dialog: false,
-               
             }
         },
         computed: {
@@ -218,8 +223,13 @@
                 return BerthyAPI.defaults.baseURL.slice(0, -5) + '' + link;
             },
             updateMapHeight() {
-                //let h = window.innerHeight - document.getElementById('toolbar').style.height.substr(0,2);
-                document.getElementById('map').style.height = window.innerHeight*0.6 + 'px';
+                let h;
+                if (this.$vuetify.breakpoint.mdAndUp) {
+                    h = window.innerHeight*0.6;
+                } else {
+                    h = window.innerHeight - document.getElementById('toolbar').style.height.substr(0,2);
+                }
+                document.getElementById('map').style.height = h + 'px';
             },
         },
     }

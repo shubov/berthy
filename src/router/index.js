@@ -20,14 +20,9 @@ const router = new VueRouter({
     mode: 'history',
 });
 
-const publicPages = [
-    '/sign-in',
-    '/sign-up',
-];
-
 router.beforeEach( async (to, from, next) => {
   functions.updatePageTitleAndMeta(document, to, next);
-  await functions.handleUnauthotirizedAccess(publicPages, to, next);
+  await functions.handleUnauthotirizedAccess(to, next);
 });
 
 

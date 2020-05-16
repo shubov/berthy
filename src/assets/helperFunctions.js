@@ -7,11 +7,22 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                   *
  ******************************************************************************/
 
-export default {
-    metersToFeet(m, decimalPoints) {
-        return m ? (3.2808 * m).toFixed(decimalPoints): null;
-    },
-    feetToMeters(f, decimalPoints) {
-        return f ? (f / 3.2808).toFixed(decimalPoints): null;
+
+export function metersToFeet(m, decimalPoints) {
+    return m ? (3.2808 * m).toFixed(decimalPoints): null;
+}
+
+export function feetToMeters(f, decimalPoints) {
+    return f ? (f / 3.2808).toFixed(decimalPoints): null;
+}
+
+export function setIcons(amenities, rootGetters) {
+    if (amenities) {
+        amenities.forEach(amenity => {
+            let icon = rootGetters['Amenities/getIcons'].get(amenity.key)
+                ? rootGetters['Amenities/getIcons'].get(amenity.key)
+                : rootGetters['Amenities/getIcons'].get("default");
+            Object.defineProperty(amenity, 'icon', {value: icon});
+        });
     }
 }

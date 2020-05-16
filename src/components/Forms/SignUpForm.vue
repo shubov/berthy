@@ -1,10 +1,10 @@
 <!-----------------------------------------------------------------------------
   - Copyright (c) - 2020 - Mikhail Shubov.                                    -
   - Berthy project. All Rights Reserved.                                      -
-  - The code in SignInForm.vue is proprietary and confidential.               -
+  - The code in SignUpForm.vue is proprietary and confidential.               -
   - Unauthorized copying of the file and any parts of it                      -
   - as well as the project itself is strictly prohibited.                     -
-  - Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                  -
+  - Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                  -
   ----------------------------------------------------------------------------->
 
 <template>
@@ -36,25 +36,39 @@
                 v-model="value.password"
                 @click:append="show = !show"
         />
-        <router-link to="#">
-            <p class="caption text-center">{{resetPassword}}</p>
-        </router-link>
+        
+        <v-text-field
+                ref="password2"
+                label="Repeat password"
+                name="password-repeat"
+                prepend-icon="mdi-lock"
+                :append-icon="show2 ? 'mdi-eye-off' : 'mdi-eye'"
+                :rules="[rules.required, rules.min, rules.passwordsMatch]"
+                :type="show2 ? 'text' : 'password'"
+                @click:append="show2 = !show2"
+        />
     </v-form>
 </template>
 
 <script>
     export default {
-        name: "SignInForm",
-        props: ['value', 'resetPassword'],
+        name: "SignUpForm",
+        props: ['value'],
         data: function () {
             return {
                 show: false,
+                show2: false,
                 rules: {
                     required: value => !!value || 'Required.',
                     min: v => v.length >= 8 || 'Min 8 characters',
                     email: value => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'Enter valid email',
+                    passwordsMatch: value => this.value.password === value || "Passwords don't match"
                 },
             }
         }
     }
 </script>
+
+<style scoped>
+
+</style>

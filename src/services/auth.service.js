@@ -9,7 +9,7 @@
 
 import axios from 'axios';
 import storage from '../services/web-storage'
-//import store from '../store'
+import store from '../store'
 
 
 const API_URL = 'https://egehackbot.cf:8080/api/auth/';
@@ -72,10 +72,10 @@ class AuthService {
             .then(response => {
                 if (response.data.success) {
                     this.onLoginSuccess(response.data.data);
+                    return true;
                 } else {
-                    console.log("auth error: " + response.data.error);
+                    return response.data.error.message;
                 }
-                return response.data.success;
             })
             .catch(()=> {
                 return false;
@@ -125,9 +125,13 @@ class AuthService {
                 password: password
             };
         return axios.post(API_URL + 'registration', data)
-            .then(() => {
-                this.logout();
-                return true;
+            .then(response => {
+                if (response.data.success) {
+                    this.logout();
+                    return true;
+                } else {
+                    return response.data.error.message;
+                }
             })
             .catch(()=> {
                 return false;
@@ -143,7 +147,7 @@ class AuthService {
         storage.removeRefreshExpiry();
         storage.removeDeviceId();
         //VUEX RESET
-        //store.dispatch('reset', null, { root: true });
+        store.dispatch('reset', null, { root: true });
     }
 }
 

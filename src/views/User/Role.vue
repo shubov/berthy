@@ -8,9 +8,19 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row  align="center" justify="center" >
-        <v-col>
-            <v-card tile class="mx-auto elevation-4" min-width="400px" style="width: 400px">
+    <v-row align="center" justify="center" >
+        <v-col
+                cols="12"
+                sm="8"
+                md="4"
+                class="px-2 py-0"
+        >
+            <v-card
+                    tile
+                    class="mx-auto elevation-4"
+                    :min-width="304"
+                    :max-width="400"
+            >
                 <v-card-actions>
                     <v-row  align="center" justify="center" >
                         <v-col cols="10">

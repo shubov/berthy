@@ -177,7 +177,7 @@
                     if (await this.$store.dispatch('Application/submitApplication'))
                         router.push('/dashboard');
                     this.submitting = false;
-                }, 1000);
+                }, 1);
             }
         },
     }

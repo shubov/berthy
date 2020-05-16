@@ -17,7 +17,7 @@
                     fluid
                     fill-height
                     class="py-2"
-                    :style="pagesWithBg.includes($route.fullPath) ? bg :''"
+                    :style="pagesWithBg.includes($route.name) ? bg :''"
             >
                 <router-view name="content" :key="$route.fullPath"/>
             </v-container>
@@ -33,7 +33,7 @@
         data: () => ({
             name: "Main",
             bg: {'background-image': `url(${require('./assets/background.jpg')})`},
-            pagesWithBg: ['/sign-in', '/sign-up']
+            pagesWithBg: ['Sign In', 'Sign Up']
         }),
     }
 </script>

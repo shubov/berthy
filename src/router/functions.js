@@ -43,7 +43,12 @@ export default {
             next();
         else
             if (!loggedIn)
-                next('/sign-in');
+                next({
+                    name: "Sign In",
+                    query: {
+                        redirect: to.path,
+                    }
+                });
             else {
                 let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
                 if (userRoles.length === 0) {

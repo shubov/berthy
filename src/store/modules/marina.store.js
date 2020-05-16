@@ -8,17 +8,7 @@
  ******************************************************************************/
 
 import BerthyAPI from "../../services/berthy-api";
-
-function setIcons(marina, rootGetters) {
-    if (marina.amenities) {
-        marina.amenities.forEach(amenity => {
-            let icon = rootGetters['Amenities/getIcons'].get(amenity.key)
-                ? rootGetters['Amenities/getIcons'].get(amenity.key)
-                : rootGetters['Amenities/getIcons'].get("default");
-            Object.defineProperty(amenity, 'icon', {value: icon});
-        });
-    }
-}
+import {setIcons} from "../../assets/helperFunctions";
 
 // State initial object
 const initialState = () => ({
@@ -82,7 +72,8 @@ const actions = {
         let response = await BerthyAPI.get('berths/'+id);
         if (response.data) {
             if (response.data.success) {
-                setIcons(response.data.data, rootGetters)
+                console.log(response.data.data);
+                setIcons(response.data.data.amenities, rootGetters)
                 commit('SET_MARINA', response.data.data);
                 return true;
             } else {
@@ -92,7 +83,7 @@ const actions = {
         return false;
     },
     selectMarina({commit, rootGetters}, index) {
-        setIcons(state.marinas[index], rootGetters);
+        setIcons(state.marinas[index].amenities, rootGetters);
         commit('SELECT_MARINA', index);
     }
 };

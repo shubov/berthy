@@ -40,7 +40,11 @@
                     </v-tooltip>
                 </v-toolbar>
                 <v-card-text class="pb-0 mb-0">
-                    <SignInForm :user.sync="signInData"></SignInForm>
+                    <SignInForm
+                            ref="form"
+                            v-model="signInData"
+                            :reset-password="resetPassword"
+                    ></SignInForm>
                 </v-card-text>
                 <v-card-actions class="pt-0 mt-0">
                     <v-row>
@@ -55,6 +59,7 @@
                         </v-col>
                         <v-col cols="6">
                             <v-btn
+                                    :loading="onAuth"
                                     block
                                     large
                                     @click="onSignInEmail()"
@@ -63,6 +68,7 @@
                         </v-col>
                         <v-col cols="12">
                             <v-btn
+                                    :loading="onGoogle"
                                     :disabled="!isInit"
                                     block
                                     outlined
@@ -77,6 +83,7 @@
                         </v-col>
                         <v-col cols="12">
                             <v-btn
+                                    :loading="onFacebook"
                                     block
                                     large
                                     color="#1877f2"
@@ -89,6 +96,22 @@
                     </v-row>
                 </v-card-actions>
             </v-card>
+            <v-snackbar
+                    v-model="snackbar"
+                    color="error"
+                    multi-line
+                    :timeout="6000"
+                    top
+            >
+                {{ errorMsg }}
+                <v-btn
+                        dark
+                        text
+                        @click="snackbar = false"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
         </v-col>
     </v-row>
     
@@ -101,35 +124,68 @@
         components: {SignInForm},
         data: function () {
             return {
+                resetPassword: "Forgot your password?",
+                errorMsg: "Incorrect password. Please try again or click on the \"Forgot your password?\" link to reset it.",
                 isInit: false,
                 signInData: {
-                    email: "john@email.com",
-                    password: "12345678",
+                    email: null,
+                    password: null,
                 },
+                snackbar: false,
+                onAuth: false,
+                onGoogle: false,
+                onFacebook: false,
             }
         },
         methods: {
             async onSignInFacebook() {
-                alert("Facebook login doesn't work. YET!");
+                this.onFacebook = true;
+                setTimeout(async () => {
+                    try {
+                        alert("Facebook login doesn't work. YET!");
+                    } catch (e) {
+                        console.log('error', e);
+                    } finally {
+                        this.onFacebook = false;
+                    }
+                }, 0);
             },
             async onSignInGoogle() {
-                this.$gAuth.getAuthCode().then(async authCode => {
-                    try {
-                        if(await this.$auth.login_google(authCode)) {
-                            this.onSignInSuccess();
-                        }
-                    } catch (e) {
-                        console.log('Authorization Error', e)
-                    }
-                }).catch(e=>console.log('GAuth error', e));
+                this.onGoogle = true;
+                setTimeout(async () => {
+                    this.$gAuth.getAuthCode()
+                        .then(async authCode => {
+                            try {
+                                if(await this.$auth.login_google(authCode)) {
+                                    this.onSignInSuccess();
+                                }
+                            } catch (e) {
+                                console.log('Authorization Error', e)
+                            }
+                        })
+                        .catch(e=>console.log('GAuth error', e))
+                        .finally(()=>this.onGoogle = false);
+                }, 1);
             },
             onSignInEmail() {
-                if(this.$auth.login_email(this.signInData)) {
-                    this.onSignInSuccess();
+                if (this.$refs.form.$refs.form.validate()) {
+                    this.onAuth = true;
+                    setTimeout(async () => {
+                        let res = await this.$auth.login_email(this.signInData);
+                            if (res === true) {
+                                this.onSignInSuccess();
+                            } else if (res===false) {
+                                this.snackbar=true;
+                                this.errorMsg="Try again."
+                            } else {
+                                this.snackbar=true;
+                            }
+                            this.onAuth = false;
+                    }, 1);
                 }
             },
-            async onSignInSuccess(){
-                router.push('/roles');
+            onSignInSuccess(){
+                router.push(this.$route.query.redirect||'/roles');
             }
         },
         mounted(){

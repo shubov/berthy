@@ -15,6 +15,32 @@
                 md="4"
                 class="px-2 py-0"
         >
+            <v-snackbar
+                    v-model="snackbar"
+                    color="error"
+                    multi-line
+                    :timeout="6000"
+                    top
+            >
+                {{errorMsg}}
+                <v-btn
+                        dark
+                        text
+                        @click="snackbar=false"
+                >
+                    Close
+                </v-btn>
+            </v-snackbar>
+            <v-dialog v-model="dialog" persistent max-width="290">
+                <v-card>
+                    <v-card-title class="headline">Email Confirmation</v-card-title>
+                    <v-card-text>Berthy sent link to <b>{{signUpData.email}}</b>. Check your mailbox and follow the link to confirm your account.</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" text @click="onClickDialog()">Ok</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <v-card
                     tile
                     class="mx-auto elevation-4"
@@ -39,15 +65,16 @@
                     </v-tooltip>
                 </v-toolbar>
                 <v-card-text class="pb-0 mb-0">
-                    <SignInForm :user.sync="signUpData" :restore_password="false"></SignInForm>
+                    <SignUpForm ref="form" v-model="signUpData"></SignUpForm>
                 </v-card-text>
                 <v-card-actions class="pt-0 mt-0">
                     <v-row>
                         <v-col cols="12">
                             <v-btn
+                                    :loading="submitting"
                                     block
                                     large
-                                    @click="onSignUp()"
+                                    @click.stop="onSignUp()"
                                     color="primary"
                             >Sign Up</v-btn>
                         </v-col>
@@ -58,24 +85,43 @@
     </v-row>
 </template>
 <script>
-    import SignInForm from "../../components/Forms/SignInForm";
+    import SignUpForm from "../../components/Forms/SignUpForm";
     export default {
         name: "SignUp",
-        components: {SignInForm},
+        components: {SignUpForm},
         data: function () {
             return {
+                snackbar: false,
+                dialog: false,
+                errorMsg: "Try again.",
                 signUpData: {
-                    email: "john@email.com",
-                    password: "12345678",
+                    email: null,
+                    password: null,
                 },
+                submitting: false,
             }
         },
         methods: {
+            onClickDialog() {
+                this.dialog = false;
+                this.$router.push('/sign-in')
+            },
             async onSignUp() {
-                try {
-                    this.$auth.registration(this.signUpData);
-                } catch (e) {
-                    console.log('error', e);
+                if (this.$refs.form.$refs.form.validate()) {
+                    this.submitting = true;
+                    setTimeout(async () => {
+                        let res = await this.$auth.registration(this.signUpData);
+                        if (res === true) {
+                            this.dialog = true;
+                        } else if (res===false) {
+                            this.errorMsg = "Try again.";
+                            this.snackbar=true;
+                        } else {
+                            this.errorMsg = res;
+                            this.snackbar=true;
+                        }
+                        this.submitting = false;
+                    }, 0);
                 }
             }
         },

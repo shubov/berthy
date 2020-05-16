@@ -44,6 +44,9 @@ const getters = {
 
 // VUEX ACTIONS
 const actions = {
+    reset({commit}) {
+        commit('RESET');
+    },
     async updateAccountInfo({commit}) {
         let response = await BerthyAPI.get("accounts/info");
         if (response.data.success) {
@@ -77,6 +80,12 @@ const actions = {
 
 // VUEX MUTATIONS
 const mutations = {
+    RESET(state) {
+        const newState = initialState();
+        Object.keys(newState).forEach(key => {
+            state[key] = newState[key]
+        });
+    },
     SET_ACCOUNT_INFO(state, {email, id, kind, permissions, roles}){
         state.email = email;
         state.id = id;

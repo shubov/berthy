@@ -116,37 +116,45 @@
                         state="places"
                 ></PlaceInput>
             </v-expansion-panels>
-            <v-expansion-panels>
-                <FileInput
-                        key="11"
-                        title="Attachments"
-                        caption="Upload documents"
-                        placeholder="Select a file"
-                        image
-                        pdf
-                        accept="image/*,application/pdf"
-                        state="attachments"
-                        upload-action="Application/uploadAttachment"
-                        remove-action="Application/onRemoveAttachment"
-                ></FileInput>
-                <TextInput
-                        key="12"
-                        title= 'Comments'
-                        placeholder= 'Any comments or questions?'
-                        caption= 'Leave a note to us regarding your application'
-                        state= 'message'
-                        mutation= 'Application/EDIT_MESSAGE'
-                        icon= "mdi-comment-text-outline"
-                ></TextInput>
-            </v-expansion-panels>
         </v-col>
-        <v-col cols="12" align="center">
-            <v-btn
-                    color="primary"
-                    @click="onSubmit()"
-                    x-large
-                    :loading="submitting"
-            >Submit</v-btn>
+        <v-col cols="12" sm="9" xl="7">
+            <v-row>
+                <v-col cols="12" sm="8">
+                    <v-expansion-panels>
+                        <FileInput
+                                key="11"
+                                title="Attachments"
+                                caption="Upload documents"
+                                placeholder="Select a file"
+                                image
+                                pdf
+                                accept="image/*,application/pdf"
+                                state="attachments"
+                                upload-action="Application/uploadAttachment"
+                                remove-action="Application/onRemoveAttachment"
+                        ></FileInput>
+                        <TextInput
+                                key="12"
+                                title= 'Comments'
+                                placeholder= 'Any comments or questions?'
+                                caption= 'Leave a note to us regarding your application'
+                                state= 'message'
+                                mutation= 'Application/EDIT_MESSAGE'
+                                icon= "mdi-comment-text-outline"
+                        ></TextInput>
+                    </v-expansion-panels>
+                    <p class="body-2 text-left" style="margin-top: 9px">Attach necessary documents to your marina application before submitting (i.e. Registration Certificate, License...) and leave a message for the moderator.</p>
+                </v-col>
+                <v-col cols="12" sm="4">
+                    <v-btn
+                            :block="isMobile"
+                            color="primary"
+                            @click="onSubmit()"
+                            x-large
+                            :loading="submitting"
+                    >Submit</v-btn>
+                    </v-col>
+            </v-row>
         </v-col>
     </v-row>
 </template>
@@ -169,6 +177,9 @@
             PlaceInput, TextInput, LocationInput, SelectAmenities, FileInput, DateInput, StringInput},
         data: () => ({
             submitting: false,
+            isMobile() {
+                return !this.$vuetify.breakpoint.smAndUp;
+            },
         }),
         methods: {
             onSubmit(){

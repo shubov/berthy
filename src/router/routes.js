@@ -50,7 +50,7 @@ const routes =
                 appbar: appBar,
                 navbar: pagesWithNavBar.includes('Marina') ? navbar : null,
                 footer: footer,
-                content: () => import('../views/Public/Marina'),
+                content: () => import('../views/User/Marina'),
             },
             meta: {
                 roles: [roles.user, roles.moderator, roles.admin],
@@ -173,6 +173,7 @@ const routes =
                 content: () => import('../views/Moderator/Requests'),
             },
             meta: {
+                public: true,
                 title: projectName + ' - Marina Registrations',
                 roles: [roles.moderator],
                 metaTags: [

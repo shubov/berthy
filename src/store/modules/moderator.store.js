@@ -16,7 +16,7 @@ const initialState = () => ({
             id: 0,
             berthId: 0,
             applicantId: 0,
-            createdAt: '2020-05-16T20:22:58.201Z',
+            createdAt: '2020-05-16T18:32:58.201Z',
             status: 'NEW',
             title: 'TITLE',
             description: 'DESCRIPTION',
@@ -43,7 +43,11 @@ const state = initialState();
 
 
 // VUEX GETTERS
-const getters = {};
+const getters = {
+    getApplications(state) {
+        return state.applications;
+    }
+};
 
 
 // VUEX ACTIONS

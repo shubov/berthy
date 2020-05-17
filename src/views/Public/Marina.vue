@@ -189,9 +189,23 @@
         name: "Marina",
         components: {PublicMarinaMap},
         async beforeCreate() {
-            if (await this.$store.dispatch("Marina/fetchMarina", this.$route.params.id))
-                document.title = this.$store.getters['Marina/getPublicMarina'].name;
-            else this.$router.push('/404');
+            let id = this.$route.params.id;
+            if (!isNaN(id)) {
+                this.$store.dispatch("Marina/fetchMarina", id)
+                    .then(response=>{
+                        if(response) {
+                            document.title = this.$store.getters['Marina/getPublicMarina'].name;
+                        } else {
+                            this.$router.push('/404');
+                        }
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                        this.$router.push('/404');
+                    })
+            } else {
+                this.$router.push('/404');
+            }
         },
         data: function () {
             return {

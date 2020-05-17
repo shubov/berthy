@@ -27,7 +27,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                             <v-btn
-                                    href="#"
+                                    href="/faq"
                                     icon
                                     large
                                     target="_blank"
@@ -128,8 +128,8 @@
                 errorMsg: "Incorrect password. Please try again or click on the \"Forgot your password?\" link to reset it.",
                 isInit: false,
                 signInData: {
-                    email: null,
-                    password: null,
+                    email: '',
+                    password: '',
                 },
                 snackbar: false,
                 onAuth: false,

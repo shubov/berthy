@@ -53,6 +53,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                             <v-btn
+                                    href="/faq"
                                     icon
                                     large
                                     target="_blank"
@@ -95,8 +96,8 @@
                 dialog: false,
                 errorMsg: "Try again.",
                 signUpData: {
-                    email: null,
-                    password: null,
+                    email: '',
+                    password: '',
                 },
                 submitting: false,
             }

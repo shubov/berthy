@@ -13,16 +13,19 @@ const roles = {
     moderator: 'MODERATOR',
     admin: 'ADMIN',
 };
-
+export const pagesWithNavBar=['Dashboard', 'Team', 'Settings', 'Booking requests', 'Messages', "Profile"];
+const navbar = () => import('../components/Bars/NavBar');
+const footer = () => import('../components/Bars/FooterBar');
+const appBar = () => import('../components/Bars/AppBar');
 const routes =
     [
         {
             path: '/',
             name: 'Berthy',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: null,
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Berthy') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Public/LandingPage'),
             },
             meta: {
@@ -44,9 +47,9 @@ const routes =
             path: '/marina/:id',
             name: 'Marina',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: null,
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Marina') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Public/Marina'),
             },
             meta: {
@@ -69,7 +72,7 @@ const routes =
             name: 'Sign Up',
             components: {
                 appbar: null,
-                navbar: null,
+                navbar: pagesWithNavBar.includes('Sign Up') ? navbar : null,
                 footer: null,
                 content: () => import('../views/Public/SignUp'),
             },
@@ -93,7 +96,7 @@ const routes =
             name: 'Sign In',
             components: {
                 appbar: null,
-                navbar: null,
+                navbar: pagesWithNavBar.includes('Sign In') ? navbar : null,
                 footer: null,
                 content: () => import('../views/Public/SignIn'),
             },
@@ -114,11 +117,11 @@ const routes =
         },
         {
             path: '/faq',
-            name: 'FAQ',
+            name: 'Frequently Asked Questions',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: null,
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Frequently Asked Questions') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Public/FAQ'),
             },
             meta: {
@@ -140,9 +143,9 @@ const routes =
             path: '/profile',
             name: 'Profile',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Profile') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/User/Profile'),
             },
             meta: {
@@ -164,9 +167,9 @@ const routes =
             path: '/moderator',
             name: 'Marina Registrations',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Marina Registrations') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Moderator/Requests'),
             },
             meta: {
@@ -188,9 +191,9 @@ const routes =
             path: '/roles',
             name: 'Role',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: null,
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Role') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/User/Role'),
             },
             meta: {
@@ -212,9 +215,9 @@ const routes =
             path: '/marina-registration',
             name: 'Marina Registration',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: null,
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Marina Registration') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Dockmaster/MarinaRegistration'),
             },
             meta: {
@@ -236,9 +239,9 @@ const routes =
             path: '/dashboard',
             name: 'Dashboard',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Dashboard') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Dockmaster/Dashboard'),
             },
             meta: {
@@ -260,9 +263,9 @@ const routes =
             path: '/messages',
             name: 'Messages',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Messages') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Dockmaster/Messages'),
             },
             meta: {
@@ -284,9 +287,9 @@ const routes =
             path: '/requests',
             name: 'Booking requests',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Booking requests') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Dockmaster/Requests'),
             },
             meta: {
@@ -308,9 +311,9 @@ const routes =
             path: '/team',
             name: 'Team',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Team') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Dockmaster/Team'),
             },
             meta: {
@@ -332,9 +335,9 @@ const routes =
             path: '/settings',
             name: 'Settings',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Settings') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Dockmaster/Settings'),
             },
             meta: {
@@ -356,9 +359,9 @@ const routes =
             path: '/Book',
             name: 'Book',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: () => import('../components/Bars/NavBar'),
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('Book') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Boater/Book'),
             },
             meta: {
@@ -380,9 +383,9 @@ const routes =
             path: '/404',
             name: 'NotFound',
             components: {
-                appbar: () => import('../components/Bars/AppBar'),
-                navbar: null,
-                footer: () => import('../components/Bars/FooterBar'),
+                appbar: appBar,
+                navbar: pagesWithNavBar.includes('NotFound') ? navbar : null,
+                footer: footer,
                 content: () => import('../views/Public/FourOFour'),
             },
             meta: {

@@ -33,7 +33,7 @@
         data: () => ({
             name: "Main",
             bg: {'background-image': `url(${require('./assets/background.jpg')})`},
-            pagesWithBg: ['Sign In', 'Sign Up']
+            pagesWithBg: ['Sign In', 'Sign Up', "Role"]
         }),
     }
 </script>

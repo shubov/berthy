@@ -15,7 +15,11 @@
             app
             clippedLeft
     >
-        <v-btn v-if="!$vuetify.breakpoint.smAndUp" icon @click="$parent.$emit('click-menu-icon')">
+        <v-btn
+                v-if="isMobile && isNavbarPresent"
+                @click="$parent.$emit('click-menu-icon')"
+                icon
+        >
             <v-icon>mdi-menu</v-icon>
         </v-btn>
     
@@ -75,21 +79,18 @@
 
 <script>
     import router from "../../router";
-
+    import {pagesWithNavBar}  from "../../router/routes";
     export default {
         name: "AppBar",
         computed: {
             loggedIn() {
-                return this.$store.state.User.roles.length > 0;
-            }
-        },
-        data: function() {
-            return {
-                icons: [
-                    { icon: "mdi-help-circle", path:"", tip:""},
-                    { icon: "mdi-account", path:"", tip:""},
-                    { icon: "", path:"", tip:""}
-                ]
+                return this.$store.state['User'].roles.length > 0;
+            },
+            isMobile() {
+                return !this.$vuetify.breakpoint.smAndUp;
+            },
+            isNavbarPresent() {
+                return pagesWithNavBar.includes(this.$route.name);
             }
         },
         methods: {

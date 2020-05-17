@@ -19,13 +19,13 @@ const deviceIdKey = 'uuid';
 
 
 class WebStorage {
-    #storage;
+    #storage=localStorage;
     constructor() {
-        if (typeof sessionStorage === 'object') {
+        if (typeof this.#storage === 'object') {
             try {
-                sessionStorage.setItem('localStorage', 'item');
-                sessionStorage.removeItem('localStorage');
-                this.#storage = sessionStorage;
+                this.#storage.setItem('storage', 'item');
+                this.#storage.removeItem('storage');
+                //this.#storage = sessionStorage;
             } catch (e) {
                 // //We're going to detect this and just silently drop any calls to setItem
                 // //to avoid the entire page breaking, without having to do a check at each usage of Storage.

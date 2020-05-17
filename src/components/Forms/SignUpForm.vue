@@ -38,6 +38,7 @@
         />
         
         <v-text-field
+                value=""
                 ref="password2"
                 label="Repeat password"
                 name="password-repeat"

@@ -38,10 +38,13 @@ export default {
 
     async handleUnauthotirizedAccess(to, next) {
         let authRequired = to.meta.public !== true;
-        let loggedIn = !!AuthService.checkAccessToken();
-        if (!authRequired)
+
+        if (!authRequired) {
             next();
-        else
+        }
+        else {
+            let loggedIn = !!AuthService.checkAccessToken();
+
             if (!loggedIn)
                 next({
                     name: "Sign In",
@@ -73,5 +76,6 @@ export default {
                 if (moderator) next('/moderator')
                 else if (user) next('/');
             }
+        }
     }
 };

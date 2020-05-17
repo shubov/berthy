@@ -12,7 +12,7 @@ import {setIcons} from "../../assets/helperFunctions";
 
 // State initial object
 const initialState = () => ({
-    publicMarina: null,
+    publicMarina: {},
     marinas: [],
     numOfMarinas: 0,
     current: null,
@@ -55,6 +55,7 @@ const actions = {
     reset({ commit }) {
         commit('RESET');
     },
+
     async fetchMyMarinas({commit,dispatch}) {
         commit('FETCHING');
         let response = await BerthyAPI.get('berths');
@@ -67,9 +68,16 @@ const actions = {
         }
         return false;
     },
+
     async fetchMarina({commit, rootGetters}, id) {
         commit('FETCHING');
-        let response = await BerthyAPI.get('berths/'+id);
+
+        let params = new URLSearchParams();
+        //params.append("include", 'amenities');
+        //params.append("include", 'places');
+
+        let response = await BerthyAPI.get('berths/'+id,{params: params});
+
         if (response.data) {
             if (response.data.success) {
                 console.log(response.data.data);
@@ -80,8 +88,10 @@ const actions = {
                 commit('ERROR', response.data.error.message);
             }
         }
+
         return false;
     },
+
     selectMarina({commit, rootGetters}, index) {
         setIcons(state.marinas[index].amenities, rootGetters);
         commit('SELECT_MARINA', index);

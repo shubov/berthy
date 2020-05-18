@@ -19,6 +19,7 @@
                     class="py-2"
                     :style="pagesWithBg.includes($route.name) ? bg :''"
             >
+                <Snackbar></Snackbar>
                 <router-view name="content" :key="$route.fullPath"/>
             </v-container>
         </v-content>
@@ -26,10 +27,9 @@
 </template>
 
 <script>
+    import Snackbar from "./components/Snackbar";
     export default {
-        props: {
-            source: String,
-        },
+        components: {Snackbar},
         data: () => ({
             name: "Main",
             bg: {'background-image': `url(${require('./assets/background.jpg')})`},

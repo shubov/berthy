@@ -15,29 +15,13 @@
                 md="4"
                 class="px-2 py-0"
         >
-            <v-snackbar
-                    v-model="snackbar"
-                    color="error"
-                    multi-line
-                    :timeout="6000"
-                    top
-            >
-                {{errorMsg}}
-                <v-btn
-                        dark
-                        text
-                        @click="snackbar=false"
-                >
-                    Close
-                </v-btn>
-            </v-snackbar>
             <v-dialog v-model="dialog" persistent max-width="290">
                 <v-card>
                     <v-card-title class="headline">Email Confirmation</v-card-title>
                     <v-card-text>Berthy sent link to <b>{{signUpData.email}}</b>. Check your mailbox and follow the link to confirm your account.</v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="onClickDialog()">Ok</v-btn>
+                        <v-btn color="primary" text @click="onOkDialog()">Ok</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -92,7 +76,6 @@
         components: {SignUpForm},
         data: function () {
             return {
-                snackbar: false,
                 dialog: false,
                 errorMsg: "Try again.",
                 signUpData: {
@@ -103,7 +86,7 @@
             }
         },
         methods: {
-            onClickDialog() {
+            onOkDialog() {
                 this.dialog = false;
                 this.$router.push('/sign-in')
             },
@@ -115,11 +98,9 @@
                         if (res === true) {
                             this.dialog = true;
                         } else if (res===false) {
-                            this.errorMsg = "Try again.";
-                            this.snackbar=true;
+                            this.$store.dispatch("snackbar");
                         } else {
-                            this.errorMsg = res;
-                            this.snackbar=true;
+                            this.$store.dispatch("snackbar", res);
                         }
                         this.submitting = false;
                     }, 0);

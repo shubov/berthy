@@ -32,7 +32,8 @@ const state = initialState();
 // VUEX GETTERS
 const getters = {
     getNumOfMarinas(state) {
-        return state.numOfMarinas;
+        let  num = state.numOfMarinas;
+        return num === 0 ? null : num;
     },
     getAll(state) {
         return state.marinas;
@@ -56,16 +57,20 @@ const actions = {
         commit('RESET');
     },
 
-    async fetchMyMarinas({commit,dispatch}) {
+    async fetchMyMarinas({getters,commit,dispatch}) {
         commit('FETCHING');
         let response = await BerthyAPI.get('berths');
-        if (response.data ? response.data.success: false) {
-            commit('SET_MY_MARINAS', response.data.data);
-            await dispatch('selectMarina', 0);
-            return true;
-        } else {
-            commit('ERROR', response.data.error.message);
+        if (response.data) {
+            if (response.data.success) {
+                commit('SET_MY_MARINAS', response.data.data);
+                if(getters.getNumOfMarinas)
+                    await dispatch('selectMarina', 0);
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
         }
+
         return false;
     },
 
@@ -80,7 +85,6 @@ const actions = {
 
         if (response.data) {
             if (response.data.success) {
-                console.log(response.data.data);
                 setIcons(response.data.data.amenities, rootGetters)
                 commit('SET_MARINA', response.data.data);
                 return true;

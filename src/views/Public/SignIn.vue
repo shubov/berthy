@@ -96,22 +96,6 @@
                     </v-row>
                 </v-card-actions>
             </v-card>
-            <v-snackbar
-                    v-model="snackbar"
-                    color="error"
-                    multi-line
-                    :timeout="6000"
-                    top
-            >
-                {{ errorMsg }}
-                <v-btn
-                        dark
-                        text
-                        @click="snackbar = false"
-                >
-                    Close
-                </v-btn>
-            </v-snackbar>
         </v-col>
     </v-row>
     
@@ -125,7 +109,6 @@
         data: function () {
             return {
                 resetPassword: "Forgot your password?",
-                errorMsg: "Incorrect password. Please try again or click on the \"Forgot your password?\" link to reset it.",
                 isInit: false,
                 signInData: {
                     email: '',
@@ -165,7 +148,7 @@
                         })
                         .catch(e=>console.log('GAuth error', e))
                         .finally(()=>this.onGoogle = false);
-                }, 1);
+                }, 0);
             },
             onSignInEmail() {
                 if (this.$refs.form.$refs.form.validate()) {
@@ -175,13 +158,13 @@
                             if (res === true) {
                                 this.onSignInSuccess();
                             } else if (res===false) {
-                                this.snackbar=true;
-                                this.errorMsg="Try again."
+                                await this.$store.dispatch("snackbar");
                             } else {
-                                this.snackbar=true;
+                                await this.$store.dispatch("snackbar",
+                                    "Incorrect password. Please try again or click on the \"Forgot your password?\" link to reset it.");
                             }
                             this.onAuth = false;
-                    }, 1);
+                    }, 0);
                 }
             },
             onSignInSuccess(){

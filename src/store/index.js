@@ -19,12 +19,34 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
     modules, // all modules automatically imported
+    state: () => ({
+        snackbar: false,
+        snackbarMessage: "",
+        roles: {
+            user: 'USER',
+            moderator: 'MODERATOR',
+            admin: 'ADMIN',
+        },
+        pagesWithNavBar: ['Dashboard', 'Team', 'Settings', 'Booking requests', 'Messages', "Profile"],
+    }),
+    mutations: {
+        SET_SNACKBAR(state, value){
+            state.snackbar = value;
+        },
+        SET_SNACKBAR_MESSAGE(state, value){
+            state.snackbarMessage = value;
+        }
+    },
     actions: {
         reset({commit}) {
             // resets state of all the modules
             Object.keys(modules).forEach(moduleName => {
                 commit(`${moduleName}/RESET`);
             })
+        },
+        snackbar({commit}, message) {
+            commit('SET_SNACKBAR', true);
+            commit('SET_SNACKBAR_MESSAGE', message ? message : "Try again.");
         }
     },
     strict: debug,

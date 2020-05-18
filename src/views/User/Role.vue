@@ -56,14 +56,15 @@
         name: "Role",
         methods: {
             async onDockmaster() {
-                if (await this.$store.dispatch('Marina/fetchMyMarinas')) {
-                    if (this.$store.state.Marina.numOfMarinas === 0) {
-                        router.push('/marina-registration');
-                    } else {
+                let res = await this.$store.dispatch('Marina/fetchMyMarinas');
+                if (res) {
+                    if (this.$store.getters['Marina/getNumOfMarinas']) {
                         router.push('/dashboard');
+                    } else {
+                        router.push('/marina-registration');
                     }
                 } else {
-                    router.push('/marina/9');
+                    this.$store.dispatch("snackbar", this.$store.state.Marina.message);
                 }
             }
         }

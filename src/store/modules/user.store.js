@@ -38,7 +38,10 @@ const state = initialState();
 const getters = {
     getRoles(){
         return state.roles;
-    }
+    },
+    isLoggedIn() {
+        return state.roles.length>0;
+    },
 };
 
 

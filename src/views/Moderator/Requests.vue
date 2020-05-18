@@ -26,12 +26,12 @@
                         active-class="pink--text"
                 >
                     <template v-for="(item, index) in applications">
-                        <v-list-item :key="item.title">
+                        <v-list-item :key="item.id">
                             <template v-slot:default>
                                 <v-list-item-content>
                                     <v-list-item-title v-text="item.title"></v-list-item-title>
-                                    <v-list-item-subtitle class="text--primary" v-text="item.status"></v-list-item-subtitle>
-                                    <v-list-item-subtitle v-text="item.title"></v-list-item-subtitle>
+                                    <v-list-item-subtitle class="text--primary" v-text="item.attachments.length+' attachments'"></v-list-item-subtitle>
+                                    <v-list-item-subtitle v-text="item.description"></v-list-item-subtitle>
                                 </v-list-item-content>
                         
                                 <v-list-item-action>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapGetters, mapActions} from 'vuex';
     export default {
         name: "Requests",
         computed: {
@@ -85,40 +85,15 @@
         data: function () {
             return {
                 selected: [],
-                marinas: [
-                    {
-                        name: 'Marina Request 1',
-                        description: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.',
-                        location: 'USA',
-                        price: 44,
-                        amenities: ['Restoraunt', 'Water'],
-                        spots: [],
-                        photos: [],
-                        status: 'New'
-                    },
-                    {
-                        name: 'Marina Request 2',
-                        description: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.',
-                        location: 'USA',
-                        price: 44,
-                        amenities: ['Restoraunt', 'Water'],
-                        spots: [],
-                        photos: [],
-                        status: 'New'
-                    },
-                    {
-                        name: 'Marina Request 3',
-                        description: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.',
-                        location: 'USA',
-                        price: 44,
-                        amenities: ['Restoraunt', 'Water'],
-                        spots: [],
-                        photos: [],
-                        status: 'New'
-                    }
-                ],
             }
         },
+        async created() {
+            await this.fetchApplications();
+            console.log(this.applications);
+        },
+        methods: {
+            ...mapActions('Moderator',[ 'fetchApplications' ]),
+        }
     }
 </script>
 

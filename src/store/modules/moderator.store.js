@@ -11,6 +11,18 @@ import BerthyAPI from "../../services/berthy-api";
 
 // State initial object
 const initialState = () => ({
+    error: null,
+    success: null,
+    message: null,
+    filter: {
+        onlyMy: null,
+        status: null,
+        dateFrom: null,
+        dateTo: null,
+        pageNum: 0,
+        pageSize: 10,
+    },
+    length: 0,
     applications: [
         {
             id: 0,
@@ -31,7 +43,7 @@ const initialState = () => ({
             moderatorId: 0
         }
     ],
-    lastUpdated: null,
+    lastUpdate: null,
 });
 
 
@@ -55,9 +67,10 @@ const actions = {
     reset({commit}) {
         commit('RESET');
     },
-    async fetchApplications({commit}) {
+    async fetchApplications({state,commit}) {
         commit('FETCHING');
-        let response = await BerthyAPI.get('berths/applications');
+        let response = await BerthyAPI.post('management/berths/applications/filter', state.filter);
+        console.log(response);
         if (response.data) {
             if (response.data.success) {
                 commit('UPDATE_APPLICATIONS', response.data.data);
@@ -79,7 +92,23 @@ const mutations = {
             state[key] = newState[key]
         });
     },
-
+    FETCHING(state) {
+        state.success = null;
+        state.error = null;
+        state.message = null;
+    },
+    ERROR(state, msg) {
+        state.success = false;
+        state.error = true;
+        state.message = msg;
+    },
+    UPDATE_APPLICATIONS(state, {items, totalCount}) {
+        state.success = true;
+        state.error = false;
+        state.applications = items;
+        state.length = totalCount;
+        state.lastUpdate = Date.now();
+    },
 };
 
 

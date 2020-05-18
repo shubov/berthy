@@ -6,17 +6,16 @@
  * as well as the project itself is strictly prohibited.                      *
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
+import store from '../store';
 
 const projectName = 'Berthy';
-const roles = {
-    user: 'USER',
-    moderator: 'MODERATOR',
-    admin: 'ADMIN',
-};
-export const pagesWithNavBar=['Dashboard', 'Team', 'Settings', 'Booking requests', 'Messages', "Profile"];
+const pagesWithNavBar = store.state.pagesWithNavBar;
+const roles = store.state.roles;
+
 const navbar = () => import('../components/Bars/NavBar');
 const footer = () => import('../components/Bars/FooterBar');
 const appBar = () => import('../components/Bars/AppBar');
+
 const routes =
     [
         {

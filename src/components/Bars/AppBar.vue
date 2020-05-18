@@ -79,18 +79,17 @@
 
 <script>
     import router from "../../router";
-    import {pagesWithNavBar}  from "../../router/routes";
     export default {
         name: "AppBar",
         computed: {
             loggedIn() {
-                return this.$store.state['User'].roles.length > 0;
+                return this.$store.getters['User/isLoggedIn'];
             },
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
             isNavbarPresent() {
-                return pagesWithNavBar.includes(this.$route.name);
+                return this.$store.state.pagesWithNavBar.includes(this.$route.name);
             }
         },
         methods: {

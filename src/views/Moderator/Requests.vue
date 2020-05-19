@@ -43,7 +43,7 @@
                     <v-text-field
                             hide-details
                             :value="search"
-                            @input="search=$event"
+                            @keyup="search=$event"
                             prepend-icon="mdi-magnify"
                             single-line
                             v-else

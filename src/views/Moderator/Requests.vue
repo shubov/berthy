@@ -18,7 +18,6 @@
 
 <template>
     <v-container
-            fill-height
             fluid
             class="py-0"
             v-resize="updateHeight"
@@ -43,6 +42,7 @@
                     </v-btn>
                     <v-text-field
                             hide-details
+                            v-model="search"
                             prepend-icon="mdi-magnify"
                             single-line
                             v-else
@@ -82,7 +82,7 @@
                             v-model="selected"
                             :multiple="multiple"
                     >
-                        <template v-for="(item, index) in applications">
+                        <template v-for="(item, index) in (filtered ? filteredApplications : applications)">
                             <v-list-item
                                     :key="item.id"
                                     @click="openApplication(index)"
@@ -175,10 +175,34 @@
             },
             isComponent(){
                 return !this.isMobile && this.show;
+            },
+            filtered(){
+                return this.filteredApplications.length>0;
+            },
+            search: {
+                get() {
+                    return this.searchQuery;
+                },
+                set(value) {
+                    let searcStr = value.toString()
+                    this.searchQuery = searcStr;
+                   
+                    if (value.toString().length<1)
+                        this.filteredApplications = [];
+                    else { console.log(value);
+                        this.filteredApplications = this.applications.filter(({title})=>{
+                            let res=title.toString().toLowerCase().includes(searcStr.toLowerCase());
+                            console.log(res, title);
+                            return res;
+                        })
+                    }
+                }
             }
         },
         data: function () {
             return {
+                searchQuery: null,
+                filteredApplications: [],
                 selectedValue: [],
                 show: false,
                 dialog: false,

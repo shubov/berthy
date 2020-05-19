@@ -9,8 +9,8 @@
 
 <template>
     <v-card tile
-            class="overflow-y-auto elevation-0"
-            style="overflow: hidden"
+            :class="!showClose ? 'overflow-y-auto elevation-0' : ''"
+            :style="!showClose ? 'overflow: hidden' : ''"
             :max-height="height"
     >
         <v-toolbar class="elevation-0">
@@ -29,7 +29,7 @@
             </v-btn>
         </v-toolbar>
         <v-card-actions>
-            <v-row>
+            <v-row class="mx-1">
                 <v-col cols="12" lg="4">
                     <v-btn block large class="info" @click="onStart(application.id)">
                         <v-icon>mdi-chat-plus-outline</v-icon>
@@ -100,12 +100,11 @@
                 <p>Radio:
                     <b>{{ display(marina.radio)}}</b>
                 </p>
-                <p class="mb-0"
-                        @click="showPhotos=!showPhotos"
-                >Photos:
+                <p class="mb-0">
+                    Photos:
                     <b>{{displayArray(marina.photos)}}</b>
                 </p>
-                <a v-show="showPhotos"
+                <a
                    v-for="photo in marina.photos"
                    :key="photo.fileId"
                    :href="'https://egehackbot.cf:8080'+photo.fileLink"
@@ -129,15 +128,11 @@
                     </v-avatar>
                     {{ a.value }}
                 </v-chip>
-                <p
-                        @click="showPlaces=!showPlaces"
-                        class="mb-0"
-                ><br/>
+                <p class="mb-0"><br/>
                     Places:
                     <b>{{displayArray(marina.places)}}</b>
                 </p>
                 <p
-                        v-show="showPlaces"
                         v-for="(p,i) in marina.places"
                         :key="p.name"
                         class="ml-2"
@@ -177,8 +172,6 @@
         },
         data: function() {
             return {
-                showPlaces: false,
-                showPhotos: false,
             }
         },
         async created() {
@@ -194,7 +187,7 @@
                 return value? value : '—';
             },
             displayArray(value) {
-                return this.isValidArray(value) ? value.length : "—"
+                return this.isValidArray(value) ? value.length  : "—"
             },
             isValidArray(value) {
                 return value ? value.length > 0 : false;

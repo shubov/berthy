@@ -13,9 +13,10 @@
             color="error"
             multi-line
             :timeout="6000"
+            :vertical="isMobile"
             top
     >
-        {{ this.$store.state.snackbarMessage }}
+        <p>{{ this.$store.state.snackbarMessage }}</p>
         <v-btn
                 dark
                 text
@@ -30,6 +31,9 @@
     export default {
         name: "Snackbar",
         computed:{
+            isMobile() {
+                return !this.$vuetify.breakpoint.smAndUp;
+            },
             snackbar:{
                 get(){
                     return this.$store.state.snackbar;

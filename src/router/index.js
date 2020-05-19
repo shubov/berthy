@@ -25,5 +25,4 @@ router.beforeEach( async (to, from, next) => {
   await functions.handleUnauthotirizedAccess(to, next);
 });
 
-
 export default router

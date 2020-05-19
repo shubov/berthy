@@ -8,21 +8,26 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row align="center" justify="center">
-        <v-col cols="11" md="8">
-            <h1 class="display-2 primary--text">Landing Page</h1>
+    <v-container
+            fluid
+            fill-height
+    >
+        <v-row align="center" justify="center">
+            <v-col cols="11" md="8">
+                <h1 class="display-2 primary--text">Landing Page</h1>
             
-            <p>The page is a landing page</p>
+                <p>The page is a landing page</p>
             
-            <v-btn
-                    to='/sign-in'
-                    color="primary"
-                    outlined
-            >
-                Sign In!
-            </v-btn>
-        </v-col>
-    </v-row>
+                <v-btn
+                        to='/sign-in'
+                        color="primary"
+                        outlined
+                >
+                    Sign In!
+                </v-btn>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

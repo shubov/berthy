@@ -55,7 +55,7 @@ const actions = {
         } else {
             commit('ERROR', response.data.error.message);
         }
-    }
+    },
 };
 
 

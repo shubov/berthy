@@ -85,7 +85,6 @@ const actions = {
                 }
             }
         }
-        console.log(array);
         return array;
     },
 };

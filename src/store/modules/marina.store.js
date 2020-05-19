@@ -78,8 +78,8 @@ const actions = {
         commit('FETCHING');
 
         let params = new URLSearchParams();
-        //params.append("include", 'amenities');
-        //params.append("include", 'places');
+        params.append("include", 'amenities');
+        params.append("include", 'places');
 
         let response = await BerthyAPI.get('berths/'+id,{params: params});
 

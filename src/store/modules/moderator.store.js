@@ -23,31 +23,14 @@ const initialState = () => ({
         pageSize: 10,
     },
     length: 0,
-    applications: [
-        {
-            id: 0,
-            berthId: 0,
-            applicantId: 0,
-            createdAt: '2020-05-16T18:32:58.201Z',
-            status: 'NEW',
-            title: 'TITLE',
-            description: 'DESCRIPTION',
-            attachments: [
-                {
-                    fileId: 'string',
-                    fileName: 'string',
-                    fileLink: 'string'
-                }
-            ],
-            decision: 'DECISION',
-            moderatorId: 0
-        }
-    ],
+    applications: [],
+    decision: '',
     lastUpdate: null,
+    current: null,
 });
 
 
-/* Module .store.js */
+/* Module moderator.store.js */
 
 
 // VUEX STATE
@@ -58,6 +41,9 @@ const state = initialState();
 const getters = {
     getApplications(state) {
         return state.applications;
+    },
+    getCurrentApplication(state){
+        return state.applications[state.current];
     }
 };
 
@@ -67,13 +53,18 @@ const actions = {
     reset({commit}) {
         commit('RESET');
     },
+    updateCurrent({commit}, id) {
+        if (id>state.length-1) return false;
+        commit("SET_CURRENT", id);
+        return true;
+    },
     async fetchApplications({state,commit}) {
         commit('FETCHING');
         let response = await BerthyAPI.post('management/berths/applications/filter', state.filter);
-        console.log(response);
         if (response.data) {
             if (response.data.success) {
                 commit('UPDATE_APPLICATIONS', response.data.data);
+                commit('UPDATE_TIMES');
                 return true;
             } else {
                 commit('ERROR', response.data.error.message);
@@ -81,6 +72,46 @@ const actions = {
         }
         return false;
     },
+    async approve({state, commit}, id) {
+        let response = await BerthyAPI.post(`management/berths/applications/${id}/approve`, {
+            decision: state.decision
+        });
+        if (response.data) {
+            if (response.data.success) {
+                commit("APPROVE");
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
+        return false;
+    },
+    async reject({state, commit}, id) {
+        let response = await BerthyAPI.post(`management/berths/applications/${id}/reject`, {
+            decision: state.decision
+        });
+        if (response.data) {
+            if (response.data.success) {
+                commit("REJECT");
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
+        return false;
+    },
+    async start({commit}, id) {
+        let response = await BerthyAPI.post(`management/berths/applications/${id}/start`);
+        if (response.data) {
+            if (response.data.success) {
+                commit("START");
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
+        return false;
+    }
 };
 
 
@@ -108,6 +139,45 @@ const mutations = {
         state.applications = items;
         state.length = totalCount;
         state.lastUpdate = Date.now();
+    },
+    UPDATE_DECISION(state, value){
+        state.decision = value;
+    },
+    APPROVE(state) {
+        state.decision ='';
+    },
+    REJECT(state) {
+        state.decision ='';
+    },
+    START() {
+    },
+    SET_CURRENT(state, index) {
+        state.current = index;
+    },
+    UPDATE_TIMES(state){
+        let now = new Date();
+        state.applications.forEach(application=> {
+            let date = new Date(application.createdAt);
+            let delta =  now - date;
+            let res;
+            let s = Math.floor(delta/1000);
+            if (s>59) {
+                let m = Math.floor(delta/60000);
+                if (m>59) {
+                    let h = Math.floor(delta/3600000);
+                    if (h>23) {
+                        res = date.toDateString();
+                    } else {
+                        res = h + "h ago";
+                    }
+                } else {
+                    res = m + "m ago";
+                }
+            } else {
+                res = s + "s ago";
+            }
+            application.ago = res;
+        })
     },
 };
 

@@ -8,40 +8,44 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row>
-        <v-col cols="12">
-            <v-row
-                    align="start"
-                    justify="space-between"
-                    no-gutters
+    <v-container
+            fluid
+            fill-height
+    >
+        <v-row>
+            <v-col cols="12">
+                <v-row
+                        align="start"
+                        justify="space-between"
+                        no-gutters
+                >
+                    <HighlightCard
+                            v-for="n in 5"
+                            :key="n"
+                            colour="red"
+                            text="146%"
+                            class="mb-1"
+                    ></HighlightCard>
+                </v-row>
+            </v-col>
+            <v-col
+                    cols="6"
+                    class="overflow-x-auto"
+                    style="overflow: hidden"
             >
-                <HighlightCard
-                        v-for="n in 5"
-                        :key="n"
-                        colour="red"
-                        text="146%"
-                        class="mb-1"
-                ></HighlightCard>
-            </v-row>
-        </v-col>
-        <v-col
-                cols="6"
-                class="overflow-x-auto"
-                style="overflow: hidden"
-        >
-            <v-row
-                    align="start"
-                    justify="start"
-                    :style="'width: ' + cardRowWidth + 'px'"
-                    no-gutters
-            >
-                <LocoDashboardCard
-                        :width=cardWidth
-                        :colour="i === index ? 'primary lighten-5':''"
-                        class="mb-1 mr-1"
-                        v-for="(item, i) in this.fleet"
-                        :key="i"
-                        :loco-info="{
+                <v-row
+                        align="start"
+                        justify="start"
+                        :style="'width: ' + cardRowWidth + 'px'"
+                        no-gutters
+                >
+                    <LocoDashboardCard
+                            :width=cardWidth
+                            :colour="i === index ? 'primary lighten-5':''"
+                            class="mb-1 mr-1"
+                            v-for="(item, i) in this.fleet"
+                            :key="i"
+                            :loco-info="{
                                 index: i,
                                 number: item.message.locoNo,
                                 mileage: item.message.mileage,
@@ -49,29 +53,30 @@
                                 speed: item.message.speed,
                                 device: item.device
                             }"
-                        @select-loco="selectLoco(i)"
-                ></LocoDashboardCard>
-            </v-row>
-        </v-col>
-        <v-col cols="6">
-            <v-row
-                    align="start"
-                    justify="start"
-                    no-gutters
-                    style="width: inherit"
-            >
-                <MapCard :loco="loco" :zoom="zoom"></MapCard>
-            </v-row>
-        </v-col>
-        <v-col cols="12">
-            <v-row
-                    align="start"
-                    no-gutters
-            >
-                <Table></Table>
-            </v-row>
-        </v-col>
-    </v-row>
+                            @select-loco="selectLoco(i)"
+                    ></LocoDashboardCard>
+                </v-row>
+            </v-col>
+            <v-col cols="6">
+                <v-row
+                        align="start"
+                        justify="start"
+                        no-gutters
+                        style="width: inherit"
+                >
+                    <MapCard :loco="loco" :zoom="zoom"></MapCard>
+                </v-row>
+            </v-col>
+            <v-col cols="12">
+                <v-row
+                        align="start"
+                        no-gutters
+                >
+                    <Table></Table>
+                </v-row>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>

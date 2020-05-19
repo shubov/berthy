@@ -17,86 +17,250 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row align="baseline" justify="center" justify-sm="start">
-        <v-col cols="12" sm="5">
-            <v-list two-line>
-                <v-list-item-group
-                        v-model="selected"
-                        multiple
-                        active-class="pink--text"
+    <v-container
+            fill-height
+            fluid
+            class="py-0"
+            v-resize="updateHeight"
+    >
+        <v-row justify="start" align="start">
+            <v-col sm="5" class="py-0" >
+                <v-toolbar
+                        class="elevation-0"
+                        id="toolbar"
                 >
-                    <template v-for="(item, index) in applications">
-                        <v-list-item :key="item.id">
-                            <template v-slot:default>
-                                <v-list-item-content>
-                                    <v-list-item-title v-text="item.title"></v-list-item-title>
-                                    <v-list-item-subtitle class="text--primary" v-text="item.attachments.length+' attachments'"></v-list-item-subtitle>
-                                    <v-list-item-subtitle v-text="item.description"></v-list-item-subtitle>
-                                </v-list-item-content>
+                    <v-btn v-if="selected.length"
+                           icon
+                           :loading="loadingApproveMultiple"
+                           @click="onApproveMultiple()">
+                        <v-icon color="success">mdi-thumb-up-outline</v-icon>
+                    </v-btn>
+                    <v-btn v-if="selected.length"
+                           icon
+                           :loading="loadingRejectMultiple"
+                           @click="onRejectMultiple()">
+                        <v-icon color="secondary">mdi-thumb-down-outline</v-icon>
+                    </v-btn>
+                    <v-text-field
+                            hide-details
+                            prepend-icon="mdi-magnify"
+                            single-line
+                            v-else
+                    ></v-text-field>
+                    <v-toolbar-title>
+                        {{ selected.length ? `${selected.length} selected` : '' }}
+                    </v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-scale-transition>
+                        <v-btn icon v-if="!selected.length">
+                            <v-icon>mdi-sort</v-icon>
+                        </v-btn>
+                    </v-scale-transition>
+                    <v-scale-transition>
+                        <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
+                            <v-icon>mdi-dots-vertical</v-icon>
+                        </v-btn>
+                    </v-scale-transition>
+                    <v-scale-transition>
+                        <v-btn
+                                v-if="selected.length"
+                                icon
+                                @click="()=>{selected = [];multiple=false;}"
+                        >
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-scale-transition>
+                </v-toolbar>
+                <v-list
+                        two-line
+                        tile
+                        class="overflow-y-auto py-0"
+                        style="overflow: hidden"
+                        :max-height="listHeight"
+                >
+                    <v-list-item-group
+                            v-model="selected"
+                            :multiple="multiple"
+                    >
+                        <template v-for="(item, index) in applications">
+                            <v-list-item
+                                    :key="item.id"
+                                    @click="openApplication(index)"
+                            >
+                                <template
+                                        v-slot:default="{active}"
+                                >
+                                    <v-list-item-avatar v-if="multiple" dark size="15px">
+                                        <v-icon small color="#00000099">
+                                            {{
+                                            active
+                                            ? 'mdi-checkbox-marked-circle-outline'
+                                            : 'mdi-checkbox-blank-circle-outline'
+                                            }}
+                                        </v-icon>
+                                    </v-list-item-avatar>
+                                
+                                    <v-list-item-content>
+                                        <v-list-item-title v-text="item.title"></v-list-item-title>
+                                        <v-list-item-subtitle class="text--primary" v-text="item.attachments.length+' attachments'"></v-list-item-subtitle>
+                                        <v-list-item-subtitle v-text="item.description"></v-list-item-subtitle>
+                                    </v-list-item-content>
+                                
+                                    <v-list-item-action>
+                                        <v-list-item-action-text v-text="item.ago"></v-list-item-action-text>
+                                        <v-chip
+                                                label
+                                                dark
+                                                :color="statusColor(item.status)"
+                                        >{{item.status}}</v-chip>
+                                    </v-list-item-action>
+                                </template>
+                            </v-list-item>
                         
-                                <v-list-item-action>
-                                    <v-list-item-action-text v-text="date"></v-list-item-action-text>
-                                    <v-chip label dark color="green">{{item.status}}</v-chip>
-                                </v-list-item-action>
-                            </template>
-                        </v-list-item>
-                
-                        <v-divider
-                                v-if="index + 1 < applications.length"
-                                :key="index"
-                        ></v-divider>
-                    </template>
-                </v-list-item-group>
-            </v-list>
-        </v-col>
-    </v-row>
+                            <v-divider
+                                    v-if="index + 1 < applications.length"
+                                    :key="index"
+                            ></v-divider>
+                        </template>
+                    </v-list-item-group>
+                </v-list>
+            </v-col>
+            <v-col class="py-0">
+                <MarinaApplicationCard
+                        v-if="isComponent"
+                        :height="applicationCardHeight"
+                ></MarinaApplicationCard>
+                <v-dialog
+                        v-if="isDialog"
+                        v-model="dialog"
+                        fullscreen
+                        transition="dialog-bottom-transition"
+                >
+                    <MarinaApplicationCard
+                            @close="onDialogClose()"
+                            :showClose="dialog"
+                    ></MarinaApplicationCard>
+                </v-dialog>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
+    import MarinaApplicationCard from "../../components/Cards/MarinaApplicationCard";
     export default {
         name: "Requests",
+        components: {MarinaApplicationCard},
         computed: {
             ...mapGetters('Moderator', {
                 applications: 'getApplications',
             }),
-            date() {
-                let now = new Date();//local date
-                let date = new Date(this.applications[0].createdAt);//created at local date
-                let delta =  now - date;
-                let s = Math.floor(delta/1000);
-                let m = Math.floor(delta/60000);
-                let h = Math.floor(delta/3600000);
-                if (s>59) {
-                    if (m>59) {
-                        if (h>23) {
-                            return date.toDateString();
-                        } else {
-                            return h + "h ago";
-                        }
-                    } else {
-                        return m + "m ago";
-                    }
-                } else {
-                    return s + "s ago";
+            ...mapGetters('Marina', {
+                marina: 'getPublicMarina',
+            }),
+            isMobile() {
+                return !this.$vuetify.breakpoint.smAndUp;
+            },
+            selected: {
+                get() {
+                    return this.selectedValue;
+                },
+                set(value) {
+                    this.selectedValue = value==null ? [] : value;
                 }
+            },
+            isDialog(){
+                return this.isMobile && this.dialog;
+            },
+            isComponent(){
+                return !this.isMobile && this.show;
             }
         },
         data: function () {
             return {
-                selected: [],
+                selectedValue: [],
+                show: false,
+                dialog: false,
+                multiple: false,
+                listHeight: null,
+                applicationCardHeight: null,
+                loadingApproveMultiple: false,
+                loadingRejectMultiple: false,
             }
         },
         async created() {
             await this.fetchApplications();
-            console.log(this.applications);
         },
         methods: {
-            ...mapActions('Moderator',[ 'fetchApplications' ]),
+            ...mapActions('Moderator', ['fetchApplications', 'updateCurrent', 'approve', 'reject']),
+            ...mapActions('Marina', ['fetchMarina']),
+            onDialogClose() {
+                this.dialog=false;
+                this.show=false;
+                this.multiple = false;
+            },
+            async openApplication(id) {
+                if (id === this.$store.state.Moderator.current || this.multiple) return;
+                let resp1 = await this.updateCurrent(id);
+                let resp2 = await this.fetchMarina(this.applications[id].berthId);
+                if (resp1 && resp2) {
+                    if(this.isMobile) this.dialog = true;
+                    else this.show = true;
+                }
+            },
+            statusColor(status) {
+                switch (status) {
+                    case ('NEW'):
+                        return 'blue lighten-3';
+                    case ('REJECTED'):
+                        return 'red lighten-3';
+                    case ('APPROVED'):
+                        return 'green lighten-3';
+                    case ('IN_PROGRESS'):
+                        return 'yellow ';
+                }
+            },
+            onRejectMultiple() {
+                this.loadingRejectMultiple = true;
+                this.selected.forEach((index)=>{
+                    this.reject(this.applications[index].id);
+                });
+                setTimeout(async ()=>{
+                    await this.fetchApplications();
+                    this.multiple=false;
+                    this.selected=[];
+                    this.loadingRejectMultiple = false;
+                }, 1000)
+            },
+            onApproveMultiple() {
+                this.loadingApproveMultiple = true;
+                this.selected.forEach((index)=>{
+                    this.approve(this.applications[index].id)
+                });
+                setTimeout(async ()=> {
+                    await this.fetchApplications();
+                    this.multiple=false;
+                    this.selected=[];
+                    this.loadingApproveMultiple = false;
+                },1000);
+                
+            },
+            updateHeight() {
+                let h = document.getElementById('toolbar').style.height.substr(0,2);
+                this.listHeight = (window.innerHeight - 84 - h) + "px";
+                this.applicationCardHeight = (window.innerHeight - 84) + "px";
+            }
         }
     }
 </script>
 
 <style scoped>
-
+    ::-webkit-scrollbar {
+        width: 0;
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
 </style>

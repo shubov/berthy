@@ -8,31 +8,36 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <l-map
-            :zoom.sync="zoom"
-            :center.sync="center"
-            :options="mapOptions"
-            style="height: 100%; z-index:0"
+    <v-container
+            fluid
+            fill-height
     >
-        <l-tile-layer
-                :url="url"
-                :attribution="attribution"
-        />
-        <l-marker
-                v-for="(loco, index) in this.fleet"
-                :key="index"
-                :lat-lng="loco.geo"
-                @click="markerClick(index)"
+        <l-map
+                :zoom.sync="zoom"
+                :center.sync="center"
+                :options="mapOptions"
+                style="height: 100%; z-index:0"
         >
-            <l-tooltip>{{loco.device}}</l-tooltip>
-        </l-marker>
-        <l-control v-if="showLocoInfo">
-            <LocoCard
-                    v-bind:locoInfo="this.locoInfo? this.locoInfo : '' "
-                    @close="showLocoInfo=false"
-            ></LocoCard>
-        </l-control>
-    </l-map>
+            <l-tile-layer
+                    :url="url"
+                    :attribution="attribution"
+            />
+            <l-marker
+                    v-for="(loco, index) in this.fleet"
+                    :key="index"
+                    :lat-lng="loco.geo"
+                    @click="markerClick(index)"
+            >
+                <l-tooltip>{{loco.device}}</l-tooltip>
+            </l-marker>
+            <l-control v-if="showLocoInfo">
+                <LocoCard
+                        v-bind:locoInfo="this.locoInfo? this.locoInfo : '' "
+                        @close="showLocoInfo=false"
+                ></LocoCard>
+            </l-control>
+        </l-map>
+    </v-container>
 </template>
 
 <script>

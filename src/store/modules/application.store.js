@@ -107,7 +107,6 @@ const actions = {
     },
     generatePlaces({state, commit}) {
         if (state.defaults.number < 1) {
-            console.log('4');
             return false;
         }
         commit('GENERATE_PLACES');

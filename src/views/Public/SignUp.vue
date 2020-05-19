@@ -8,66 +8,74 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-row align="center" justify="center" >
-        <v-col
-                cols="12"
-                sm="8"
-                md="4"
-                class="px-2 py-0"
-        >
-            <v-dialog v-model="dialog" persistent max-width="290">
-                <v-card>
-                    <v-card-title class="headline">Email Confirmation</v-card-title>
-                    <v-card-text>Berthy sent link to <b>{{signUpData.email}}</b>. Check your mailbox and follow the link to confirm your account.</v-card-text>
-                    <v-card-actions>
+    <v-container
+            fluid
+            fill-height
+            class="py-2"
+            :style="$store.state.bg"
+    >
+        <v-row align="center" justify="center" >
+            <v-col
+                    cols="12"
+                    sm="8"
+                    md="4"
+                    class="px-2 py-0"
+            >
+                <v-dialog v-model="dialog" persistent max-width="290">
+                    <v-card>
+                        <v-card-title class="headline">Email Confirmation</v-card-title>
+                        <v-card-text>Berthy sent link to <b>{{signUpData.email}}</b>. Check your mailbox and follow the link to confirm your account.</v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" text @click="onOkDialog()">Ok</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-card
+                        tile
+                        class="mx-auto elevation-4"
+                        :min-width="304"
+                        :max-width="400"
+                >
+                    <v-toolbar flat>
+                        <v-toolbar-title class="font-weight-light">Sign Up</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="onOkDialog()">Ok</v-btn>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn
+                                        href="/faq"
+                                        icon
+                                        large
+                                        target="_blank"
+                                        v-on="on"
+                                >
+                                    <v-icon>mdi-help-circle</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Source</span>
+                        </v-tooltip>
+                    </v-toolbar>
+                    <v-card-text class="pb-0 mb-0">
+                        <SignUpForm ref="form" v-model="signUpData"></SignUpForm>
+                    </v-card-text>
+                    <v-card-actions class="pt-0 mt-0">
+                        <v-row>
+                            <v-col cols="12">
+                                <v-btn
+                                        :loading="submitting"
+                                        block
+                                        large
+                                        @click.stop="onSignUp()"
+                                        color="primary"
+                                >Sign Up</v-btn>
+                            </v-col>
+                        </v-row>
                     </v-card-actions>
                 </v-card>
-            </v-dialog>
-            <v-card
-                    tile
-                    class="mx-auto elevation-4"
-                    :min-width="304"
-                    :max-width="400"
-            >
-                <v-toolbar flat>
-                    <v-toolbar-title class="font-weight-light">Sign Up</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
-                            <v-btn
-                                    href="/faq"
-                                    icon
-                                    large
-                                    target="_blank"
-                                    v-on="on"
-                            >
-                                <v-icon>mdi-help-circle</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Source</span>
-                    </v-tooltip>
-                </v-toolbar>
-                <v-card-text class="pb-0 mb-0">
-                    <SignUpForm ref="form" v-model="signUpData"></SignUpForm>
-                </v-card-text>
-                <v-card-actions class="pt-0 mt-0">
-                    <v-row>
-                        <v-col cols="12">
-                            <v-btn
-                                    :loading="submitting"
-                                    block
-                                    large
-                                    @click.stop="onSignUp()"
-                                    color="primary"
-                            >Sign Up</v-btn>
-                        </v-col>
-                    </v-row>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
+            </v-col>
+        </v-row>
+    </v-container>
+    
 </template>
 <script>
     import SignUpForm from "../../components/Forms/SignUpForm";

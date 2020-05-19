@@ -27,6 +27,8 @@ export default new Vuex.Store({
             moderator: 'MODERATOR',
             admin: 'ADMIN',
         },
+        bg: {'background-image': `url(${require('../assets/background.jpg')})`},
+        pagesWithBg: ['Sign In', 'Sign Up', "Role"],
         pagesWithNavBar: ['Dashboard', 'Team', 'Settings', 'Booking requests', 'Messages', "Profile"],
     }),
     mutations: {

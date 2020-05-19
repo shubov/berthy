@@ -28,7 +28,8 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
             <v-textarea
-                    v-model="model"
+                    :value="model"
+                    @input="model=$event"
                     :placeholder="placeholder"
                     auto-grow
                     clearable

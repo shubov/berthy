@@ -30,7 +30,8 @@
             <v-row no-gutters>
                 <v-col>
                     <v-autocomplete
-                            v-model="model"
+                            :value="model"
+                            @input="model=$event"
                             :items="amenities"
                             chips
                             item-text="value"

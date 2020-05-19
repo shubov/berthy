@@ -19,7 +19,7 @@
                             <v-col>
                                 <v-text-field
                                         dense
-                                        @change="editPlace($event, index, 0)"
+                                        @input="editPlace($event, index, 0)"
                                         :value="model[index].name"
                                         :rules="rules.rulesName"
                                         label="Name"
@@ -28,7 +28,7 @@
                             <v-col>
                                 <v-text-field
                                         dense
-                                        @change='editPlace($event, index, 1)'
+                                        @input='editPlace($event, index, 1)'
                                         :value="model[index].price"
                                         :prefix="currency"
                                         :rules="rules.rulesPrice"
@@ -48,7 +48,7 @@
                                 <v-col cols="12" sm="4" class="pb-0">
                                     <v-text-field
                                             dense
-                                            @change='editPlace($event, index, 2)'
+                                            @input='editPlace($event, index, 2)'
                                             :value="model[index].length"
                                             :rules="rules.rulesLength"
                                             :suffix="suffix"
@@ -60,7 +60,7 @@
                                 <v-col cols="12" sm="4" class="pb-0">
                                     <v-text-field
                                             dense
-                                            @change='editPlace($event, index, 3)'
+                                            @input='editPlace($event, index, 3)'
                                             :value="model[index].draft"
                                             :suffix="suffix"
                                             :rules="rules.rulesDraft"
@@ -72,7 +72,7 @@
                                 <v-col cols="12" sm="4" class="pb-0">
                                     <v-text-field
                                             dense
-                                            @change='editPlace($event, index, 4)'
+                                            @input='editPlace($event, index, 4)'
                                             :value="model[index].width"
                                             :rules="rules.rulesWidth"
                                             :suffix="suffix"

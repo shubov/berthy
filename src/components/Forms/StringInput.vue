@@ -29,7 +29,8 @@
         <v-expansion-panel-content>
             <v-text-field
                     :prepend-icon="icon"
-                    v-model="model"
+                    :value="model"
+                    @input="model=$event"
                     :placeholder="placeholder"
             ></v-text-field>
         </v-expansion-panel-content>

@@ -42,7 +42,8 @@
                     </v-btn>
                     <v-text-field
                             hide-details
-                            v-model="search"
+                            :value="search"
+                            @input="search=$event"
                             prepend-icon="mdi-magnify"
                             single-line
                             v-else

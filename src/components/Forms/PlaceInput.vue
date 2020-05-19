@@ -30,7 +30,8 @@
                 <v-row>
                     <v-col cols="12" md="4">
                         <v-text-field
-                                v-model="defaultLength"
+                                :value="defaultLength"
+                                @input="defaultLength=$event"
                                 :suffix="sizeSuffix"
                                 type="number"
                                 :rules="rules.rulesLength"
@@ -40,7 +41,8 @@
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-text-field
-                                v-model="defaultWidth"
+                                :value="defaultWidth"
+                                @input="defaultWidth=$event"
                                 :suffix="sizeSuffix"
                                 :rules="rules.rulesWidth"
                                 type="number"
@@ -50,7 +52,8 @@
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-text-field
-                                v-model="defaultDraft"
+                                :value="defaultDraft"
+                                @input="defaultDraft=$event"
                                 :suffix="sizeSuffix"
                                 :rules="rules.rulesDraft"
                                 type="number"
@@ -60,8 +63,9 @@
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-text-field
+                                :value="defaultPrice"
+                                @input="defaultPrice=$event"
                                 prepend-inner-icon="mdi-cash-100"
-                                v-model="defaultPrice"
                                 :prefix="currency"
                                 :rules="rules.rulesPrice"
                                 type="number"
@@ -72,13 +76,12 @@
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-text-field
+                                :value="number"
+                                @input="number=$event"
                                 prepend-inner-icon="mdi-counter"
-                                v-model="number"
                                 :rules="rules.rulesNumber"
                                 label="Number of places"
                                 type="number"
-                                :error-messages="numberErrorMsg"
-                                @input="numberErrorMsg=[]"
                                 hint="Number of docking spots in your marina"
                                 outlined
                         ></v-text-field>
@@ -239,6 +242,7 @@
             dialog: false,
             valid: null,
             dialogLoading: false,
+            localization: 'EU',
             numberErrorMsg: [],
             rules: {
                 rulesNumber: [

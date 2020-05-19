@@ -31,12 +31,14 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
             <v-text-field
-                    v-model="lat"
+                    :value="lat"
+                    @input="lat=$event"
                     :placeholder="placeholder"
                     prepend-icon="mdi-latitude"
             ></v-text-field>
             <v-text-field
-                    v-model="lng"
+                    :value="lng"
+                    @input="lng=$event"
                     :placeholder="placeholder"
                     prepend-icon="mdi-longitude"
             ></v-text-field>

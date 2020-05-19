@@ -22,7 +22,8 @@
                 prepend-icon="mdi-email"
                 :rules="[rules.required, rules.email]"
                 type="email"
-                v-model="value.email"
+                :value="value.email"
+                @input="value.email=$event"
         />
         
         <v-text-field
@@ -33,8 +34,9 @@
                 :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.required, rules.min]"
                 :type="show ? 'text' : 'password'"
-                v-model="value.password"
                 @click:append="show = !show"
+                :value="value.password"
+                @input="value.password=$event"
         />
         
         <v-text-field

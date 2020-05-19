@@ -51,7 +51,8 @@
                 <v-col cols="12">
                     <v-text-field
                             label="Decision"
-                            v-model="decision"
+                            :value="decision"
+                            @input="decision=$event"
                             outlined
                             hide-details
                             dense

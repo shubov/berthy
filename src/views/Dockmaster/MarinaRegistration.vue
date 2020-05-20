@@ -151,7 +151,7 @@
                     </v-col>
                     <v-col cols="12" sm="4">
                         <v-btn
-                                :block="isMobile"
+                                block
                                 color="primary"
                                 @click="onSubmit()"
                                 x-large
@@ -179,12 +179,15 @@
         name: "MarinaRegistration",
         components: {
             PhoneInput,
-            PlaceInput, TextInput, LocationInput, SelectAmenities, FileInput, DateInput, StringInput},
-        data: () => ({
-            submitting: false,
+            PlaceInput, TextInput, LocationInput, SelectAmenities, FileInput, DateInput, StringInput
+        },
+        computed: {
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
+        },
+        data: () => ({
+            submitting: false,
         }),
         methods: {
             onSubmit(){

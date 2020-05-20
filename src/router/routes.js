@@ -172,7 +172,6 @@ const routes =
                 content: () => import('../views/Moderator/Requests'),
             },
             meta: {
-                public: true,
                 title: projectName + ' - Marina Registrations',
                 roles: [roles.moderator],
                 metaTags: [
@@ -266,7 +265,7 @@ const routes =
                 appbar: appBar,
                 navbar: pagesWithNavBar.includes('Messages') ? navbar : null,
                 footer: footer,
-                content: () => import('../views/Dockmaster/Messages'),
+                content: () => import('../views/User/Messages'),
             },
             meta: {
                 title: projectName + ' - Messages',

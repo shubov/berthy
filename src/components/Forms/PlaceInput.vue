@@ -242,7 +242,6 @@
             dialog: false,
             valid: null,
             dialogLoading: false,
-            localization: 'EU',
             numberErrorMsg: [],
             rules: {
                 rulesNumber: [

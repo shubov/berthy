@@ -115,7 +115,7 @@ const mutations = {
         state.success = true;
         state.error = false;
         state.marinas = data;
-        state.length = data.length;
+        state.numOfMarinas = data.length;
         state.lastUpdate = Date.now();
     },
     SET_MARINA(state, marina) {

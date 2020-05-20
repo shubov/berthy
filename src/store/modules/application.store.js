@@ -34,7 +34,7 @@ const initialState = () => ({
         defaultLength: null,
         defaultWidth: null,
         defaultDraft: null,
-        localization: 'US',
+        localization: 'EU',
     }
 });
 

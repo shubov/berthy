@@ -131,9 +131,9 @@
                 this.onFacebook = true;
                 setTimeout(async () => {
                     try {
-                        alert("Facebook login doesn't work. YET!");
+                        await this.$store.dispatch("snackbar", "Facebook login doesn't work. YET!");
                     } catch (e) {
-                        console.log('error', e);
+                        await this.$store.dispatch("snackbar", e);
                     } finally {
                         this.onFacebook = false;
                     }
@@ -149,10 +149,12 @@
                                     this.onSignInSuccess();
                                 }
                             } catch (e) {
-                                console.log('Authorization Error', e)
+                                await this.$store.dispatch("snackbar", e);
                             }
                         })
-                        .catch(e=>console.log('GAuth error', e))
+                        .catch(async (e) => {
+                            await this.$store.dispatch("snackbar", e);
+                        })
                         .finally(()=>this.onGoogle = false);
                 }, 0);
             },

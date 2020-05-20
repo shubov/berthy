@@ -1,36 +1,32 @@
+import BerthyAPI from "../../services/berthy-api";
+
 /******************************************************************************
  * Copyright (c) - 2020 - Mikhail Shubov.                                     *
  * Berthy project. All Rights Reserved.                                       *
- * The code in moderator.store.js is proprietary and confidential.            *
+ * The code in bookings.store.js is proprietary and confidential.             *
  * Unauthorized copying of the file and any parts of it                       *
  * as well as the project itself is strictly prohibited.                      *
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                   *
  ******************************************************************************/
-import BerthyAPI from "../../services/berthy-api";
-//import {setIcons} from "../../assets/helperFunctions";
 
 // State initial object
 const initialState = () => ({
+    bookings: [
+        {
+            createdAt: null,
+        }
+    ],
+    length: 0,
+    lastUpdate: null,
+    current: null,
     error: null,
     success: null,
     message: null,
-    filter: {
-        onlyMy: null,
-        status: null,
-        dateFrom: null,
-        dateTo: null,
-        pageNum: 0,
-        pageSize: 100,
-    },
-    length: 0,
-    applications: [],
-    decision: '',
-    lastUpdate: null,
-    current: null,
 });
 
 
-/* Module moderator.store.js */
+/* Module .store.js */
+
 
 
 // VUEX STATE
@@ -40,10 +36,10 @@ const state = initialState();
 // VUEX GETTERS
 const getters = {
     getApplications(state) {
-        return state.applications;
+        return state.bookings;
     },
     getCurrentApplication(state){
-        return state.applications[state.current];
+        return state.bookings[state.current];
     }
 };
 
@@ -60,7 +56,7 @@ const actions = {
     },
     async fetchApplications({state,commit}) {
         commit('FETCHING');
-        let response = await BerthyAPI.post('management/berths/applications/filter', state.filter);
+        let response = await BerthyAPI.post('management/berths/bookings', state.filter);
         if (response.data) {
             if (response.data.success) {
                 commit('UPDATE_APPLICATIONS', response.data.data);
@@ -73,7 +69,7 @@ const actions = {
         return false;
     },
     async approve({state, commit}, id) {
-        let response = await BerthyAPI.post(`management/berths/applications/${id}/approve`, {
+        let response = await BerthyAPI.post(`management/berths/bookings/${id}/approve`, {
             decision: state.decision
         });
         if (response.data) {
@@ -87,7 +83,7 @@ const actions = {
         return false;
     },
     async reject({state, commit}, id) {
-        let response = await BerthyAPI.post(`management/berths/applications/${id}/reject`, {
+        let response = await BerthyAPI.post(`management/berths/bookings/${id}/reject`, {
             decision: state.decision
         });
         if (response.data) {
@@ -100,18 +96,6 @@ const actions = {
         }
         return false;
     },
-    async start({commit}, id) {
-        let response = await BerthyAPI.post(`management/berths/applications/${id}/start`);
-        if (response.data) {
-            if (response.data.success) {
-                commit("START");
-                return true;
-            } else {
-                commit('ERROR', response.data.error.message);
-            }
-        }
-        return false;
-    }
 };
 
 
@@ -123,17 +107,6 @@ const mutations = {
             state[key] = newState[key]
         });
     },
-    ON_SCROLL(state) {
-        state.filter.pageSize+=20;
-    },
-    UPDATE_FILTER(state, {onlyMy, status, dateFrom, dateTo}) {
-        state.filter.onlyMy = onlyMy;
-        state.filter.status = status;
-        state.filter.dateFrom = dateFrom;
-        state.filter.dateTo = dateTo;
-        state.filter.pageNum = 0;
-        state.filter.pageSize = 100;
-    },
     FETCHING(state) {
         state.success = null;
         state.error = null;
@@ -144,32 +117,20 @@ const mutations = {
         state.error = true;
         state.message = msg;
     },
-    UPDATE_APPLICATIONS(state, {items, totalCount}) {
+    UPDATE_BOOKINGS(state, {items, totalCount}) {
         state.success = true;
         state.error = false;
         state.applications = items;
         state.length = totalCount;
         state.lastUpdate = Date.now();
     },
-    UPDATE_DECISION(state, value){
-        state.decision = value;
-    },
-    APPROVE(state) {
-        state.decision ='';
-    },
-    REJECT(state) {
-        state.decision ='';
-    },
-    START() {
-    },
     SET_CURRENT(state, index) {
         state.current = index;
     },
     UPDATE_TIMES(state){
-        let now = new Date();
-        state.applications.forEach(application=> {
-            let date = new Date(application.createdAt);
-            let delta =  now - date;
+        state.bookings.forEach(booking=> {
+            let date = new Date(booking.createdAt);
+            let delta =  new Date() - date;
             let res;
             let s = Math.floor(delta/1000);
             if (s>59) {
@@ -187,7 +148,7 @@ const mutations = {
             } else {
                 res = s + "s ago";
             }
-            application.ago = res;
+            booking.ago = res;
         })
     },
 };

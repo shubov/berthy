@@ -11,8 +11,8 @@
     <v-form
             ref="form"
             @input="$emit('input', {
-                email: $refs.email.value,
-                password: $refs.password.value,
+                email: $refs.email ? $refs.email.value : '',
+                password: $refs.password ? $refs.password.value : '',
             })"
     >
         <v-text-field

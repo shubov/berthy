@@ -43,7 +43,7 @@
                     <v-text-field
                             hide-details
                             :value="search"
-                            @keyup="search=$event"
+                            @input="search=$event"
                             prepend-icon="mdi-magnify"
                             single-line
                             v-else
@@ -52,25 +52,30 @@
                         {{ selected.length ? `${selected.length} selected` : '' }}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-scale-transition>
-                        <v-btn icon v-if="!selected.length">
-                            <v-icon>mdi-sort</v-icon>
-                        </v-btn>
-                    </v-scale-transition>
-                    <v-scale-transition>
-                        <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
-                            <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
-                    </v-scale-transition>
-                    <v-scale-transition>
-                        <v-btn
-                                v-if="selected.length"
-                                icon
-                                @click="()=>{selected = [];multiple=false;}"
-                        >
-                            <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                    </v-scale-transition>
+                    <v-menu
+                            v-model="filterMenu"
+                            :close-on-content-click="false"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon v-bind="attrs" v-on="on">
+                                <v-icon>mdi-filter-variant</v-icon>
+                            </v-btn>
+                        </template>
+                        <ModeratorFilter
+                                @close-filter="filterMenu=false"
+                                @save-filter="onSaveFilter"
+                        ></ModeratorFilter>
+                    </v-menu>
+                    <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
+                        <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                    <v-btn
+                            v-if="selected.length"
+                            icon
+                            @click="()=>{selected = [];multiple=false;}"
+                    >
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
                 </v-toolbar>
                 <v-list
                         two-line
@@ -78,10 +83,12 @@
                         class="overflow-y-auto py-0"
                         style="overflow: hidden"
                         :max-height="listHeight"
+                        id="list"
                 >
                     <v-list-item-group
                             v-model="selected"
                             :multiple="multiple"
+                            v-scroll:#list="onScrollList"
                     >
                         <template v-for="(item, index) in (filtered ? filteredApplications : applications)">
                             <v-list-item
@@ -150,9 +157,17 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import MarinaApplicationCard from "../../components/Cards/MarinaApplicationCard";
+    import ModeratorFilter from "../../components/ModeratorFilter";
     export default {
         name: "Requests",
-        components: {MarinaApplicationCard},
+        components: {ModeratorFilter, MarinaApplicationCard},
+        watch: {
+            filterMenu(value) {
+                if (value) {
+                    this.onDialogClose();
+                }
+            },
+        },
         computed: {
             ...mapGetters('Moderator', {
                 applications: 'getApplications',
@@ -212,10 +227,9 @@
                 applicationCardHeight: null,
                 loadingApproveMultiple: false,
                 loadingRejectMultiple: false,
+                offsetTop: 0,
+                filterMenu: false,
             }
-        },
-        async created() {
-            await this.fetchApplications();
         },
         methods: {
             ...mapActions('Moderator', ['fetchApplications', 'updateCurrent', 'approve', 'reject']),
@@ -275,8 +289,22 @@
                 let h = document.getElementById('toolbar').style.height.substr(0,2);
                 this.listHeight = (window.innerHeight - 84 - h) + "px";
                 this.applicationCardHeight = (window.innerHeight - 84) + "px";
-            }
-        }
+            },
+            onScrollList (e) {
+                this.offsetTop = e.target.scrollTop
+            },
+            async onSaveFilter() {
+                try {
+                    await this.fetchApplications();
+                } catch (e) {
+                    console.log(e);
+                }
+                this.filterMenu = false;
+            },
+        },
+        async created() {
+            await this.fetchApplications();
+        },
     }
 </script>
 

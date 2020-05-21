@@ -56,7 +56,7 @@
                     <v-card-text>
                         <v-text-field
                                 v-model="msg"
-                                @change="addMessage"
+                                @keyup.enter="addMessage"
                                 hide-details
                                 placeholder="Write a message"
                                 append-outer-icon="mdi-send"

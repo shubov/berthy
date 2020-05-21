@@ -74,7 +74,7 @@
                     this.$store.dispatch("snackbar", this.$store.state.Marina.message);
                 }
             }
-        }
+        },
     }
 </script>
 

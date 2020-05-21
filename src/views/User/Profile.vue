@@ -10,130 +10,198 @@
 <template>
     <v-container
             fluid
-            fill-height
     >
-        <v-row>
+        <v-row align="start" justify="center">
             <v-col>
-                <v-row justify="center">
-                    <v-subheader>Today</v-subheader>
-                
-                    <v-expansion-panels popout>
-                        <v-expansion-panel
-                                v-for="(message, i) in messages"
-                                :key="i"
-                                hide-actions
-                        >
-                            <v-expansion-panel-header>
-                                <v-row
-                                        align="center"
-                                        class="spacer"
-                                        no-gutters
+                <v-card tile class="elevation-0">
+                    <v-card-text>
+                        <v-row align="start" justify="start" no-gutters>
+                            <v-col>
+                                <v-avatar
+                                        class="mt-2"
+                                        style="float: right"
+                                        size="115px"
                                 >
-                                    <v-col
-                                            cols="4"
-                                            sm="2"
-                                            md="1"
-                                    >
-                                        <v-avatar
-                                                size="36px"
-                                        >
-                                            <img
-                                                    v-if="message.avatar"
-                                                    alt="Avatar"
-                                                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                                            >
-                                            <v-icon
-                                                    v-else
-                                                    :color="message.color"
-                                                    v-text="message.icon"
-                                            ></v-icon>
-                                        </v-avatar>
-                                    </v-col>
-                                
-                                    <v-col
-                                            class="hidden-xs-only"
-                                            sm="5"
-                                            md="3"
-                                    >
-                                        <strong v-html="message.name"></strong>
-                                        <span
-                                                v-if="message.total"
-                                                class="grey--text"
-                                        >
-                  &nbsp;({{ message.total }})
-                </span>
-                                    </v-col>
-                                
-                                    <v-col
-                                            class="text-no-wrap"
-                                            cols="5"
-                                            sm="3"
-                                    >
-                                        <v-chip
-                                                v-if="message.new"
-                                                :color="`${message.color} lighten-4`"
-                                                class="ml-0 mr-2 black--text"
-                                                label
-                                                small
-                                        >
-                                            {{ message.new }} new
-                                        </v-chip>
-                                        <strong v-html="message.title"></strong>
-                                    </v-col>
-                                
-                                    <v-col
-                                            v-if="message.excerpt"
-                                            class="grey--text text-truncate hidden-sm-and-down"
-                                    >
-                                        &mdash;
-                                        {{ message.excerpt }}
-                                    </v-col>
-                                </v-row>
-                            </v-expansion-panel-header>
-                        
-                            <v-expansion-panel-content>
-                                <v-divider></v-divider>
-                                <v-card-text v-text="lorem"></v-card-text>
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
+                                    <v-img :src="photo ? photo : ''"/>
+                                </v-avatar>
+                                <p class="pl-0 subtitle-1 font-weight-bold">
+                                    {{type}}
+                                </p>
+                                <p class="display-3 font-weight-black my-0">
+                                    {{name}}
+                                </p>
+                                <p class="pl-0 subtitle-1 font-weight-bold">
+                                    1 marina, 2 boats
+                                </p>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn v-if="disabled" @click="disabled=false">
+                            <v-icon>mdi-pencil</v-icon>Edit Account
+                        </v-btn>
+                        <v-btn v-if="!disabled" @click="onSave()" :loading="saving">
+                            <v-icon>mdi-check</v-icon>Save
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" md="4">
+                <v-card tile class="elevation-0">
+                    <v-card-text>
+                        <v-text-field
+                                hide-details
+                                :placeholder="email"
+                                disabled
+                                filled
+                                rounded
+                        ></v-text-field>
+                    </v-card-text>
+                </v-card>
+                <v-card-text>
+                    <v-text-field
+                            ref="firstName"
+                            hide-details
+                            @input="userEdit.firstName=$event"
+                            :value="userEdit.firstName"
+                            :placeholder="firstName ? firstName : 'First name'"
+                            :disabled="disabled"
+                            :append-outer-icon="disabled?'':'mdi-pencil'"
+                            filled
+                            rounded
+                    ></v-text-field>
+                </v-card-text>
+                <v-card-text>
+                    <v-text-field
+                            ref="lastName"
+                            hide-details
+                            @input="userEdit.lastName=$event"
+                            :value="userEdit.lastName"
+                            :placeholder="lastName ? lastName : 'Last name'"
+                            :disabled="disabled"
+                            :append-outer-icon="disabled?'':'mdi-pencil'"
+                            filled
+                            rounded
+                    ></v-text-field>
+                </v-card-text>
+                <v-card tile class="elevation-0">
+                    <v-card-text>
+                        <v-text-field
+                                ref="phNumber"
+                                hide-details
+                                @input="userEdit.phNumber=$event"
+                                :value="userEdit.phNumber"
+                                :placeholder="phone ? phone : 'Phone'"
+                                :disabled="disabled"
+                                :append-outer-icon="disabled?'':'mdi-pencil'"
+                                filled
+                                rounded
+                        ></v-text-field>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col>
+                <v-row>
+                    <v-col
+                            v-for="(marina, index) in marinas"
+                            :key="index"
+                            cols="6"
+                    >
+                        <v-card class="elevation-1">
+                            <v-img
+                                    :src="marina.photos.length ? marina.photos[0].fileLink : marinaImg"
+                                    class="white--text align-end"
+                                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                    height="200px"
+                            >
+                                <v-card-title>{{marina.name}}</v-card-title>
+                            </v-img>
+        
+                            <v-card-actions>
+                                <v-chip class="primary">4 new notifications</v-chip>
+                                <v-spacer></v-spacer>
+            
+                                <v-btn icon>
+                                    <v-icon>mdi-arrow-right</v-icon>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
                 </v-row>
+               
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script>
+    import {mapGetters, mapActions} from 'vuex';
     export default {
         name: "Profile",
-        data: () => ({
-            messages: [
-                {
-                    //avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-                    name: 'John Leider',
-                    title: 'Welcome to Vuetify.js!',
-                    excerpt: 'Thank you for joining our community...',
-                },
-                {
-                    color: 'red',
-                    icon: 'people',
-                    name: 'Social',
-                    new: 1,
-                    total: 3,
-                    title: 'Twitter',
-                },
-                {
-                    color: 'teal',
-                    icon: 'local_offer',
-                    name: 'Promos',
-                    new: 2,
-                    total: 4,
-                    title: 'Shop your way',
-                    exceprt: 'New deals available, Join Today',
-                },
-            ],
-            lorem: 'Lorem ipsum dolor sit amet, at aliquam vivendum vel, everti delicatissimi cu eos. Dico iuvaret debitis mel an, et cum zril menandri. Eum in consul legimus accusam. Ea dico abhorreant duo, quo illum minimum incorrupte no, nostro voluptaria sea eu. Suas eligendi ius at, at nemore equidem est. Sed in error hendrerit, in consul constituam cum.',
-        }),
+        computed: {
+            ...mapGetters('User', {
+                email: 'getEmail',
+                name: 'getName',
+                user: 'isUser',
+                firstName: 'getFirstName',
+                lastName: 'getLastName',
+                moderator: 'isModerator',
+                photo: 'getPhoto',
+                phone: 'getPhone',
+                error: "getError"
+            }),
+            ...mapGetters('Marina', {
+                marinas: 'getAll'
+            }),
+            type() {
+                if (this.user) return 'User profile'
+                if (this.moderator) return 'Moderator profile'
+                return 'Profile';
+            }
+        },
+        data: function () {
+            return {
+                disabled: true,
+                marinaImg: require("../../assets/marina.jpg"),
+                saving: false,
+                userEdit: {
+                    firstName: null,
+                    lastName: null,
+                    phNumber: null,
+                }
+            }
+        },
+        methods: {
+            ...mapActions('User',['updateUserInfo','editUserInfo']),
+            ...mapActions('Marina',['fetchMyMarinas']),
+            onSave() {
+                this.saving = true;
+                setTimeout(async ()=>{
+                    if (await this.editUserInfo(this.clean(this.userEdit))) {
+                        this.disabled=true;
+                    } else {
+                        await this.$store.dispatch("snackbar", this.error);
+                    }
+                    this.saving = false;
+                },0)
+                
+            },
+            clean(obj) {
+                let res = obj;
+                for (let propName in res) {
+                    if (res[propName] === null || res[propName] === undefined) {
+                        delete res[propName];
+                    }
+                }
+                return res;
+            }
+        },
+        async mounted() {
+            await this.updateUserInfo();
+            await this.fetchMyMarinas();
+        },
     }
 </script>
 

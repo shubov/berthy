@@ -176,6 +176,7 @@
                 }
             },
             onSignInSuccess(){
+                this.$store.dispatch("User/updateUserInfo");
                 router.push(this.$route.query.redirect||'/roles');
             }
         },

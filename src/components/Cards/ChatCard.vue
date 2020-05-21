@@ -62,7 +62,7 @@
                                 hide-details
                                 placeholder="Write a message"
                                 append-outer-icon="mdi-send"
-                                @click:append-outer="addMessage"
+                                @click:append-outer.prevent="addMessage"
                                 filled
                                 rounded
                         ></v-text-field>

@@ -55,7 +55,9 @@
                 <v-card tile id="messageInput" class="elevation-0">
                     <v-card-text>
                         <v-text-field
-                                v-model="msg"
+                                @focus="scroll"
+                                @input="msg=$event"
+                                :value=msg
                                 @keyup.enter="addMessage"
                                 hide-details
                                 placeholder="Write a message"

@@ -179,7 +179,16 @@
             onSave() {
                 this.saving = true;
                 setTimeout(async ()=>{
-                    if (await this.editUserInfo(this.clean(this.userEdit))) {
+                    if (await this.editUserInfo({
+                        firstName: this.userEdit.firstName ? this.userEdit.firstName : this.firstName,
+                        lastName: this.userEdit.lastName ? this.userEdit.lastName : this.lastName,
+                        phNumber: this.userEdit.phNumber ? this.userEdit.phNumber : this.phNumber,
+                    })) {
+                        this.userEdit = {
+                            firstName: null,
+                            lastName: null,
+                            phNumber: null,
+                        };
                         this.disabled=true;
                     } else {
                         await this.$store.dispatch("snackbar", this.error);

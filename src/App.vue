@@ -13,6 +13,7 @@
         <router-view name="navbar"/>
         <router-view name="footer"/>
         <Snackbar></Snackbar>
+       
         <v-content>
             <router-view name="content" :key="$route.fullPath"/>
         </v-content>

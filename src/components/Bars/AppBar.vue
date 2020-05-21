@@ -14,6 +14,7 @@
             dark
             app
             clippedLeft
+            clipped-right
     >
         <v-btn
                 v-if="isMobile && isNavbarPresent"

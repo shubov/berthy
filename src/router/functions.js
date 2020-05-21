@@ -74,7 +74,7 @@ export default {
                     }
                 }
                 if (moderator) next('/moderator')
-                else if (user) next('/');
+                else if (user) next('/profile');
             }
         }
     }

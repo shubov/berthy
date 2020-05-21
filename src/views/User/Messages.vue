@@ -14,7 +14,7 @@
             v-resize="updateHeight"
     >
         <v-row justify="start" align="start">
-            <v-col sm="7" md="5" class="py-0" >
+            <v-col cols="12" sm="5" md="4" class="py-0" >
                     <v-toolbar
                             id="toolbar"
                             class="elevation-0"
@@ -54,6 +54,7 @@
                                     v-else
                                     :key="item.title"
                                     ripple
+                                    @click="show=true"
                             >
                                 <v-list-item-avatar>
                                     <img :src="item.avatar" alt="">
@@ -66,75 +67,36 @@
                         </template>
                     </v-list>
             </v-col>
-            <v-col v-if="!isMobile" class="py-0">
-                <v-row  justify="center" align="start">
-                    <v-col class="pa-0">
-                        <v-card
-                                id="messagesContainer"
-                                :height="messagesContainerHeight"
-                                class="overflow-y-auto py-0 elevation-0"
-                                style="overflow: hidden"
-                                tile
-                        >
-                            <transition-group name="list-complete" tag="v-card-text" class="d-flex flex-column">
-                                <div
-                                        v-for="(m,i) in messages"
-                                        :key="i+'w'"
-                                        class="py-1 px-4"
-                                >
-                                    <v-avatar
-                                            v-if="i%2===0"
-                                            :key="i+'avatar'"
-                                            size="30px"
-                                    >
-                                        <v-img src="https://picsum.photos/250/300?image=821"></v-img>
-                                    </v-avatar>
-                                    <div
-                                            :class="i%2===0?'message':'myMessage'"
-                                            :key="i+'message'"
-                                    >
-                                        {{m}}
-                                    </div>
-                                </div>
-                            </transition-group>
-                        </v-card>
-                    </v-col>
-                </v-row>
-                <v-row justify="center" align="end" >
-                    <v-col class="pa-0">
-                        <v-card tile id="messageInput" class="elevation-0">
-                            <v-card-text>
-                                <v-text-field
-                                        v-model="msg"
-                                        @change="addMessage"
-                                        hide-details
-                                        placeholder="Write a message"
-                                        filled
-                                        rounded
-                                ></v-text-field>
-                            </v-card-text>
-                        </v-card>
-                    </v-col>
-                </v-row>
+            <v-col cols="0" sm="7" md="8" class="py-0">
+                <ChatCard v-if="chatCard"></ChatCard>
             </v-col>
         </v-row>
+        <v-dialog fullscreen v-model="chatDialog">
+            <ChatCard @close="show=false"></ChatCard>
+        </v-dialog>
     </v-container>
 </template>
 
 <script>
+    import ChatCard from "../../components/Cards/ChatCard";
     export default {
         name: "Messages",
+        components: {ChatCard},
         computed: {
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
+            chatDialog() {
+                return this.show && this.isMobile;
+            },
+            chatCard() {
+                return this.show && !this.isMobile;
+            }
         },
         data () {
             return {
-                msg: null,
+                show: false,
                 listHeight: 0,
-                messagesContainerHeight: 0,
-                messages: ['1Hello', '2Hello', '3Hello', 'Hello', 'Hello', 'Hello', 'Hello', 'Hello', 'https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660', 'Hello', '12Hello', '13Hello', '14Hello', '15Hello'],
                 items: [
                     {
                         header: 'Today',
@@ -202,25 +164,9 @@
         },
         methods: {
             updateHeight() {
-                let h_toolbar = document.getElementById('toolbar').style.height.substr(0,2);
+                let h_toolbar = document.getElementById('toolbar').style.height.substr(0, 2);
                 this.listHeight = (window.innerHeight - 84/*footer+appbar*/ - h_toolbar) + "px";
-                this.messagesContainerHeight = (window.innerHeight - 84/*footer+appbar*/ - 88) + "px";
             },
-            addMessage(){
-                if (this.msg.trim().length) {
-                    this.messages.push(this.msg);
-                    setTimeout(()=>{
-                        this.scroll();
-                        this.msg='';
-                    }, 300);
-                }
-            },
-            scroll() {
-                document.getElementById('messagesContainer').scrollTop = 200000;
-            }
-        },
-        mounted() {
-            this.scroll();
         }
     }
 </script>
@@ -232,25 +178,5 @@
     }
     ::-webkit-scrollbar-thumb {
         background: transparent;
-    }
-    .myMessage {
-        float: right;
-        background-color: rgba(255, 0, 0, 0.6);
-        border-radius: 18px;
-        padding: 10px;
-        white-space: initial;
-        color: white;
-        max-width: 300px;
-        display: inline-block;
-        margin-left: 2px;
-    }
-    .message {
-        background-color: rgba(0, 0, 0, 0.06);
-        border-radius: 18px;
-        padding: 10px;
-        white-space: initial;
-        max-width: 300px;
-        display: inline-block;
-        margin-left: 2px;
     }
 </style>

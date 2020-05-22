@@ -7,6 +7,8 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 5 / 2020                   *
  ******************************************************************************/
 
+import BerthyAPI from "../services/berthy-api";
+
 
 export function metersToFeet(m, decimalPoints) {
     return m ? (3.2808 * m).toFixed(decimalPoints): null;
@@ -25,4 +27,8 @@ export function setIcons(amenities, rootGetters) {
             Object.defineProperty(amenity, 'icon', {value: icon});
         });
     }
+}
+
+export function photoLink(link) {
+    return BerthyAPI.defaults.baseURL.slice(0, -5) + '' + link;
 }

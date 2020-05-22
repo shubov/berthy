@@ -149,7 +149,7 @@
                                     eager
                                     v-for="(photo,i) in marina.photos"
                                     :key="i"
-                                    :src="photoLink(photo.fileLink)"
+                                    :src="toLink(photo.fileLink)"
                             ></v-carousel-item>
                         </v-carousel>
                     </v-col>
@@ -187,9 +187,9 @@
 </template>
 
 <script>
-    import BerthyAPI from "../../services/berthy-api";
     import {mapGetters} from 'vuex';
     import PublicMarinaMap from "../../components/Maps/PublicMarinaMap";
+    import {photoLink} from "../../assets/helperFunctions";
     
     export default {
         name: "Marina",
@@ -239,8 +239,8 @@
                     sec : (0|M/1e6%1*6e4)/100
                 };
             },
-            photoLink(link) {
-                return BerthyAPI.defaults.baseURL.slice(0, -5) + '' + link;
+            toLink(link) {
+                return photoLink(link);
             },
             updateMapHeight() {
                 let h;

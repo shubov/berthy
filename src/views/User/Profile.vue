@@ -111,7 +111,7 @@
                     >
                         <v-card class="elevation-1">
                             <v-img
-                                    :src="marina.photos.length ? marina.photos[0].fileLink : marinaImg"
+                                    :src="marina.photos.length ? toLink(marina.photos[0].fileLink) : marinaImg"
                                     class="white--text align-end"
                                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                     height="200px"
@@ -138,6 +138,7 @@
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
+    import {photoLink} from "../../assets/helperFunctions";
     export default {
         name: "Profile",
         computed: {
@@ -205,7 +206,10 @@
                     }
                 }
                 return res;
-            }
+            },
+            toLink(link) {
+                return photoLink(link);
+            },
         },
         async mounted() {
             await this.updateUserInfo();

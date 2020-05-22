@@ -39,22 +39,6 @@
                         :style="'width: ' + cardRowWidth + 'px'"
                         no-gutters
                 >
-                    <LocoDashboardCard
-                            :width=cardWidth
-                            :colour="i === index ? 'primary lighten-5':''"
-                            class="mb-1 mr-1"
-                            v-for="(item, i) in this.fleet"
-                            :key="i"
-                            :loco-info="{
-                                index: i,
-                                number: item.message.locoNo,
-                                mileage: item.message.mileage,
-                                sofis: item.message.falarm,
-                                speed: item.message.speed,
-                                device: item.device
-                            }"
-                            @select-loco="selectLoco(i)"
-                    ></LocoDashboardCard>
                 </v-row>
             </v-col>
             <v-col cols="6">
@@ -82,13 +66,11 @@
 <script>
     import HighlightCard from "../../components/Cards/HighlightCard";
     import {mapGetters} from "vuex";
-    import LocoDashboardCard from "../../components/Cards/LocoDashboardCard";
-    import MapCard from "../../components/Cards/MapCard";
     import Table from "../../components/Tables/Table";
 
     export default {
         name: "Dashboard",
-        components: {Table, MapCard, HighlightCard, LocoDashboardCard},
+        components: {Table, HighlightCard},
         computed: {
             ...mapGetters({
                 fleet: 'Fleet/getFleet',

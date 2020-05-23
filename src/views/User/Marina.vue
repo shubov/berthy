@@ -77,16 +77,34 @@
                         </v-row>
                         <v-row>
                             <v-col cols="12" align="start" >
-                                <v-btn
-                                        color="primary"
-                                        x-large
-                                        class="mr-3 mb-3"
-                                        :block="!$vuetify.breakpoint.smAndUp"
-                                        to="/marina/7"
-                                >
-                                    <v-icon>mdi-calendar-check</v-icon>
-                                    Reserve a docking spot
-                                </v-btn>
+                                <v-dialog
+                                        v-model="dialogReservation"
+                                        :fullscreen="!$vuetify.breakpoint.mdAndUp"
+                                        max-width="700px"
+                                        persistent
+                                        transition="dialog-bottom-transition">
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn
+                                                color="primary"
+                                                x-large
+                                                class="mr-3 mb-3"
+                                                :block="!$vuetify.breakpoint.smAndUp"
+                                                v-on="on"
+                                        >
+                                            <v-icon>mdi-calendar-check</v-icon>
+                                            Reserve a docking spot
+                                        </v-btn>
+                                    </template>
+                                    <v-toolbar dark color="primary">
+                                        <v-toolbar-title>Reservation</v-toolbar-title>
+                                        <v-spacer></v-spacer>
+                                        <v-btn icon dark @click="dialogReservation = false">
+                                            <v-icon>mdi-close</v-icon>
+                                        </v-btn>
+                                    </v-toolbar>
+                                    <ReservationCard  @new-ship="dialogShip=true"></ReservationCard>
+                                </v-dialog>
+                                
                                 <v-dialog
                                         v-model="dialog"
                                         :fullscreen="!$vuetify.breakpoint.mdAndUp"
@@ -182,18 +200,32 @@
                 </v-row>
             </v-col>
         </v-row>
+        <v-dialog v-model="dialogShip"
+                  :fullscreen="isMobile"
+        >
+            <v-toolbar color="primary" dark>
+                <v-toolbar-title>Add your boat</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="dialogShip=false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <ShipForm></ShipForm>
+        </v-dialog>
     </v-container>
-    
 </template>
 
 <script>
     import {mapGetters} from 'vuex';
-    import PublicMarinaMap from "../../components/Maps/PublicMarinaMap";
     import {photoLink} from "../../assets/helperFunctions";
     
     export default {
         name: "Marina",
-        components: {PublicMarinaMap},
+        components: {
+            ShipForm: ()=>import("../../components/BookComponents/ShipForm"),
+            ReservationCard: ()=> import("../../components/BookComponents/ReservationCard"),
+            PublicMarinaMap: ()=>import("../../components/MarinaPageComponents/PublicMarinaMap"),
+        },
         async beforeCreate() {
             let id = this.$route.params.id;
             if (!isNaN(id)) {
@@ -216,6 +248,8 @@
         data: function () {
             return {
                 dialog: false,
+                dialogShip: false,
+                dialogReservation: false,
             }
         },
         computed: {
@@ -228,13 +262,17 @@
             lng(){
                 return this.convertToDMS(this.marina.lng, true);
             },
+            isMobile() {
+                return !this.$vuetify.breakpoint.mdAndUp;
+            },
         },
         methods: {
-            convertToDMS(D, lng){
+            convertToDMS(D1, lng){
+                const D = D1<0?-D1:D1;
                 const M=0|(D%1)*60e7;
                 return {
-                    dir : D<0?lng?'W':'S':lng?'E':'N',
-                    deg : 0|(D<0?D=-D:D),
+                    dir : D1<0?lng?'W':'S':lng?'E':'N',
+                    deg : 0|D,
                     min : 0|M/1e7,
                     sec : (0|M/1e6%1*6e4)/100
                 };

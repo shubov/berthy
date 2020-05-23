@@ -8,113 +8,64 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-container
-            fluid
-            fill-height
+    <grid-layout
+            :layout.sync="layout"
+            :col-num="12"
+            :row-height="30"
+            :is-draggable="true"
+            :is-resizable="true"
+            :is-mirrored="false"
+            :vertical-compact="true"
+            :margin="[10, 10]"
+            :use-css-transforms="true"
+            :responsive="true"
     >
-        <v-row>
-            <v-col cols="12">
-                <v-row
-                        align="start"
-                        justify="space-between"
-                        no-gutters
-                >
-                    <HighlightCard
-                            v-for="n in 5"
-                            :key="n"
-                            colour="red"
-                            text="146%"
-                            class="mb-1"
-                    ></HighlightCard>
-                </v-row>
-            </v-col>
-            <v-col
-                    cols="6"
-                    class="overflow-x-auto"
-                    style="overflow: hidden"
-            >
-                <v-row
-                        align="start"
-                        justify="start"
-                        :style="'width: ' + cardRowWidth + 'px'"
-                        no-gutters
-                >
-                </v-row>
-            </v-col>
-            <v-col cols="6">
-                <v-row
-                        align="start"
-                        justify="start"
-                        no-gutters
-                        style="width: inherit"
-                >
-                    <MapCard :loco="loco" :zoom="zoom"></MapCard>
-                </v-row>
-            </v-col>
-            <v-col cols="12">
-                <v-row
-                        align="start"
-                        no-gutters
-                >
-                    <Table></Table>
-                </v-row>
-            </v-col>
-        </v-row>
-    </v-container>
+        
+        <grid-item v-for="item in layout"
+                   :x="item.x"
+                   :y="item.y"
+                   :w="item.w"
+                   :h="item.h"
+                   :i="item.i"
+                   :key="item.i">
+            {{item.i}}
+        </grid-item>
+    </grid-layout>
 </template>
 
 <script>
-    import HighlightCard from "../../components/Cards/HighlightCard";
-    import {mapGetters} from "vuex";
-    import Table from "../../components/Tables/Table";
-
+    import VueGridLayout from 'vue-grid-layout';
     export default {
         name: "Dashboard",
-        components: {Table, HighlightCard},
-        computed: {
-            ...mapGetters({
-                fleet: 'Fleet/getFleet',
-                length: 'Fleet/getLength',
-            }),
-            cardRowWidth: function () {
-                let l = this.length;
-                if (l<=3) {
-                    return l * this.cardWidthMargin;
-                }
-                if (l>3 && l<=6) {
-                    return 3 * this.cardWidthMargin;
-                }
-                if (l>6) {
-                    return Math.floor((l+1)/2) * this.cardWidthMargin;
-                }
-                return 600;
-            },
-            cardWidthMargin: function () {
-                return this.cardWidth + 4;
-            }
+        components: {
+            GridLayout: VueGridLayout.GridLayout,
+            GridItem: VueGridLayout.GridItem
         },
         data: function() {
             return {
-                cardWidth: 135,
-                loco: null,
-                index: null,
-                setIntervalID: null,
-                zoom: 7,
+                layout: [
+                    {"x":0,"y":0,"w":2,"h":2,"i":"0"},
+                    {"x":2,"y":0,"w":2,"h":4,"i":"1"},
+                    {"x":4,"y":0,"w":2,"h":5,"i":"2"},
+                    {"x":6,"y":0,"w":2,"h":3,"i":"3"},
+                    {"x":8,"y":0,"w":2,"h":3,"i":"4"},
+                    {"x":10,"y":0,"w":2,"h":3,"i":"5"},
+                    {"x":0,"y":5,"w":2,"h":5,"i":"6"},
+                    {"x":2,"y":5,"w":2,"h":5,"i":"7"},
+                    {"x":4,"y":5,"w":2,"h":5,"i":"8"},
+                    {"x":6,"y":3,"w":2,"h":4,"i":"9"},
+                    {"x":8,"y":4,"w":2,"h":4,"i":"10"},
+                    {"x":10,"y":4,"w":2,"h":4,"i":"11"},
+                    {"x":0,"y":10,"w":2,"h":5,"i":"12"},
+                    {"x":2,"y":10,"w":2,"h":5,"i":"13"},
+                    {"x":4,"y":8,"w":2,"h":4,"i":"14"},
+                    {"x":6,"y":8,"w":2,"h":4,"i":"15"},
+                    {"x":8,"y":10,"w":2,"h":5,"i":"16"},
+                    {"x":10,"y":4,"w":2,"h":2,"i":"17"},
+                    {"x":0,"y":9,"w":2,"h":3,"i":"18"},
+                    {"x":2,"y":6,"w":2,"h":2,"i":"19"}
+                ],
             }
-        },
-        methods: {
-            selectLoco: function (index) {
-                clearInterval(this.setIntervalID);
-                this.index = index;
-                this.loco=this.fleet[index];
-                this.zoom = 18;
-                this.setIntervalID = setInterval( () => {
-                    this.loco=this.fleet[index];
-                }, 3000);
-            }
-        },
-        beforeDestroy () {
-            clearInterval(this.setIntervalID);
         },
     }
 </script>

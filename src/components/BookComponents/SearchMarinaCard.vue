@@ -8,7 +8,7 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-card class="elevation-1" :max-width="!isMobile?'350px':''">
+    <v-card :class="elevation ? 'elevation-1' : 'elevation-0'" :max-width="!isMobile?'350px':''">
         <v-img
                 :src="marina.photos.length ? toLink(marina.photos[0].fileLink): marinaImg"
                 class="white--text align-end"
@@ -33,6 +33,12 @@
 
     export default {
         name: "SearchMarinaCard",
+        props: {
+            elevation: {
+                type: Boolean,
+                default: false,
+            }
+        },
         data: function () {
             return {
                 marinaImg: require("../../assets/marina.jpg"),

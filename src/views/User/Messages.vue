@@ -78,7 +78,7 @@
 </template>
 
 <script>
-    import ChatCard from "../../components/Cards/ChatCard";
+    import ChatCard from "../../components/ChatComponents/ChatCard";
     export default {
         name: "Messages",
         components: {ChatCard},

@@ -33,6 +33,8 @@ const initialState = () => ({
         radius: 1000,
         amenities: [],
         sortBy: 'PRICE',
+        spotID: null,
+        places: null,
     },
     sortOptions: ['PRICE', 'RATING', 'DISTANCE'],
     geolocation: {
@@ -111,6 +113,20 @@ const getters = {
             lng: state.map.center.lng,
         }
     },
+    getSpotId(state) {
+        return state.booking.spotID;
+    },
+    getPlaces(state) {
+        return state.booking.places;
+    },
+    getBooking(state) {
+        return {
+            shipId: state.booking.ship,
+            startDate: state.booking.dateFrom,
+            endDate: state.booking.dateTo,
+            berthPlaceId: state.booking.spotID,
+        }
+    },
 
     getFilteredMarinas(state) {
         return state.marinas;
@@ -132,23 +148,31 @@ const actions = {
     },
     async updateSearch({commit, getters, dispatch}) {
         if (Date.now() - getters.getLastSearchTime < 100) return false;
-
         commit('FETCHING');
-
         let data = getters.getSearchData;
         data.amenities = await dispatch('Amenities/getAmenitiesByKeys', data.amenities, {root:true});
-
         let response = await BerthyAPI.post('bookings/search', data);
-
         if (response.data) {
             if (response.data.success) {
                 commit('UPDATE_MARINAS', response.data.data);
+                commit('STORE_LOCAL_COPY', data);
                 return true;
             } else {
                 commit('ERROR', response.data.error.message);
             }
         }
         return false;
+    },
+    async book({commit, getters}) {
+        let data = getters.getBooking;
+        let response = await BerthyAPI.post('bookings', data);
+        if (response.data) {
+            if (response.data.success) {
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
     },
     watchGeolocation({commit, dispatch, getters}) {
         let watcher = navigator.geolocation.watchPosition(
@@ -199,7 +223,7 @@ const mutations = {
     },
     SELECT_MARINA(state, index) {
         state.indexSelected=index;
-        console.log(index);
+        console.log(state.indexSelected);
         //state.map.center = latLng(state.marinas[index].lat,state.marinas[index].lng);
     },
 
@@ -219,11 +243,9 @@ const mutations = {
 
     UPDATE_MAP_CENTER(state, value) {
         state.map.center = value;
-        state.indexSelected = null;
     },
     UPDATE_RADIUS(state, value) {
         state.booking.radius = value;
-        state.indexSelected = null;
     },
 
     UPDATE_SHIP(state, value) {
@@ -241,6 +263,28 @@ const mutations = {
     UPDATE_SORT(state, value) {
         state.booking.sortBy = value;
     },
+    UPDATE_SPOT(state, id) {
+        state.booking.spotID = id;
+    },
+
+    STORE_LOCAL_COPY(state) {
+        let data = {
+            shipId: state.booking.ship,
+            endDate: state.booking.dateTo,
+            startDate: state.booking.dateFrom,
+        };
+        localStorage.setItem('searchData',  JSON.stringify(data));
+    },
+    GET_LOCAL_COPY(state){
+        let data = localStorage.getItem('searchData');
+        localStorage.removeItem('searchData');
+        if (data != null) {
+            data =  JSON.parse(data);
+            state.booking.dateFrom = data.startDate ? data.startDate: state.booking.dateFrom;
+            state.booking.dateTo = data.endDate ? data.endDate: state.booking.dateTo;
+            state.booking.ship = data.shipId ? data.shipId: state.booking.ship;
+        }
+    }
 };
 
 

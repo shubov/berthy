@@ -27,7 +27,6 @@
                    @toggle-search="dialogSearch=!dialogSearch"
                    @toggle-list="dialogList=!dialogList"
         ></SearchMap>
-        
         <v-navigation-drawer id="right"
                              v-if="!isMobile"
                              permanent app clipped right
@@ -41,12 +40,24 @@
             <SearchListCard></SearchListCard>
         </v-dialog>
         
-        <v-dialog v-model="dialogShip" max-width="800px">
+        <v-dialog v-model="dialogShip"
+                  :fullscreen="isMobile"
+        >
+            <v-toolbar color="primary" dark>
+                <v-toolbar-title>Add your boat</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="dialogShip=false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
             <ShipForm></ShipForm>
         </v-dialog>
     
-        <v-bottom-sheet v-model="bottomSheet">
-            <v-sheet class="text-center">
+        <v-bottom-sheet
+                v-if="getSelected !=null"
+                v-model="bottomSheet"
+        >
+            <v-sheet class="text-center px-3 pt-3" tile>
                 <SearchMarinaCard></SearchMarinaCard>
             </v-sheet>
         </v-bottom-sheet>
@@ -55,20 +66,21 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import SearchMap from "../../components/BookComponents/SearchMap";
 
     export default {
         name: "Book",
         components: {
-            SearchMarinaCard: () => import("../../components/Cards/SearchMarinaCard"),
-            ShipForm: () => import("../../components/Forms/ShipForm"),
-            SearchListCard: () => import("../../components/Cards/SearchListCard"),
-            SearchCard: () => import("../../components/Cards/SearchCard"),
-            SearchMap: () => import("../../components/Maps/SearchMap"),
+            SearchMap,
+            SearchMarinaCard: () => import("../../components/BookComponents/SearchMarinaCard"),
+            ShipForm: () => import("../../components/BookComponents/ShipForm"),
+            SearchListCard: () => import("../../components/BookComponents/SearchListCard"),
+            SearchCard: () => import("../../components/BookComponents/SearchCard"),
         },
         watch: {
             getSelected(value) {
                 if (value != null && this.isMobile)
-                    this.bottomSheet =true;
+                    this.bottomSheetFlag = true;
             }
         },
         computed: {
@@ -78,13 +90,22 @@
             isMobile() {
                 return !this.$vuetify.breakpoint.mdAndUp;
             },
+            bottomSheet: {
+                get() {
+                    return this.bottomSheetFlag;
+                },
+                set(value) {
+                    if (!value) this.$store.commit('Reservation/SELECT_MARINA', null)
+                    this.bottomSheetFlag = value;
+                }
+            }
         },
         data: function () {
             return {
                 dialogSearch: false,
                 dialogList: false,
                 dialogShip: false,
-                bottomSheet: false,
+                bottomSheetFlag: false,
             }
         },
         methods: {

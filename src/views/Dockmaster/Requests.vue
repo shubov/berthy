@@ -133,7 +133,7 @@
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
-    import BookingCard from "../../components/Cards/BookingCard";
+    import BookingCard from "../../components/MarinaBookingRequestsComponents/BookingCard";
     export default {
         name: "Requests",
         components: {BookingCard},

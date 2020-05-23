@@ -13,7 +13,7 @@
         <router-view name="navbar"/>
         <router-view name="footer"/>
         <Snackbar></Snackbar>
-       
+        <Dialog></Dialog>
         <v-content>
             <router-view name="content" :key="$route.fullPath"/>
         </v-content>
@@ -21,9 +21,10 @@
 </template>
 
 <script>
-    import Snackbar from "./components/Snackbar";
+    import Snackbar from "./components/AppComponents/Snackbar";
+    import Dialog from "./components/AppComponents/Dialog";
     export default {
-        components: {Snackbar},
+        components: {Dialog, Snackbar},
         data: () => ({
             name: "Main",
         }),

@@ -93,6 +93,13 @@ const actions = {
     getShipIdByIndex({getters}, index) {
         return getters.ships[index].id;
     },
+    getShipById({state}, id) {
+        let res;
+        state.ships.forEach(ship=>{
+            if (ship.id===id) res = ship;
+        });
+        return res;
+    },
     async uploadFile({commit, dispatch, rootGetters}, {file, commitType}) {
         await dispatch('File/uploadFile', file, {root:true});
         if (rootGetters['File/isUploaded'])

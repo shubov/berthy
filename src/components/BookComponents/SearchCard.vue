@@ -14,10 +14,12 @@
                 <v-select
                         dense
                         outlined
+                        label="Boat"
                         v-model='ship'
                         :items="ships"
                         item-text="name"
                         item-value="id"
+                        menu-props="{z-index: 200}"
                 >
                     <template v-slot:append-item>
                         <v-list-item>
@@ -27,7 +29,7 @@
                                     @click.stop="$emit('new-ship')"
                             >
                                 <v-icon>mdi-sail-boat</v-icon>
-                                NEW SHIP
+                                NEW Boat
                             </v-btn>
                         </v-list-item>
                     </template>
@@ -82,6 +84,7 @@
                         dense
                         label="Amenities"
                         outlined
+                        return-object
                         multiple
                 >
                     <template v-slot:selection="data">

@@ -37,7 +37,7 @@ export default new Vuex.Store({
         },
         SET_SNACKBAR_MESSAGE(state, value){
             state.snackbarMessage = value;
-        }
+        },
     },
     actions: {
         reset({commit}) {

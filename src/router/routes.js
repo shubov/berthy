@@ -12,9 +12,9 @@ const projectName = 'Berthy';
 const pagesWithNavBar = store.state.pagesWithNavBar;
 const roles = store.state.roles;
 
-const navbar = () => import('../components/Bars/NavBar');
-const footer = () => import('../components/Bars/FooterBar');
-const appBar = () => import('../components/Bars/AppBar');
+const navbar = () => import('../components/AppComponents/NavBar');
+const footer = () => import('../components/AppComponents/FooterBar');
+const appBar = () => import('../components/AppComponents/AppBar');
 
 const routes =
     [

@@ -107,7 +107,7 @@
     </v-container>
 </template>
 <script>
-    import SignInForm from "../../components/Forms/SignInForm";
+    import SignInForm from "../../components/AuthComponents/SignInForm";
     import router from "../../router";
     export default {
         name: "SignIn",

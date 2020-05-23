@@ -9,10 +9,9 @@
 
 <template>
     <v-card class="elevation-0" tile>
-        <v-card-title>Add your boat</v-card-title>
         <v-card-text>
             <v-row>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                     <v-text-field
                             dense
                             v-model="name"
@@ -22,7 +21,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="6">
                     <v-select
                             dense
                             v-model="type"
@@ -38,6 +37,7 @@
                             v-model="photos"
                             multiple
                             filled
+                            hide-details
                             rounded
                             dense
                             label="Photos"
@@ -53,7 +53,7 @@
                                     :key="index"
                                     @click:close="onRemovePhoto(index)"
                             >
-                                {{photos[index].fileName}}
+                                {{fileNameDisplay(photos[index].fileName, 9)}}
                             </v-chip>
                         </template>
                     </v-file-input>
@@ -63,7 +63,7 @@
                 <v-col cols="12">
                     <v-label>Dimensions</v-label>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-text-field
                             dense
                             hide-details
@@ -74,7 +74,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-text-field
                             dense
                             hide-details
@@ -85,7 +85,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-text-field
                             dense
                             hide-details
@@ -101,7 +101,7 @@
                 <v-col cols="12">
                     <v-label>Model</v-label>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-text-field
                             dense
                             hide-details
@@ -111,7 +111,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-text-field
                             dense
                             hide-details
@@ -121,7 +121,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="4">
                     <v-text-field
                             dense
                             hide-details
@@ -137,7 +137,7 @@
                 <v-col cols="12">
                     <v-label>Registration</v-label>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="6" md="4">
                     <v-text-field
                             dense
                             hide-details
@@ -147,7 +147,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" sm="6" md="4">
                     <v-menu v-model="registrationMenu" max-width="290px">
                         <template v-slot:activator="{ on }">
                             <v-text-field
@@ -168,12 +168,13 @@
                         ></v-date-picker>
                     </v-menu>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="12" md="4">
                     <v-file-input
                             v-model="regFile"
                             filled
                             rounded
                             dense
+                            hide-details
                             label="File"
                             :clearable="true"
                             accept="image/*,application/pdf"
@@ -182,7 +183,7 @@
                     >
                         <template v-slot:selection>
                             <span v-if="regFile">
-                                {{regFile.fileName.substr(0,18)}}...
+                                {{fileNameDisplay(regFile.fileName,  $vuetify.breakpoint.mdOnly ? 15 : 27)}}
                             </span>
                         </template>
                     </v-file-input>
@@ -192,7 +193,7 @@
                 <v-col cols="12">
                     <v-label>Insurance</v-label>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="4" md="3">
                     <v-text-field
                             dense
                             hide-details
@@ -202,7 +203,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="4" md="3">
                     <v-text-field
                             dense
                             hide-details
@@ -212,7 +213,7 @@
                             rounded
                     ></v-text-field>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" sm="4" md="3">
                     <v-menu v-model="insuranceMenu" max-width="290px">
                         <template v-slot:activator="{ on }">
                             <v-text-field
@@ -233,10 +234,11 @@
                         ></v-date-picker>
                     </v-menu>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="12" md="3">
                     <v-file-input
                             v-model="insFile"
                             filled
+                            hide-details
                             rounded
                             dense
                             label="File"
@@ -247,7 +249,7 @@
                     >
                         <template v-slot:selection>
                              <span v-if="insFile">
-                                {{insFile.fileName.substr(0,18)}}...
+                                {{fileNameDisplay(insFile.fileName, $vuetify.breakpoint.mdOnly ? 9 : 17)}}
                             </span>
                         </template>
                     </v-file-input>
@@ -447,9 +449,14 @@
             onSubmit(){
                 this.submitting = true;
                 setTimeout(async ()=> {
-                    await this.$store.dispatch('Ships/createShip');
+                    if(await this.$store.dispatch('Ships/createShip'))
+                        this.$store.dispatch('Dialog/set', this.name + ' boat was succesfully created');
+                    else this.$store.dispatch('snackbar', 'Error creating boat');
                     this.submitting = false;
                 }, 0);
+            },
+            fileNameDisplay(fileName, length) {
+                return fileName.length > length ? fileName.substr(0,length)+'...' : fileName;
             }
         }
     }

@@ -75,7 +75,7 @@
     export default {
         name: "LocationInput",
         components: {
-            Map: () => import('../Maps/MarinaRegistrationMap'),
+            Map: () => import('./MarinaRegistrationMap'),
         },
         props: {
             required: {

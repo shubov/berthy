@@ -7,6 +7,8 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 
+import router from "../router";
+import store from "../store"
 import axios from 'axios';
 import AuthService from '../services/auth.service';
 
@@ -19,6 +21,18 @@ BerthyAPI.interceptors.request.use(function (config) {
     return config;
 }, function(error) {
     return Promise.reject(error);
+});
+
+BerthyAPI.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (401 === error.response.status) {
+        store.dispatch('snackbar',
+            "Your session has expired. Would you like to be redirected to the login page?");
+        router.push('/sign-in');
+    } else {
+        return Promise.reject(error);
+    }
 });
 
 export default BerthyAPI;

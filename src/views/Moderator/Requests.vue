@@ -156,8 +156,8 @@
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
-    import MarinaApplicationCard from "../../components/Cards/MarinaApplicationCard";
-    import ModeratorFilter from "../../components/ModeratorFilter";
+    import MarinaApplicationCard from "../../components/ModeratorComponents/MarinaApplicationCard";
+    import ModeratorFilter from "../../components/ModeratorComponents/ModeratorFilter";
     export default {
         name: "Requests",
         components: {ModeratorFilter, MarinaApplicationCard},

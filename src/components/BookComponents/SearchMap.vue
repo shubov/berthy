@@ -46,7 +46,7 @@
                 v-if="selected != null && !isMobile"
                 position="bottomright"
         >
-            <SearchMarinaCard></SearchMarinaCard>
+            <SearchMarinaCard elevation></SearchMarinaCard>
         </l-control>
         <l-circle-marker
                 v-if="isGeoAvailable"
@@ -70,7 +70,7 @@
     import {LMap, LTileLayer, LCircleMarker, LMarker, LControl, LControlScale, LTooltip} from "vue2-leaflet";
     import {Icon} from 'leaflet';
     import {mapActions, mapGetters} from "vuex";
-    import SearchMarinaCard from "../Cards/SearchMarinaCard";
+    import SearchMarinaCard from "./SearchMarinaCard";
     delete Icon.Default.prototype._getIconUrl;
     Icon.Default.mergeOptions({
         iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),

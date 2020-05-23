@@ -41,8 +41,8 @@
                 set(value) {
                     this.$store.commit('SET_SNACKBAR', value);
                 }
-            }
-        }
+            },
+        },
     }
 </script>
 

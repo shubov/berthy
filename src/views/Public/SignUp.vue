@@ -78,7 +78,7 @@
     
 </template>
 <script>
-    import SignUpForm from "../../components/Forms/SignUpForm";
+    import SignUpForm from "../../components/AuthComponents/SignUpForm";
     export default {
         name: "SignUp",
         components: {SignUpForm},

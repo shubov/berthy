@@ -54,7 +54,7 @@
         />
         <l-marker ref="marker"
                 v-for="(marina, index) in marinas"
-                :key="marina.name+index"
+                :key="marina.id+marina.name+index"
                 :lat-lng="[marina.lat, marina.lng]"
                 @click="selected=index"
                 :icon="selectionIcon"
@@ -107,6 +107,7 @@
                     let mapBoundNorthEast = this.map.getBounds().getNorthEast();
                     let mapDistance = mapBoundNorthEast.distanceTo(value);
                     this.$store.commit("Reservation/UPDATE_RADIUS", mapDistance/1000);
+                    this.$store.commit('Reservation/UNSELECT_MARINA');
                     this.updateSearch();
                 }
             },

@@ -36,6 +36,7 @@
                 </v-select>
                 <v-menu
                         v-model="dateMenuFrom"
+                        max-width="290px"
                         transition="slide-x-transition"
                 >
                     <template v-slot:activator="{ on }">
@@ -58,6 +59,7 @@
                 </v-menu>
                 <v-menu
                         v-model="dateMenuTo"
+                        max-width="290px"
                         transition="slide-x-transition"
                 >
                     <template v-slot:activator="{ on }">
@@ -92,7 +94,7 @@
                                     v-if="data.index===0"
                             >{{ amenitiesSearch.length }} selected</span>
                     </template>
-                    <template v-slot:item="data" z-index="999">
+                    <template v-slot:item="data">
                         <template v-if="typeof data.item !== 'object'">
                             <v-list-item-content v-text="data.item"></v-list-item-content>
                         </template>

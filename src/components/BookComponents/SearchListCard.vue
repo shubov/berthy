@@ -16,7 +16,7 @@
                 <v-list-item-group v-model="selected" color="primary">
                     <v-list-item
                             v-for="(marina, index) in marinas"
-                            :key="marina.id+'_'+index"
+                            :key="index"
                     >
                         <v-list-item-title>{{marina.name}}</v-list-item-title>
                     </v-list-item>

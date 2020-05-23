@@ -95,7 +95,7 @@
                     return this.bottomSheetFlag;
                 },
                 set(value) {
-                    if (!value) this.$store.commit('Reservation/SELECT_MARINA', null)
+                    if (!value) this.$store.commit('Reservation/UNSELECT_MARINA');
                     this.bottomSheetFlag = value;
                 }
             }
@@ -117,8 +117,3 @@
         },
     };
 </script>
-<style>
-    .menu__content {
-        z-index: 999
-    }
-</style>

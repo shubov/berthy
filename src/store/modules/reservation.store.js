@@ -146,11 +146,10 @@ const actions = {
     reset({commit}) {
         commit('RESET');
     },
-    async updateSearch({commit, getters, dispatch}) {
+    async updateSearch({commit, getters}) {
         if (Date.now() - getters.getLastSearchTime < 100) return false;
         commit('FETCHING');
         let data = getters.getSearchData;
-        data.amenities = await dispatch('Amenities/getAmenitiesByKeys', data.amenities, {root:true});
         let response = await BerthyAPI.post('bookings/search', data);
         if (response.data) {
             if (response.data.success) {
@@ -223,8 +222,9 @@ const mutations = {
     },
     SELECT_MARINA(state, index) {
         state.indexSelected=index;
-        console.log(state.indexSelected);
-        //state.map.center = latLng(state.marinas[index].lat,state.marinas[index].lng);
+    },
+    UNSELECT_MARINA(state) {
+        state.indexSelected=null;
     },
 
     WATCH_GEOLOCATION(state, watcher) {

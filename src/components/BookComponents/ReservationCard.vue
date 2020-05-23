@@ -9,13 +9,64 @@
 
 <template>
     <v-card class="elevation-0" tile>
-        <v-card-subtitle>Check the information</v-card-subtitle>
         <v-card-text>
             <v-row>
                 <v-col cols="12" sm="6">
+                    <v-menu
+                            v-model="dateMenuFrom"
+                            transition="slide-x-transition"
+                            max-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    rounded
+                                    filled
+                                    dense
+                                    label="Date From"
+                                    :value="dateFrom"
+                                    readonly
+                                    prepend-inner-icon="mdi-calendar"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                                v-model="dateFrom"
+                                no-title
+                                :allowed-dates="allowedDatesFrom"
+                                @change="()=>{dateMenuFrom = false; dateTo=null;}"
+                        ></v-date-picker>
+                    </v-menu>
+                </v-col>
+                <v-col cols="12" sm="6">
+                    <v-menu
+                            v-model="dateMenuTo"
+                            transition="slide-x-transition"
+                            max-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    dense
+                                    rounded
+                                    filled
+                                    label="Date To"
+                                    :value="dateTo"
+                                    readonly
+                                    prepend-inner-icon="mdi-calendar"
+                                    v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                                v-model="dateTo"
+                                no-title @change="dateMenuTo = false"
+                                :allowed-dates="allowedDatesTo"
+                        ></v-date-picker>
+                    </v-menu>
+                </v-col>
+                <v-col cols="12" sm="6">
                     <v-select
                             dense
-                            outlined
+                            rounded
+                            filled
                             label="Boat"
                             v-model='ship'
                             :items="ships"
@@ -38,56 +89,11 @@
                     </v-select>
                 </v-col>
                 <v-col cols="12" sm="6">
-                    <v-menu
-                            v-model="dateMenuFrom"
-                            transition="slide-x-transition"
-                    >
-                        <template v-slot:activator="{ on }">
-                            <v-text-field
-                                    dense
-                                    outlined
-                                    label="Date From"
-                                    :value="dateFrom"
-                                    readonly
-                                    prepend-inner-icon="mdi-calendar"
-                                    v-on="on"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker
-                                v-model="dateFrom"
-                                no-title
-                                :allowed-dates="allowedDatesFrom"
-                                @change="()=>{dateMenuFrom = false; dateTo=null;}"
-                        ></v-date-picker>
-                    </v-menu>
-                </v-col>
-                <v-col cols="12" sm="6">
-                    <v-menu
-                            v-model="dateMenuTo"
-                            transition="slide-x-transition"
-                    >
-                        <template v-slot:activator="{ on }">
-                            <v-text-field
-                                    dense
-                                    outlined
-                                    label="Date To"
-                                    :value="dateTo"
-                                    readonly
-                                    prepend-inner-icon="mdi-calendar"
-                                    v-on="on"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker
-                                v-model="dateTo"
-                                no-title @change="dateMenuTo = false"
-                                :allowed-dates="allowedDatesTo"
-                        ></v-date-picker>
-                    </v-menu>
-                </v-col>
-                <v-col cols="12" sm="6">
                     <v-select
                         dense
-                        outlined
+                        label="Select a docking spot"
+                        rounded
+                        filled
                         v-model='berthPlaceId'
                         :items="places"
                         item-text="name"
@@ -98,8 +104,9 @@
             </v-row>
         </v-card-text>
         <v-card-actions>
+            <v-spacer></v-spacer>
             <v-btn
-                    block
+                    :block="isMobile"
                     color="primary"
                     @click="onSubmit()"
                     x-large
@@ -172,7 +179,10 @@
                     ${this.dateFrom} to
                     ${this.dateTo}`;
                 else return '';
-            }
+            },
+            isMobile() {
+                return !this.$vuetify.breakpoint.mdAndUp;
+            },
         },
         data: function() {
             return {

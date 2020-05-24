@@ -40,7 +40,6 @@ const initialState = () => ({
     geolocation: {
         lat: null,
         lng: null,
-        trackLocation: false,
         geolocationWatcher: null,
         options: {
             enableHighAccuracy: true,
@@ -233,6 +232,8 @@ const mutations = {
     STOP_WATCHING(state) {
         navigator.geolocation.clearWatch(state.geolocation.geolocationWatcher);
         state.geolocation.geolocationWatcher = null;
+        state.geolocation.lat=null;
+        state.geolocation.lng=null;
     },
     UPDATE_GEOLOCATION_LAT(state, value) {
         state.geolocation.lat=value;

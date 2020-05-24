@@ -8,7 +8,10 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-card :class="elevation ? 'elevation-1' : 'elevation-0'" :max-width="!isMobile?'350px':''">
+    <v-card
+            :class="'pa-2 '+(elevation ? 'elevation-1' : 'elevation-0')"
+            :max-width="!isMobile?'350px':''"
+    >
         <v-img
                 :src="marina.photos.length ? toLink(marina.photos[0].fileLink): marinaImg"
                 class="white--text align-end"

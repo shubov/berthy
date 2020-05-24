@@ -19,28 +19,24 @@
                 :url="getMap.url"
                 :attribution="getMap.attribution"
         />
-        <l-control-scale position="topright" :imperial="true"></l-control-scale>
+       
+        <l-control-scale position="bottomleft" :imperial="true"></l-control-scale>
         <l-control position="bottomleft">
-            <v-btn large icon
-                   v-if="isMobile"
-                   @click.stop="$emit('toggle-search')"
-            ><v-icon>mdi-magnify</v-icon></v-btn>
-        </l-control>
-        <l-control position="bottomright">
-            <v-btn large icon
-                   v-if="isMobile"
-                   @click.stop="$emit('toggle-list')"
-            ><v-icon>mdi-sort-variant</v-icon></v-btn>
-        </l-control>
-        <l-control position="topright">
-            <v-btn large icon color="info" class="pulsation"
+            <v-btn x-large icon color="info" class="pulsation"
                    v-if="isGeoOn"
                    @click.stop="stopWatching"
             ><v-icon>mdi-compass</v-icon></v-btn>
-            <v-btn large icon
+            <v-btn x-large icon
                    v-else
                    @click.stop="watchGeolocation"
             ><v-icon>mdi-compass-outline</v-icon></v-btn>
+        </l-control>
+        
+        <l-control position="bottomright">
+            <v-btn icon x-large
+                   v-if="isMobile"
+                   @click.stop="$emit('toggle-search')"
+            ><v-icon class="control">mdi-magnify</v-icon></v-btn>
         </l-control>
         <l-control
                 v-if="selected != null && !isMobile"
@@ -48,6 +44,14 @@
         >
             <SearchMarinaCard elevation></SearchMarinaCard>
         </l-control>
+        
+        <l-control position="topright">
+            <v-btn icon x-large
+                   v-if="isMobile"
+                   @click.stop="$emit('toggle-list')"
+            ><v-icon class="control">mdi-sort-variant</v-icon></v-btn>
+        </l-control>
+       
         <l-circle-marker
                 v-if="isGeoAvailable"
                 :lat-lng="geolocation"
@@ -146,15 +150,22 @@
 </script>
 
 <style scoped>
+    .control {
+        box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+        border-radius: 4px;
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+        padding: 17px 16px 15px 16px;
+    }
     .pulsation {
         animation: animate 3s linear infinite;
     }
     @keyframes animate {
         0% {
-            box-shadow: inset 0 0 0 10px rgba(33, 150, 243, 0.7);
+            box-shadow: inset 0 0 0 15px rgba(33, 150, 243, 0.7);
         }
         40% {
-            box-shadow: inset 0 0 0 5px rgba(33, 150, 243, 0.4);
+            box-shadow: inset 0 0 0 0 rgba(33, 150, 243, 0);
         }
         80% {
             box-shadow: inset 0 0 0 0 rgba(33, 150, 243, 0);

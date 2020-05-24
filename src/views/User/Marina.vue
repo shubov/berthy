@@ -76,7 +76,7 @@
                             </v-col>
                         </v-row>
                         <v-row>
-                            <v-col cols="12" align="start" >
+                            <v-col cols="12">
                                 <v-dialog
                                         v-model="dialogReservation"
                                         :fullscreen="!$vuetify.breakpoint.mdAndUp"
@@ -102,7 +102,10 @@
                                             <v-icon>mdi-close</v-icon>
                                         </v-btn>
                                     </v-toolbar>
-                                    <ReservationCard  @new-ship="dialogShip=true"></ReservationCard>
+                                    <ReservationCard
+                                            @new-ship="dialogShip=true"
+                                            @close-reg-form="dialogReservation = false"
+                                    ></ReservationCard>
                                 </v-dialog>
                                 
                                 <v-dialog

@@ -220,6 +220,7 @@
                 this.submitting = true;
                 setTimeout(async ()=> {
                     if(await this.$store.dispatch('Reservation/book')) {
+                        this.$emit('close-reg-form');
                         this.shipName = (await this.getShipById(this.ship)).name;
                         this.$store.dispatch('Dialog/set',this.confirmationMessage);
                     } else {

@@ -449,9 +449,10 @@
             onSubmit(){
                 this.submitting = true;
                 setTimeout(async ()=> {
-                    if(await this.$store.dispatch('Ships/createShip'))
+                    if(await this.$store.dispatch('Ships/createShip')) {
+                        this.$emit('close-ship-form');
                         this.$store.dispatch('Dialog/set', this.name + ' boat was succesfully created');
-                    else this.$store.dispatch('snackbar', 'Fill all the fields to create a boat');
+                    } else this.$store.dispatch('snackbar', 'Fill all the fields to create a boat');
                     this.submitting = false;
                 }, 0);
             },

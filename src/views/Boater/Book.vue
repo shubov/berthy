@@ -50,14 +50,14 @@
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
-            <ShipForm></ShipForm>
+            <ShipForm @close-ship-form="dialogShip=false"></ShipForm>
         </v-dialog>
     
         <v-bottom-sheet
                 v-if="getSelected !=null"
                 v-model="bottomSheet"
         >
-            <v-sheet class="text-center px-3 pt-3" tile>
+            <v-sheet class="text-center" tile>
                 <SearchMarinaCard></SearchMarinaCard>
             </v-sheet>
         </v-bottom-sheet>

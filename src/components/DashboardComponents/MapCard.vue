@@ -8,21 +8,25 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-card id='map-card'>
+    <v-card
+            id='map-card'
+            style="height: inherit"
+    >
         <l-map
-                :zoom.sync="zoom"
-                :center.sync="center"
-                :options="mapOptions"
+                ref="map"
+                :center="location"
+                :zoom="4"
+                style="height: inherit; z-index: 0"
         >
             <l-tile-layer
                     :url="url"
                     :attribution="attribution"
             />
             <l-marker
-                    v-if="loco"
-                    :lat-lng="loco.geo"
+                    v-if="location"
+                    :lat-lng="location"
             >
-                <l-tooltip>{{loco.device}}</l-tooltip>
+                <l-tooltip>{{latitude}}; {{longitude}}</l-tooltip>
             </l-marker>
         </l-map>
     </v-card>
@@ -30,6 +34,7 @@
 
 <script>
     //LEAFLET********
+    import 'leaflet/dist/leaflet.css';
     import { latLng } from "leaflet";
     import { LMap, LTileLayer, LMarker, LTooltip} from "vue2-leaflet";
     import { Icon } from 'leaflet';
@@ -44,47 +49,26 @@
     
     export default {
         name: "MapCard",
-        props: {
-            loco: {
-                validator: prop => typeof prop === 'object' || prop === null
-            },
-            zoom: {
-                type: Number,
-                default: 7,
-            }
-        },
-        watch: {
-            loco() {
-                this.recenter(this.loco.geo.lat, this.loco.geo.lng);
-            }
-        },
+        props: ['height', 'latitude', 'longitude'],
         components: {
             LMap, LTileLayer, LMarker, LTooltip,
         },
+        computed: {
+            location() {
+                return latLng(this.latitude, this.longitude);
+            },
+        },
         data: function () {
             return {
-                mapHeight: 100,
-                index: null,
-                bounds: {},
-                center: latLng(59.24, 49.13),
                 url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                //url:  "https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
-                attribution: '',//`Map data &#169; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>`,
-                mapOptions: {
-                    zoomSnap: 0.5
-                }
+                attribution: '',
             };
         },
-        methods: {
-            recenter: function (lat, lng) {
-                this.center=latLng(lat,lng);
-            },
-            setZoom: function (zoom) {
-                this.zoom = zoom;
-            },
-            // onResize(){
-            //     document.getElementById('map-card').style.height = window.innerHeight/2 - window.innerHeight%2 + 'px';
-            // }
+        mounted() {
+            this.map = this.$refs.map.mapObject;
+            setTimeout(()=>{
+                this.map.invalidateSize();
+            }, 0);
         }
     };
 </script>
@@ -92,6 +76,5 @@
     #map-card {
         width: inherit;
         z-index: 0;
-        height: 369.8px;
     }
 </style>

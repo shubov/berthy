@@ -25,8 +25,8 @@
                 </v-row>
             </template>
             <template v-if="valid != null" v-slot:actions>
-                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
-                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+                <v-icon v-if="valid" color="teal">{{icons.checkCircle}}</v-icon>
+                <v-icon v-else color="warning">{{icons.alertCircle}}</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -46,7 +46,7 @@
                             <v-text-field
                                     v-model="start"
                                     label="Start date"
-                                    prepend-icon="mdi-calendar"
+                                    :prepend-icon="icons.calendar"
                                     readonly
                                     v-on="on"
                             ></v-text-field>
@@ -83,7 +83,7 @@
                             <v-text-field
                                     v-model="end"
                                     label="End date"
-                                    prepend-icon="mdi-calendar"
+                                    :prepend-icon="icons.calendar"
                                     readonly
                                     v-on="on"
                             ></v-text-field>
@@ -117,6 +117,8 @@
 </template>
 
 <script>
+    import {mdiAlertCircle, mdiCalendar, mdiCheckCircle} from "@mdi/js";
+
     export default {
         name: "DateInput",
         props: {
@@ -127,6 +129,10 @@
                 type: Boolean,
                 default: false
             },
+            icons: {
+                checkCircle: mdiCheckCircle,
+                alertCircle: mdiAlertCircle,
+            }
         },
         computed: {
             start: {
@@ -151,6 +157,9 @@
         },
         data: () => ({
             date: null,
+            icons: {
+                calendar: mdiCalendar,
+            }
         }),
     }
 </script>

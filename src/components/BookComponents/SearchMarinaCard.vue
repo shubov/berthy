@@ -14,6 +14,7 @@
     >
         <v-img
                 :src="marina.photos.length ? toLink(marina.photos[0].fileLink): marinaImg"
+                :lazy-src="marinaLazy"
                 class="white--text align-end"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                 height="200px"
@@ -45,6 +46,7 @@
         data: function () {
             return {
                 marinaImg: require("../../assets/marina.jpg"),
+                marinaLazy: require("../../assets/marina.webp"),
             }
         },
         computed: {

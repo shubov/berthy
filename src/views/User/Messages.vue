@@ -24,7 +24,7 @@
                         <v-spacer></v-spacer>
                     
                         <v-btn icon>
-                            <v-icon>mdi-magnify</v-icon>
+                            <v-icon>{{icons.magnify}}</v-icon>
                         </v-btn>
                     </v-toolbar>
                 
@@ -78,6 +78,8 @@
 </template>
 
 <script>
+    import {mdiMagnify} from "@mdi/js";
+
     export default {
         name: "Messages",
         components: {
@@ -96,6 +98,9 @@
         },
         data () {
             return {
+                icons: {
+                    magnify: mdiMagnify,
+                },
                 show: false,
                 listHeight: 0,
                 items: [

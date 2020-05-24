@@ -25,8 +25,8 @@
                 </v-row>
             </template>
             <template v-if="valid != null" v-slot:actions>
-                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
-                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+                <v-icon v-if="valid" color="teal">{{icons.checkCircle}}</v-icon>
+                <v-icon v-else color="warning">{{icons.alertCircle}}</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -34,13 +34,13 @@
                     :value="lat"
                     @input="lat=$event"
                     :placeholder="placeholder"
-                    prepend-icon="mdi-latitude"
+                    :prepend-icon="icons.latitude"
             ></v-text-field>
             <v-text-field
                     :value="lng"
                     @input="lng=$event"
                     :placeholder="placeholder"
-                    prepend-icon="mdi-longitude"
+                    :prepend-icon="icons.longitude"
             ></v-text-field>
             <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
                 <template v-slot:activator="{ on }">
@@ -49,7 +49,7 @@
                 <v-card v-resize="updateMapHeight">
                     <v-toolbar id="toolbar" dark color="primary">
                         <v-btn icon dark @click="dialog = false">
-                            <v-icon>mdi-close</v-icon>
+                            <v-icon>{{icons.close}}</v-icon>
                         </v-btn>
                         <v-toolbar-title>Location</v-toolbar-title>
                         <v-spacer></v-spacer>
@@ -71,6 +71,7 @@
 
 <script>
     import {latLng} from "leaflet";
+    import {mdiAlertCircle, mdiCheckCircle, mdiClose, mdiLatitude, mdiLongitude} from "@mdi/js";
 
     export default {
         name: "LocationInput",
@@ -113,6 +114,13 @@
             dialog: false,
             zoom: 11,
             position: latLng(50, 13),
+            icons: {
+                checkCircle: mdiCheckCircle,
+                alertCircle: mdiAlertCircle,
+                close: mdiClose,
+                latitude: mdiLatitude,
+                longitude: mdiLongitude,
+            }
         }),
         methods: {
             onSave(){

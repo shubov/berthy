@@ -42,7 +42,11 @@
                     return this.getSelected;
                 },
                 set(value) {
-                    this.$store.commit('Reservation/SELECT_MARINA', value)
+                    this.$store.commit('Reservation/UNSELECT_MARINA');
+                    this.$nextTick(()=>{
+                        this.$store.commit('Reservation/SELECT_MARINA', value);
+                    });
+                   
                 }
             }
         }

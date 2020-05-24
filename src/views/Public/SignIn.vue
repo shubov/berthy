@@ -39,7 +39,7 @@
                                         target="_blank"
                                         v-on="on"
                                 >
-                                    <v-icon>mdi-help-circle</v-icon>
+                                    <v-icon>{{icons.helpCircle}}</v-icon>
                                 </v-btn>
                             </template>
                             <span>Source</span>
@@ -95,7 +95,7 @@
                                         color="#1877f2"
                                         class="white--text"
                                         @click="onSignInFacebook()"
-                                > <v-icon class="mr-3">mdi-facebook</v-icon>
+                                > <v-icon class="mr-3">{{icons.facebook}}</v-icon>
                                     Continue With Facebook
                                 </v-btn>
                             </v-col>
@@ -108,6 +108,9 @@
 </template>
 <script>
     import router from "../../router";
+    import {
+        mdiFacebook, mdiHelpCircle
+    } from "@mdi/js";
     export default {
         name: "SignIn",
         components: {
@@ -125,6 +128,10 @@
                 onAuth: false,
                 onGoogle: false,
                 onFacebook: false,
+                icons: {
+                    helpCircle: mdiHelpCircle,
+                    facebook: mdiFacebook,
+                }
             }
         },
         methods: {

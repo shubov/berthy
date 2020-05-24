@@ -39,7 +39,7 @@
                         </v-row>
                         <v-spacer></v-spacer>
                         <v-btn icon dark @click.stop="onRemove(index)">
-                            <v-icon>mdi-delete</v-icon>
+                            <v-icon>{{icons.delete}}</v-icon>
                         </v-btn>
                     </v-toolbar>
                     <v-row justify="center">
@@ -91,6 +91,8 @@
 </template>
 
 <script>
+    import {mdiDelete} from "@mdi/js";
+
     export default {
         name: "PlaceEditCard",
         props: {
@@ -113,6 +115,9 @@
             }
         },
         data: () => ({
+            icons: {
+                delete: mdiDelete,
+            },
             rules: {
                 rulesPrice: [
                     v => !!v || 'Parameter is required',

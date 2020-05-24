@@ -21,7 +21,7 @@
                 @click="$parent.$emit('click-menu-icon')"
                 icon
         >
-            <v-icon>mdi-menu</v-icon>
+            <v-icon>{{icons.menu}}</v-icon>
         </v-btn>
     
         <router-link to="/">
@@ -38,7 +38,7 @@
         <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" v-on="on" @click="toFaq()">
-                    <v-icon>mdi-help-circle</v-icon>
+                    <v-icon>{{icons.helpCircle}}</v-icon>
                 </v-btn>
             </template>
             <span>FAQ</span>
@@ -53,7 +53,7 @@
         <v-menu v-if="loggedIn">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" v-on="on">
-                    <v-icon>mdi-account</v-icon>
+                    <v-icon>{{icons.account}}</v-icon>
                 </v-btn>
             </template>
     
@@ -70,7 +70,7 @@
         <v-tooltip bottom v-if="loggedIn">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-on="on" v-bind="attrs" @click="onSignOut">
-                    <v-icon>mdi-logout</v-icon>
+                    <v-icon>{{icons.logout}}</v-icon>
                 </v-btn>
             </template>
             <span>Sign Out</span>
@@ -80,6 +80,7 @@
 
 <script>
     import router from "../../router";
+    import { mdiMenu, mdiHelpCircle, mdiAccount, mdiLogout } from '@mdi/js'
     export default {
         name: "AppBar",
         computed: {
@@ -91,6 +92,16 @@
             },
             isNavbarPresent() {
                 return this.$store.state.pagesWithNavBar.includes(this.$route.name);
+            }
+        },
+        data: function () {
+            return {
+                icons: {
+                    account: mdiAccount,
+                    helpCircle: mdiHelpCircle,
+                    logout: mdiLogout,
+                    menu: mdiMenu,
+                }
             }
         },
         methods: {

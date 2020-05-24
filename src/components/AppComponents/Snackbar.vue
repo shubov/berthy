@@ -11,8 +11,8 @@
     <v-snackbar
             v-model="snackbar"
             color="error"
-            multi-line
-            :timeout="6000"
+            :multi-line="!isMobile"
+            :timeout="60000"
             :vertical="isMobile"
             top
     >

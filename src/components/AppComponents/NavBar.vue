@@ -44,6 +44,8 @@
 </template>
 
 <script>
+    import {mdiAccountGroup, mdiClipboardList, mdiCog, mdiForum, mdiViewDashboard} from "@mdi/js";
+
     export default {
         name: "NavBar",
         created() {
@@ -53,11 +55,11 @@
             return {
                 menu: this.$vuetify.breakpoint.smAndUp,
                 pages: [
-                    { title: 'Dashboard', path: "/dashboard",icon: 'mdi-view-dashboard' },
-                    { title: 'Requests', path: "requests",icon: 'mdi-clipboard-list' },
-                    { title: 'Messages', path: "messages",icon: 'mdi-forum' },
-                    { title: 'Team', path: "team",icon: 'mdi-account-group' },
-                    { title: 'Marina Settings', path: "/settings", icon: 'mdi-cog' },
+                    { title: 'Dashboard', path: "/dashboard",icon: mdiViewDashboard },
+                    { title: 'Requests', path: "requests",icon: mdiClipboardList },
+                    { title: 'Messages', path: "messages",icon: mdiForum },
+                    { title: 'Team', path: "team",icon: mdiAccountGroup},
+                    { title: 'Marina Settings', path: "/settings", icon: mdiCog },
                 ]
             }
         },

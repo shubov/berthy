@@ -42,31 +42,31 @@
                         </v-row>
                         <v-row align="center" justify="center" no-gutters>
                             <v-col cols="12" class="mb-2">
-                                <v-icon class="contactsIcons">mdi-latitude</v-icon>
+                                <v-icon class="contactsIcons">{{icons.latitude}}</v-icon>
                                 <p class="d-inline text-left subtitle-1 font-weight-medium">
                                     {{lat.dir}} {{lat.deg}}° {{lat.min}}' {{lat.sec}}''
                                 </p>
                             </v-col>
                             <v-col cols="12"  class="mb-2">
-                                <v-icon class="contactsIcons">mdi-longitude</v-icon>
+                                <v-icon class="contactsIcons">{{icons.longitude}}</v-icon>
                                 <p class="d-inline text-left subtitle-1 font-weight-medium">
                                     {{lng.dir}} {{lng.deg}}° {{lng.min}}' {{lng.sec}}''
                                 </p>
                             </v-col>
                             <v-col cols="12" class="mb-2">
-                                <v-icon class="contactsIcons">mdi-compass-outline</v-icon>
+                                <v-icon class="contactsIcons">{{icons.compassOutline}}</v-icon>
                                 <p class="d-inline text-left subtitle-1 font-weight-medium">
                                     Moscow, Russia
                                 </p>
                             </v-col>
                             <v-col cols="12" class="mb-2">
-                                <v-icon class="contactsIcons">mdi-radio-handheld</v-icon>
+                                <v-icon class="contactsIcons">{{icons.radioHandheld}}</v-icon>
                                 <p class="d-inline text-left subtitle-1 font-weight-medium">
                                     {{marina.radio}}
                                 </p>
                             </v-col>
                             <v-col cols="12">
-                                <v-icon class="contactsIcons">mdi-link-variant</v-icon>
+                                <v-icon class="contactsIcons">{{icons.linkVariant}}</v-icon>
                                 <a target="_blank"
                                    class="d-inline text-left subtitle-1 font-weight-medium"
                                    :href="marina.site"
@@ -91,7 +91,7 @@
                                                 :block="!$vuetify.breakpoint.smAndUp"
                                                 v-on="on"
                                         >
-                                            <v-icon>mdi-calendar-check</v-icon>
+                                            <v-icon>{{icons.calendarCheck}}</v-icon>
                                             Reserve a docking spot
                                         </v-btn>
                                     </template>
@@ -99,7 +99,7 @@
                                         <v-toolbar-title>Reservation</v-toolbar-title>
                                         <v-spacer></v-spacer>
                                         <v-btn icon dark @click="dialogReservation = false">
-                                            <v-icon>mdi-close</v-icon>
+                                            <v-icon>{{icons.close}}</v-icon>
                                         </v-btn>
                                     </v-toolbar>
                                     <ReservationCard
@@ -122,7 +122,7 @@
                                                 class="mr-3 mb-3"
                                                 v-on="on"
                                         >
-                                            <v-icon>mdi-map-marker-outline</v-icon>
+                                            <v-icon>{{icons.mapMarkerOutline}}</v-icon>
                                             Open a map
                                         </v-btn>
                                     </template>
@@ -139,7 +139,7 @@
                                                     dark
                                                     @click="dialog = false"
                                             >
-                                                <v-icon>mdi-close</v-icon>
+                                                <v-icon>{{icons.close}}</v-icon>
                                             </v-btn>
                                         </v-toolbar>
                                         <v-row align="center" justify="center" no-gutters>
@@ -163,7 +163,7 @@
                                 :continuous="true"
                                 :show-arrows="true"
                                 hide-delimiter-background
-                                delimiter-icon="mdi-minus"
+                                :delimiter-icon="icons.minus"
                                 height="400"
                         >
                             <v-carousel-item
@@ -210,7 +210,7 @@
                 <v-toolbar-title>Add your boat</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="dialogShip=false">
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>{{icons.close}}</v-icon>
                 </v-btn>
             </v-toolbar>
             <ShipForm></ShipForm>
@@ -221,6 +221,14 @@
 <script>
     import {mapGetters} from 'vuex';
     import {photoLink} from "../../assets/helperFunctions";
+    import {
+        mdiCalendarCheck,
+        mdiClose,
+        mdiCompassOutline, mdiLatitude,
+        mdiLinkVariant, mdiLongitude,
+        mdiMapMarkerOutline, mdiMinus,
+        mdiRadioHandheld
+    } from "@mdi/js";
     
     export default {
         name: "Marina",
@@ -250,6 +258,17 @@
         },
         data: function () {
             return {
+                icons: {
+                    minus: mdiMinus,
+                    latitude: mdiLatitude,
+                    longitude: mdiLongitude,
+                    compassOutline: mdiCompassOutline,
+                    radioHandheld: mdiRadioHandheld,
+                    linkVariant: mdiLinkVariant,
+                    calendarCheck: mdiCalendarCheck,
+                    close: mdiClose,
+                    mapMarkerOutline: mdiMapMarkerOutline,
+                },
                 dialog: false,
                 dialogShip: false,
                 dialogReservation: false,

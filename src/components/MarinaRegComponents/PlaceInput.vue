@@ -21,8 +21,8 @@
                 </v-row>
             </template>
             <template v-if="valid != null" v-slot:actions>
-                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
-                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+                <v-icon v-if="valid" color="teal">{{icons.checkCircle}}</v-icon>
+                <v-icon v-else color="warning">{{icons.alertCircle}}</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -65,7 +65,7 @@
                         <v-text-field
                                 :value="defaultPrice"
                                 @input="defaultPrice=$event"
-                                prepend-inner-icon="mdi-cash-100"
+                                :prepend-inner-icon="icons.cash100"
                                 :prefix="currency"
                                 :rules="rules.rulesPrice"
                                 type="number"
@@ -78,7 +78,7 @@
                         <v-text-field
                                 :value="number"
                                 @input="number=$event"
-                                prepend-inner-icon="mdi-counter"
+                                :prepend-inner-icon="icons.counter"
                                 :rules="rules.rulesNumber"
                                 label="Number of places"
                                 type="number"
@@ -101,7 +101,7 @@
                             <v-card>
                                 <v-toolbar id="toolbar" dark color="primary">
                                     <v-btn icon dark @click="closeDialog">
-                                        <v-icon>mdi-close</v-icon>
+                                        <v-icon>{{icons.close}}</v-icon>
                                     </v-btn>
                                     <v-toolbar-title>Docking spots</v-toolbar-title>
                                     <v-spacer></v-spacer>
@@ -112,7 +112,7 @@
                                                 @click="$refs.dialog.addPlace()"
                                         >
                                             App spot
-                                            <v-icon right dark>mdi-plus-circle</v-icon>
+                                            <v-icon right dark>{{icons.plusCircle}}</v-icon>
                                         </v-btn>
                                         <v-btn dark text @click.stop="onSave()">Save</v-btn>
                                     </v-toolbar-items>
@@ -136,6 +136,8 @@
 </template>
 
 <script>
+    import {mdiAlertCircle, mdiCash100, mdiCheckCircle, mdiClose, mdiCounter, mdiPlusCircle} from "@mdi/js";
+
     export default {
         name: "PlaceInput",
         components: {
@@ -239,6 +241,14 @@
             },
         },
         data: ()=> ({
+            icons: {
+                checkCircle: mdiCheckCircle,
+                alertCircle: mdiAlertCircle,
+                close: mdiClose,
+                plusCircle: mdiPlusCircle,
+                cash100: mdiCash100,
+                counter: mdiCounter,
+            },
             isUpdated: false,
             dialog: false,
             valid: null,

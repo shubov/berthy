@@ -25,26 +25,26 @@
             >{{application.status}}</v-chip>
             <v-spacer></v-spacer>
             <v-btn v-show="showClose" icon @click="$emit('close')">
-                <v-icon>mdi-close</v-icon>
+                <v-icon>{{icons.close}}</v-icon>
             </v-btn>
         </v-toolbar>
         <v-card-actions>
             <v-row class="mx-1">
                 <v-col cols="12" lg="4">
                     <v-btn block large class="info" @click="onStart(application.id)">
-                        <v-icon>mdi-chat-plus-outline</v-icon>
+                        <v-icon>{{icons.chatPlusOutline}}</v-icon>
                         Start
                     </v-btn>
                 </v-col>
                 <v-col cols="6" lg="4">
                     <v-btn block large class="success" @click="onApprove(application.id)">
-                        <v-icon>mdi-thumb-up-outline</v-icon>
+                        <v-icon>{{icons.thumbUpOutline}}</v-icon>
                         Approve
                     </v-btn>
                 </v-col>
                 <v-col cols="6" lg="4">
                     <v-btn block large class="secondary" @click="onReject(application.id)">
-                        <v-icon>mdi-thumb-down-outline</v-icon>
+                        <v-icon>{{icons.thumbDownOutline}}</v-icon>
                         Reject
                     </v-btn>
                 </v-col>
@@ -148,6 +148,7 @@
 
 <script>
     import {mapActions, mapGetters} from "vuex";
+    import {mdiChatPlusOutline, mdiClose, mdiThumbDownOutline, mdiThumbUpOutline} from "@mdi/js";
 
     export default {
         name: "MarinaApplicationCard",
@@ -173,6 +174,12 @@
         },
         data: function() {
             return {
+                icons: {
+                    close: mdiClose,
+                    chatPlusOutline: mdiChatPlusOutline,
+                    thumbUpOutline: mdiThumbUpOutline,
+                    thumbDownOutline: mdiThumbDownOutline,
+                }
             }
         },
         async created() {

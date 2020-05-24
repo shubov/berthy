@@ -19,7 +19,7 @@
                 ref="email"
                 label="Email"
                 name="email"
-                prepend-icon="mdi-email"
+                :prepend-icon="icons.email"
                 :rules="[rules.required, rules.email]"
                 type="email"
                 :value="value.email"
@@ -30,8 +30,8 @@
                 ref="password"
                 label="Password"
                 name="password"
-                prepend-icon="mdi-lock"
-                :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
+                :prepend-icon="icons.lock"
+                :append-icon="show ? icons.eyeOff : icons.eye"
                 :rules="[rules.required, rules.min]"
                 :type="show ? 'text' : 'password'"
                 @click:append="show = !show"
@@ -44,8 +44,8 @@
                 ref="password2"
                 label="Repeat password"
                 name="password-repeat"
-                prepend-icon="mdi-lock"
-                :append-icon="show2 ? 'mdi-eye-off' : 'mdi-eye'"
+                :prepend-icon="icons.lock"
+                :append-icon="show2 ? icons.eyeOff : icons.eye"
                 :rules="[rules.required, rules.min, rules.passwordsMatch]"
                 :type="show2 ? 'text' : 'password'"
                 @click:append="show2 = !show2"
@@ -54,11 +54,19 @@
 </template>
 
 <script>
+    import {mdiEmail, mdiEye, mdiEyeOff, mdiLock} from "@mdi/js";
+
     export default {
         name: "SignUpForm",
         props: ['value'],
         data: function () {
             return {
+                icons: {
+                    email: mdiEmail,
+                    lock: mdiLock,
+                    eyeOff: mdiEyeOff,
+                    eye: mdiEye,
+                },
                 show: false,
                 show2: false,
                 rules: {

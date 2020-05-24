@@ -21,8 +21,8 @@
                 </v-row>
             </template>
             <template v-if="valid != null" v-slot:actions>
-                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
-                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+                <v-icon v-if="valid" color="teal">{{icons.checkCircle}}</v-icon>
+                <v-icon v-else color="warning">{{icons.alertCircle}}</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -36,6 +36,7 @@
 
 <script>
     import { VueTelInput } from 'vue-tel-input'
+    import {mdiAlertCircle, mdiCheckCircle} from "@mdi/js";
     export default {
         name: "PhoneInput",
         components: {
@@ -82,6 +83,10 @@
         },
         data: ()=> ({
             valid: null,
+            icons: {
+                checkCircle: mdiCheckCircle,
+                alertCircle: mdiAlertCircle,
+            }
         }),
         mounted() {
             this.valid = this.number ? false : null;

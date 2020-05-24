@@ -25,18 +25,18 @@
             <v-btn x-large icon color="info" class="pulsation"
                    v-if="isGeoOn"
                    @click.stop="stopWatching"
-            ><v-icon>mdi-compass</v-icon></v-btn>
+            ><v-icon>{{icons.compass}}</v-icon></v-btn>
             <v-btn x-large icon
                    v-else
                    @click.stop="watchGeolocation"
-            ><v-icon>mdi-compass-outline</v-icon></v-btn>
+            ><v-icon>{{icons.compassOutline}}</v-icon></v-btn>
         </l-control>
         
         <l-control position="bottomright">
             <v-btn icon x-large
                    v-if="isMobile"
                    @click.stop="$emit('toggle-search')"
-            ><v-icon class="control">mdi-magnify</v-icon></v-btn>
+            ><v-icon class="control">{{icons.magnify}}</v-icon></v-btn>
         </l-control>
         <l-control
                 v-if="selected != null && !isMobile"
@@ -49,7 +49,7 @@
             <v-btn icon x-large
                    v-if="isMobile"
                    @click.stop="$emit('toggle-list')"
-            ><v-icon class="control">mdi-sort-variant</v-icon></v-btn>
+            ><v-icon class="control">{{icons.sortVariant}}</v-icon></v-btn>
         </l-control>
        
         <l-circle-marker
@@ -81,7 +81,8 @@
         shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
     //***************
-
+    import {mdiCompass, mdiCompassOutline, mdiMagnify, mdiSortVariant} from '@mdi/js';
+    
     export default {
         name: "SearchMap",
         components: {
@@ -119,7 +120,10 @@
                     return this.getSelected;
                 },
                 set(index) {
-                    this.$store.commit('Reservation/SELECT_MARINA', index);
+                    this.$store.commit('Reservation/UNSELECT_MARINA');
+                    this.$nextTick(()=>{
+                        this.$store.commit('Reservation/SELECT_MARINA', index);
+                    });
                 }
             }
         },
@@ -127,6 +131,12 @@
             return {
                 map: null,
                 selectionIcon: null,
+                icons: {
+                    compass: mdiCompass,
+                    compassOutline: mdiCompassOutline,
+                    magnify: mdiMagnify,
+                    sortVariant: mdiSortVariant,
+                }
             }
         },
         methods: {

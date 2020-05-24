@@ -19,7 +19,7 @@
                 ref="email"
                 label="Email"
                 name="email"
-                prepend-icon="mdi-email"
+                :prepend-icon="icons.email"
                 :rules="[rules.required, rules.email]"
                 type="email"
                 :value="value.email"
@@ -30,8 +30,8 @@
                 ref="password"
                 label="Password"
                 name="password"
-                prepend-icon="mdi-lock"
-                :append-icon="show ? 'mdi-eye-off' : 'mdi-eye'"
+                :prepend-icon="icons.lock"
+                :append-icon="show ? icons.eyeOff : icons.eye"
                 :rules="[rules.required, rules.min]"
                 :type="show ? 'text' : 'password'"
                 :value="value.password"
@@ -45,11 +45,19 @@
 </template>
 
 <script>
+    import {mdiEmail, mdiEye, mdiEyeOff, mdiLock} from "@mdi/js";
+
     export default {
         name: "SignInForm",
         props: ['value', 'resetPassword'],
         data: function () {
             return {
+                icons: {
+                    email: mdiEmail,
+                    lock: mdiLock,
+                    eyeOff: mdiEyeOff,
+                    eye: mdiEye,
+                },
                 show: false,
                 rules: {
                     required: value => !!value || 'Required.',

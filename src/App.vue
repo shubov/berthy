@@ -21,10 +21,11 @@
 </template>
 
 <script>
-    import Snackbar from "./components/AppComponents/Snackbar";
-    import Dialog from "./components/AppComponents/Dialog";
     export default {
-        components: {Dialog, Snackbar},
+        components: {
+            Dialog: ()=>import("./components/AppComponents/Dialog"),
+            Snackbar: ()=>import("./components/AppComponents/Snackbar"),
+        },
         data: () => ({
             name: "Main",
         }),

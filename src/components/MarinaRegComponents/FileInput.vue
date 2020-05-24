@@ -22,8 +22,8 @@
                 </v-row>
             </template>
             <template v-if="valid != null" v-slot:actions>
-                <v-icon v-if="valid" color="teal">mdi-check-circle</v-icon>
-                <v-icon v-else color="warning">mdi-alert-circle</v-icon>
+                <v-icon v-if="valid" color="teal">{{icons.checkCircle}}</v-icon>
+                <v-icon v-else color="warning">{{icons.alertCircle}}</v-icon>
             </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -53,6 +53,8 @@
 </template>
 
 <script>
+    import {mdiAlertCircle, mdiCheckCircle, mdiFileImage, mdiPaperclip} from "@mdi/js";
+
     export default {
         name: "FileInput",
         props: {
@@ -101,7 +103,7 @@
         },
         computed: {
             icon: function () {
-                return (this.image && !this.pdf)? 'mdi-file-image' : 'mdi-paperclip';
+                return (this.image && !this.pdf)? this.icons.fileImage : this.icons.paperclip;
             },
             model: {
                 get() {
@@ -122,6 +124,12 @@
         },
         data: () => ({
             loading: false,
+            icons: {
+                checkCircle: mdiCheckCircle,
+                alertCircle: mdiAlertCircle,
+                fileImage: mdiFileImage,
+                paperclip: mdiPaperclip,
+            }
         }),
         methods: {
             onRemoveFile(index){

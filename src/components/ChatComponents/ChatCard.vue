@@ -15,7 +15,7 @@
                     <v-toolbar-title>Person</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn v-show="isMobile" icon @click="$emit('close')">
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon>{{icons.close}}</v-icon>
                     </v-btn>
                 </v-toolbar>
                 <v-card
@@ -61,7 +61,7 @@
                                 @keyup.enter="addMessage"
                                 hide-details
                                 placeholder="Write a message"
-                                append-outer-icon="mdi-send"
+                                :append-outer-icon="icons.send"
                                 @click:append-outer.prevent="addMessage"
                                 filled
                                 rounded
@@ -74,6 +74,8 @@
 </template>
 
 <script>
+    import {mdiClose, mdiSend} from "@mdi/js";
+
     export default {
         name: "ChatCard",
         computed: {
@@ -83,6 +85,10 @@
         },
         data () {
             return {
+                icons: {
+                    close: mdiClose,
+                    send: mdiSend,
+                },
                 msg: null,
                 messagesContainerHeight: 0,
                 changeMessageWidth: false,

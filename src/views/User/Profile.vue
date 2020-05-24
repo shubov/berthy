@@ -18,92 +18,51 @@
                         <v-row align="start" justify="start" no-gutters>
                             <v-col>
                                 <v-avatar
-                                        class="mt-2"
-                                        style="float: right"
-                                        size="115px"
+                                        style="float: left"
+                                        size="116px"
+                                        class="mr-4"
                                 >
                                     <v-img :src="photo ? photo : ''"/>
                                 </v-avatar>
-                                <p class="pl-0 subtitle-1 font-weight-bold">
+                                <p class="subtitle-1 font-weight-bold mb-0">
                                     {{type}}
                                 </p>
-                                <p class="display-3 font-weight-black my-0">
+                                <p class="display-3 font-weight-black mb-0">
                                     {{name}}
                                 </p>
-                                <p class="pl-0 subtitle-1 font-weight-bold">
-                                    1 marina, 2 boats
+                                <p class="subtitle-1 font-weight-bold mb-0">
+                                    {{subtitle}}
                                 </p>
                             </v-col>
                         </v-row>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn v-if="disabled" @click="disabled=false">
-                            <v-icon>mdi-pencil</v-icon>Edit Account
-                        </v-btn>
-                        <v-btn v-if="!disabled" @click="onSave()" :loading="saving">
-                            <v-icon>mdi-check</v-icon>Save
-                        </v-btn>
+                        <v-dialog v-model="dialogEditProfile"
+                                  :fullscreen="isMobile"
+                                  max-width="600px"
+                        >
+                            <template v-slot:activator="{on}">
+                                <v-btn v-on="on">
+                                    <v-icon>{{icons.pencil}}</v-icon>Edit Account
+                                </v-btn>
+                            </template>
+                            <v-toolbar color="primary" dark>
+                                <v-toolbar-title>Edit Account</v-toolbar-title>
+                                <v-spacer></v-spacer>
+                                <v-btn icon @click="dialogEditProfile=false">
+                                    <v-icon>{{icons.close}}</v-icon>
+                                </v-btn>
+                            </v-toolbar>
+                            <EditProfileCard @close-edit-profile="dialogEditProfile=false"></EditProfileCard>
+                        </v-dialog>
                     </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12" md="4">
-                <v-card tile class="elevation-0">
-                    <v-card-text>
-                        <v-text-field
-                                hide-details
-                                :placeholder="email"
-                                disabled
-                                filled
-                                rounded
-                        ></v-text-field>
-                    </v-card-text>
-                </v-card>
-                <v-card-text>
-                    <v-text-field
-                            ref="firstName"
-                            hide-details
-                            @input="userEdit.firstName=$event"
-                            :value="userEdit.firstName"
-                            :placeholder="firstName ? firstName : 'First name'"
-                            :disabled="disabled"
-                            :append-outer-icon="disabled?'':'mdi-pencil'"
-                            filled
-                            rounded
-                    ></v-text-field>
-                </v-card-text>
-                <v-card-text>
-                    <v-text-field
-                            ref="lastName"
-                            hide-details
-                            @input="userEdit.lastName=$event"
-                            :value="userEdit.lastName"
-                            :placeholder="lastName ? lastName : 'Last name'"
-                            :disabled="disabled"
-                            :append-outer-icon="disabled?'':'mdi-pencil'"
-                            filled
-                            rounded
-                    ></v-text-field>
-                </v-card-text>
-                <v-card tile class="elevation-0">
-                    <v-card-text>
-                        <v-text-field
-                                ref="phNumber"
-                                hide-details
-                                @input="userEdit.phNumber=$event"
-                                :value="userEdit.phNumber"
-                                :placeholder="phone ? phone : 'Phone'"
-                                :disabled="disabled"
-                                :append-outer-icon="disabled?'':'mdi-pencil'"
-                                filled
-                                rounded
-                        ></v-text-field>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-            <v-col>
+            <v-col cols="12" md="6">
                 <v-row>
+                    <v-col cols="12"><p class="font-weight-black title">My Marinas</p></v-col>
                     <v-col
                             v-for="(marina, index) in marinas"
                             :key="index"
@@ -112,6 +71,7 @@
                         <v-card class="elevation-1">
                             <v-img
                                     :src="marina.photos.length ? toLink(marina.photos[0].fileLink) : marinaImg"
+                                    :lazy-src="marinaLazy"
                                     class="white--text align-end"
                                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                                     height="200px"
@@ -124,13 +84,47 @@
                                 <v-spacer></v-spacer>
             
                                 <v-btn icon>
-                                    <v-icon>mdi-arrow-right</v-icon>
+                                    <v-icon>{{icons.arrowRight}}</v-icon>
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
                 </v-row>
                
+            </v-col>
+            <v-col cols="12" md="6">
+                <v-row>
+                    <v-col cols="12"><p class="font-weight-black title">My Boats</p></v-col>
+                    <v-col
+                            v-for="(ship, index) in ships"
+                            :key="index"
+                            cols="6"
+                    >
+                        <v-card class="elevation-1">
+                            <v-img
+                                    :src="ship.photos.length ? toLink(ship.photos[0].fileLink)
+                                                             : ship.type==='SAIL'
+                                                             ? sailImg
+                                                             : powerImg"
+                                    :lazy-src="ship.type==='SAIL' ? sailLazy : powerLazy"
+                                    class="white--text align-end"
+                                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                    height="200px"
+                            >
+                                <v-card-title>{{ship.name}}</v-card-title>
+                            </v-img>
+                    
+                            <v-card-actions>
+                                <v-chip class="primary">4 new notifications</v-chip>
+                                <v-spacer></v-spacer>
+                        
+                                <v-btn icon>
+                                    <v-icon>{{icons.arrowRight}}</v-icon>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
     </v-container>
@@ -139,8 +133,12 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import {photoLink} from "../../assets/helperFunctions";
+    import {mdiArrowRight, mdiCheck, mdiClose, mdiPencil} from "@mdi/js";
     export default {
         name: "Profile",
+        components: {
+            EditProfileCard: ()=>import("../../components/ProfileComponents/EditProfileCard"),
+        },
         computed: {
             ...mapGetters('User', {
                 email: 'getEmail',
@@ -156,64 +154,60 @@
             ...mapGetters('Marina', {
                 marinas: 'getAll'
             }),
+            ...mapGetters('Ships', {
+                ships: 'getShips',
+            }),
             type() {
                 if (this.user) return 'User profile'
                 if (this.moderator) return 'Moderator profile'
                 return 'Profile';
+            },
+            isMobile() {
+                return !this.$vuetify.breakpoint.mdAndUp;
+            },
+            subtitle() {
+                let m = this.marinas.length;
+                let b = this.ships.length;
+                let mtext = m===1 ? 'marina' : 'marinas';
+                let btext = b===1 ? 'boat' : 'boats';
+                return `${m} ${mtext}, ${b} ${btext}`
             }
         },
         data: function () {
             return {
+                dialogEditProfile: false,
                 disabled: true,
                 marinaImg: require("../../assets/marina.jpg"),
+                sailImg: require("../../assets/sailBoat.jpg"),
+                powerImg: require("../../assets/powerBoat.jpg"),
+                marinaLazy: require("../../assets/marina.webp"),
+                sailLazy: require("../../assets/sailBoat.webp"),
+                powerLazy: require("../../assets/powerBoat.webp"),
                 saving: false,
-                userEdit: {
-                    firstName: null,
-                    lastName: null,
-                    phNumber: null,
-                }
+                icons: {
+                    arrowRight: mdiArrowRight,
+                    check: mdiCheck,
+                    pencil: mdiPencil,
+                    close: mdiClose,
+                },
             }
         },
         methods: {
-            ...mapActions('User',['updateUserInfo','editUserInfo']),
+            ...mapActions('User',['updateUserInfo']),
             ...mapActions('Marina',['fetchMyMarinas']),
-            onSave() {
-                this.saving = true;
-                setTimeout(async ()=>{
-                    if (await this.editUserInfo({
-                        firstName: this.userEdit.firstName ? this.userEdit.firstName : this.firstName,
-                        lastName: this.userEdit.lastName ? this.userEdit.lastName : this.lastName,
-                        phNumber: this.userEdit.phNumber ? this.userEdit.phNumber : this.phNumber,
-                    })) {
-                        this.userEdit = {
-                            firstName: null,
-                            lastName: null,
-                            phNumber: null,
-                        };
-                        this.disabled=true;
-                    } else {
-                        await this.$store.dispatch("snackbar", this.error);
-                    }
-                    this.saving = false;
-                },0)
-                
-            },
-            clean(obj) {
-                let res = obj;
-                for (let propName in res) {
-                    if (res[propName] === null || res[propName] === undefined) {
-                        delete res[propName];
-                    }
-                }
-                return res;
-            },
+            ...mapActions('Ships', {
+                    updateShips: 'fetchShips',
+            }),
             toLink(link) {
                 return photoLink(link);
             },
         },
         async mounted() {
             await this.updateUserInfo();
-            await this.fetchMyMarinas();
+            if (!this.marinas.length)
+                await this.fetchMyMarinas();
+            if (!this.ships.length)
+                await this.updateShips();
         },
     }
 </script>

@@ -28,7 +28,7 @@
                                     block
                                     @click.stop="$emit('new-ship')"
                             >
-                                <v-icon>mdi-sail-boat</v-icon>
+                                <v-icon>{{icons.sailBoat}}</v-icon>
                                 NEW Boat
                             </v-btn>
                         </v-list-item>
@@ -46,7 +46,7 @@
                                 label="Date From"
                                 :value="dateFrom"
                                 readonly
-                                prepend-inner-icon="mdi-calendar"
+                                :prepend-inner-icon="icons.calendar"
                                 v-on="on"
                         ></v-text-field>
                     </template>
@@ -69,7 +69,7 @@
                                 label="Date To"
                                 :value="dateTo"
                                 readonly
-                                prepend-inner-icon="mdi-calendar"
+                                :prepend-inner-icon="icons.calendar"
                                 v-on="on"
                         ></v-text-field>
                     </template>
@@ -119,7 +119,7 @@
 
 <script>
     import {mapActions, mapGetters} from "vuex";
-
+    import {mdiCalendar, mdiSailBoat} from '@mdi/js';
     export default {
         name: "SearchCard",
         computed: {
@@ -187,6 +187,10 @@
                 dateMenuFrom: false,
                 dateMenuTo: false,
                 rules: [val=>!isNaN(val) || 'Not a number'],
+                icons: {
+                    sailBoat: mdiSailBoat,
+                    calendar: mdiCalendar,
+                }
             }
         },
         methods: {

@@ -38,7 +38,7 @@
                             caption= 'Name of your marina'
                             state= 'name'
                             mutation= 'Application/EDIT_NAME'
-                            icon= "mdi-rename-box"
+                            :icon="icons.renameBox"
                     ></StringInput>
                     <TextInput
                             key="2"
@@ -47,7 +47,7 @@
                             caption= 'Detailed description of your marina'
                             state= 'description'
                             mutation= 'Application/EDIT_DESCRIPTION'
-                            icon= "mdi-text-subject"
+                            :icon="icons.textSubject"
                     ></TextInput>
                     <StringInput
                             key="3"
@@ -56,7 +56,7 @@
                             caption= 'Enter a full URL of the website (if you have one)'
                             state= 'site'
                             mutation= 'Application/EDIT_SITE'
-                            icon= "mdi-link-variant"
+                            :icon="icons.linkVariant"
                     ></StringInput>
                     <PhoneInput
                             key="4"
@@ -75,7 +75,7 @@
                             caption= 'A VHF Channel visitors can use to contact your marina (or radio frequency i.e. "156.550 MHz")'
                             state= 'radio'
                             mutation= 'Application/EDIT_RADIO'
-                            icon= "mdi-radio-handheld"
+                            :icon="icons.radioHandheld"
                     ></StringInput>
                     <DateInput
                             key="6"
@@ -144,7 +144,7 @@
                                     caption= 'Leave a note to us regarding your application'
                                     state= 'message'
                                     mutation= 'Application/EDIT_MESSAGE'
-                                    icon= "mdi-comment-text-outline"
+                                    :icon="icons.commentTextOutline"
                             ></TextInput>
                         </v-expansion-panels>
                         <p class="body-2 text-left" style="margin-top: 9px">Attach necessary documents to your marina application before submitting (i.e. Registration Certificate, License...) and leave a message for the moderator.</p>
@@ -166,6 +166,7 @@
 
 <script>
     import router from "../../router";
+    import {mdiCommentTextOutline, mdiLinkVariant, mdiRadioHandheld, mdiRenameBox, mdiTextSubject} from "@mdi/js";
     
     export default {
         name: "MarinaRegistration",
@@ -185,6 +186,13 @@
             },
         },
         data: () => ({
+            icons: {
+                commentTextOutline: mdiCommentTextOutline,
+                radioHandheld: mdiRadioHandheld,
+                linkVariant: mdiLinkVariant,
+                textSubject: mdiTextSubject,
+                renameBox: mdiRenameBox,
+            },
             submitting: false,
         }),
         methods: {

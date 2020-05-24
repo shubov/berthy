@@ -47,7 +47,7 @@
                 <v-toolbar-title>Add your boat</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="dialogShip=false">
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>{{icons.close}}</v-icon>
                 </v-btn>
             </v-toolbar>
             <ShipForm @close-ship-form="dialogShip=false"></ShipForm>
@@ -67,6 +67,7 @@
 <script>
     import {mapGetters} from "vuex";
     import SearchMap from "../../components/BookComponents/SearchMap";
+    import {mdiClose} from "@mdi/js";
 
     export default {
         name: "Book",
@@ -102,6 +103,9 @@
         },
         data: function () {
             return {
+                icons: {
+                    close: mdiClose,
+                },
                 dialogSearch: false,
                 dialogList: false,
                 dialogShip: false,

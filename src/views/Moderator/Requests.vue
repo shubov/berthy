@@ -32,19 +32,19 @@
                            icon
                            :loading="loadingApproveMultiple"
                            @click="onApproveMultiple()">
-                        <v-icon color="success">mdi-thumb-up-outline</v-icon>
+                        <v-icon color="success">{{icons.thumbUpOutline}}</v-icon>
                     </v-btn>
                     <v-btn v-if="selected.length"
                            icon
                            :loading="loadingRejectMultiple"
                            @click="onRejectMultiple()">
-                        <v-icon color="secondary">mdi-thumb-down-outline</v-icon>
+                        <v-icon color="secondary">{{icons.thumbDownOutline}}</v-icon>
                     </v-btn>
                     <v-text-field
                             hide-details
                             :value="search"
                             @input="search=$event"
-                            prepend-icon="mdi-magnify"
+                            :prepend-icon="icons.magnify"
                             single-line
                             v-else
                     ></v-text-field>
@@ -58,7 +58,7 @@
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn icon v-bind="attrs" v-on="on">
-                                <v-icon>mdi-filter-variant</v-icon>
+                                <v-icon>{{icons.filterVariant}}t</v-icon>
                             </v-btn>
                         </template>
                         <ModeratorFilter
@@ -67,14 +67,14 @@
                         ></ModeratorFilter>
                     </v-menu>
                     <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
-                        <v-icon>mdi-dots-vertical</v-icon>
+                        <v-icon>{{icons.dotsVertical}}</v-icon>
                     </v-btn>
                     <v-btn
                             v-if="selected.length"
                             icon
                             @click="()=>{selected = [];multiple=false;}"
                     >
-                        <v-icon>mdi-close</v-icon>
+                        <v-icon>{{icons.close}}</v-icon>
                     </v-btn>
                 </v-toolbar>
                 <v-list
@@ -102,8 +102,8 @@
                                         <v-icon small color="#00000099">
                                             {{
                                             active
-                                            ? 'mdi-checkbox-marked-circle-outline'
-                                            : 'mdi-checkbox-blank-circle-outline'
+                                            ? icons.checkboxMarkedCircleOutline
+                                            : icons.checkboxBlankCircleOutline
                                             }}
                                         </v-icon>
                                     </v-list-item-avatar>
@@ -156,6 +156,14 @@
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
+    import {
+        mdiCheckboxBlankCircleOutline,
+        mdiCheckboxMarkedCircleOutline,
+        mdiClose,
+        mdiDotsVertical, mdiFilterVariant, mdiMagnify,
+        mdiThumbDownOutline,
+        mdiThumbUpOutline
+    } from "@mdi/js";
     
     export default {
         name: "Requests",
@@ -231,6 +239,16 @@
                 loadingRejectMultiple: false,
                 offsetTop: 0,
                 filterMenu: false,
+                icons: {
+                    magnify: mdiMagnify,
+                    close: mdiClose,
+                    dotsVertical: mdiDotsVertical,
+                    thumbUpOutline: mdiThumbUpOutline,
+                    thumbDownOutline: mdiThumbDownOutline,
+                    filterVariant: mdiFilterVariant,
+                    checkboxMarkedCircleOutline: mdiCheckboxMarkedCircleOutline,
+                    checkboxBlankCircleOutline: mdiCheckboxBlankCircleOutline,
+                }
             }
         },
         methods: {

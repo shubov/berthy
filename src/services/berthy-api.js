@@ -24,15 +24,13 @@ BerthyAPI.interceptors.request.use(function (config) {
 });
 
 BerthyAPI.interceptors.response.use(function (response) {
+    if (!response.data.success && response.data.error.code===401) {
+        store.dispatch('snackbar', "Your session has expired");
+        router.push('/sign-in');
+    }
     return response;
 }, function (error) {
-    if (401 === error.response.status) {
-        store.dispatch('snackbar',
-            "Your session has expired. Would you like to be redirected to the login page?");
-        router.push('/sign-in');
-    } else {
-        return Promise.reject(error);
-    }
+    return Promise.reject(error);
 });
 
 export default BerthyAPI;

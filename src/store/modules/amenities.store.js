@@ -8,6 +8,18 @@
  ******************************************************************************/
 
 import BerthyAPI from "../../services/berthy-api";
+import {
+    mdiAtm,
+    mdiBed,
+    mdiBike,
+    mdiCar,
+    mdiCarElectric, mdiFlashCircle,
+    mdiGasStation, mdiGlassCocktail,
+    mdiHelp,
+    mdiParking, mdiShowerHead, mdiSilverwareForkKnife,
+    mdiStorefrontOutline,
+    mdiWater, mdiWheelchairAccessibility, mdiWifi
+} from "@mdi/js";
 
 // State initial object
 const initialState = () => ({
@@ -15,24 +27,24 @@ const initialState = () => ({
     lastUpdate: null,
     length: 0,
     icons: new Map([
-        ["atm", "mdi-atm"],
-        ["accessible", "mdi-wheelchair-accessibility"],
-        ["bathtub", "mdi-shower-head"],
-        ["wifi", "mdi-wifi"],
-        ["ev_station", "mdi-flash-circle"],
-        ["hotel", "mdi-bed"],
-        ["restaurant", "mdi-silverware-fork-knife"],
-        ["bar", "mdi-glass-cocktail"],
-        ["gas_station", "mdi-gas-station"],
-        ["parking", "mdi-parking"],
-        ["water", "mdi-water"],
-        ["bicycle_rental", "mdi-bike"],
-        ["car_rental", "mdi-car"],
-        ["grocery_store", "mdi-storefront-outline"],
+        ["atm", mdiAtm],
+        ["accessible", mdiWheelchairAccessibility],
+        ["bathtub", mdiShowerHead],
+        ["wifi", mdiWifi],
+        ["ev_station", mdiFlashCircle],
+        ["hotel", mdiBed],
+        ["restaurant", mdiSilverwareForkKnife],
+        ["bar", mdiGlassCocktail],
+        ["gas_station", mdiGasStation],
+        ["parking", mdiParking],
+        ["water", mdiWater],
+        ["bicycle_rental", mdiBike],
+        ["car_rental", mdiCar],
+        ["grocery_store", mdiStorefrontOutline],
 
-        ["car_electric", "mdi-car-electric"],
+        ["car_electric", mdiCarElectric],
 
-        ["default", "mdi-help"]
+        ["default", mdiHelp]
     ])
 });
 

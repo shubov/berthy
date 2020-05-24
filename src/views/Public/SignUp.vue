@@ -49,7 +49,7 @@
                                         target="_blank"
                                         v-on="on"
                                 >
-                                    <v-icon>mdi-help-circle</v-icon>
+                                    <v-icon>{{icons.helpCircle}}</v-icon>
                                 </v-btn>
                             </template>
                             <span>Source</span>
@@ -78,6 +78,8 @@
     
 </template>
 <script>
+    import {mdiHelpCircle} from "@mdi/js";
+
     export default {
         name: "SignUp",
         components: {
@@ -92,6 +94,9 @@
                     password: '',
                 },
                 submitting: false,
+                icons: {
+                    helpCircle: mdiHelpCircle,
+                },
             }
         },
         methods: {

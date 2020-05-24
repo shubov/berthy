@@ -49,7 +49,8 @@
                     <v-text-field
                             v-model="dateRangeText"
                             label="Date range"
-                            prepend-icon="mdi-calendar" readonly
+                            :prepend-icon="icons.calendar"
+                            readonly
                             v-on="on"
                     >
                     </v-text-field>
@@ -72,6 +73,8 @@
 </template>
 
 <script>
+    import {mdiCalendar} from "@mdi/js";
+
     export default {
         name: "ModeratorFilter",
         computed: {
@@ -86,7 +89,10 @@
                 status: null,
                 dateFrom: null,
                 dateTo: null,
-                dates: []
+                dates: [],
+                icons: {
+                    calendar: mdiCalendar,
+                }
             }
         },
         methods: {

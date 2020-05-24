@@ -42,7 +42,9 @@
         name: "PublicMarinaMap",
         props: ['position'],
         components: {
-            LMap, LTileLayer, LMarker
+            LMap,
+            LTileLayer,
+            LMarker
         },
         data: function () {
             return{

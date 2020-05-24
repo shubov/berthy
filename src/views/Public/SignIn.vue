@@ -107,11 +107,12 @@
     </v-container>
 </template>
 <script>
-    import SignInForm from "../../components/AuthComponents/SignInForm";
     import router from "../../router";
     export default {
         name: "SignIn",
-        components: {SignInForm},
+        components: {
+            SignInForm: ()=>import("../../components/AuthComponents/SignInForm"),
+        },
         data: function () {
             return {
                 resetPassword: "Forgot your password?",

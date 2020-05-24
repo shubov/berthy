@@ -78,10 +78,11 @@
     
 </template>
 <script>
-    import SignUpForm from "../../components/AuthComponents/SignUpForm";
     export default {
         name: "SignUp",
-        components: {SignUpForm},
+        components: {
+            SignUpForm: ()=>import("../../components/AuthComponents/SignUpForm"),
+        },
         data: function () {
             return {
                 dialog: false,

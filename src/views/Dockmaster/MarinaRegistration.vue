@@ -166,20 +166,18 @@
 
 <script>
     import router from "../../router";
-    import StringInput from "../../components/MarinaRegComponents/StringInput";
-    import DateInput from "../../components/MarinaRegComponents/DateInput";
-    import FileInput from "../../components/MarinaRegComponents/FileInput";
-    import SelectAmenities from "../../components/MarinaRegComponents/SelectAmenities";
-    import LocationInput from "../../components/MarinaRegComponents/LocationInput";
-    import TextInput from "../../components/MarinaRegComponents/TextInput";
-    import PlaceInput from "../../components/MarinaRegComponents/PlaceInput";
-    import PhoneInput from "../../components/MarinaRegComponents/PhoneInput";
     
     export default {
         name: "MarinaRegistration",
         components: {
-            PhoneInput,
-            PlaceInput, TextInput, LocationInput, SelectAmenities, FileInput, DateInput, StringInput
+            PhoneInput: ()=>import("../../components/MarinaRegComponents/PhoneInput"),
+            PlaceInput: ()=>import("../../components/MarinaRegComponents/PlaceInput"),
+            TextInput: ()=>import("../../components/MarinaRegComponents/TextInput"),
+            LocationInput: ()=>import("../../components/MarinaRegComponents/LocationInput"),
+            SelectAmenities: ()=>import("../../components/MarinaRegComponents/SelectAmenities"),
+            FileInput: ()=>import("../../components/MarinaRegComponents/FileInput"),
+            DateInput: ()=>import("../../components/MarinaRegComponents/DateInput"),
+            StringInput: ()=>import("../../components/MarinaRegComponents/StringInput")
         },
         computed: {
             isMobile() {

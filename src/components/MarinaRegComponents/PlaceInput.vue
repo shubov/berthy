@@ -136,10 +136,11 @@
 </template>
 
 <script>
-    import PlaceEditCard from "./PlaceEditCard";
     export default {
         name: "PlaceInput",
-        components: {PlaceEditCard},
+        components: {
+            PlaceEditCard: ()=> import("./PlaceEditCard"),
+        },
         props: {
             title: String,
             placeholder: String,

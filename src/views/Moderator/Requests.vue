@@ -156,11 +156,13 @@
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
-    import MarinaApplicationCard from "../../components/ModeratorComponents/MarinaApplicationCard";
-    import ModeratorFilter from "../../components/ModeratorComponents/ModeratorFilter";
+    
     export default {
         name: "Requests",
-        components: {ModeratorFilter, MarinaApplicationCard},
+        components: {
+            ModeratorFilter: ()=>import("../../components/ModeratorComponents/ModeratorFilter"),
+            MarinaApplicationCard: ()=>import("../../components/ModeratorComponents/MarinaApplicationCard"),
+        },
         watch: {
             filterMenu(value) {
                 if (value) {

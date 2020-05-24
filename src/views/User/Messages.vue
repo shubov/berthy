@@ -78,10 +78,11 @@
 </template>
 
 <script>
-    import ChatCard from "../../components/ChatComponents/ChatCard";
     export default {
         name: "Messages",
-        components: {ChatCard},
+        components: {
+            ChatCard: ()=>import("../../components/ChatComponents/ChatCard"),
+        },
         computed: {
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;

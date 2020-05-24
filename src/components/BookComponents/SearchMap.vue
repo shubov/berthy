@@ -74,7 +74,6 @@
     import {LMap, LTileLayer, LCircleMarker, LMarker, LControl, LControlScale, LTooltip} from "vue2-leaflet";
     import {Icon} from 'leaflet';
     import {mapActions, mapGetters} from "vuex";
-    import SearchMarinaCard from "./SearchMarinaCard";
     delete Icon.Default.prototype._getIconUrl;
     Icon.Default.mergeOptions({
         iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -86,7 +85,7 @@
     export default {
         name: "SearchMap",
         components: {
-            SearchMarinaCard,
+            SearchMarinaCard: ()=>import("./SearchMarinaCard"),
             LMap, LTileLayer, LCircleMarker, LMarker,  LControl, LControlScale, LTooltip
         },
         computed: {

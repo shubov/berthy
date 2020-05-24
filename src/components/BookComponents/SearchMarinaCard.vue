@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import {photoLink} from "../../assets/helperFunctions";
+    import { photoLink } from "../../assets/helperFunctions";
     import {mapGetters} from "vuex";
 
     export default {

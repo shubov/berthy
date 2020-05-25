@@ -32,7 +32,7 @@
                     src="../../assets/berthy_logo.png"
             ></v-img>
         </router-link>
-    
+        <v-toolbar-title class="ml-3">{{$route.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
         
         <v-tooltip bottom>

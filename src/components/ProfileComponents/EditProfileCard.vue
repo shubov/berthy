@@ -9,9 +9,8 @@
 
 <template>
     <v-card tile class="elevation-0">
-        <v-card-text>
+        <v-card-text class="pt-5">
             <v-text-field
-                    class="mt-5"
                     hide-details
                     :placeholder="email"
                     disabled

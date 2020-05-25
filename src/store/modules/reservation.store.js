@@ -186,7 +186,7 @@ const actions = {
     },
     onGeolocationSuccess({commit, getters}, position) {
         let updateMap = false;
-        if (getters['isGeoAvailable']) updateMap = true;
+        if (!getters['isGeoAvailable']) updateMap = true;
         commit('UPDATE_GEOLOCATION_LAT',position.coords.latitude);
         commit('UPDATE_GEOLOCATION_LNG',position.coords.longitude);
         if (updateMap) commit("UPDATE_MAP_CENTER", getters['getGeolocation']);

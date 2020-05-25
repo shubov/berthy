@@ -33,6 +33,7 @@
                                 <p class="subtitle-1 font-weight-bold mb-0">
                                     {{subtitle}}
                                 </p>
+                                
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -42,8 +43,8 @@
                                   max-width="600px"
                         >
                             <template v-slot:activator="{on}">
-                                <v-btn v-on="on">
-                                    <v-icon>{{icons.pencil}}</v-icon>Edit Account
+                                <v-btn icon v-on="on">
+                                    <v-icon>{{icons.pencil}}</v-icon>
                                 </v-btn>
                             </template>
                             <v-toolbar color="primary" dark>
@@ -55,6 +56,12 @@
                             </v-toolbar>
                             <EditProfileCard @close-edit-profile="dialogEditProfile=false"></EditProfileCard>
                         </v-dialog>
+                        <v-btn to="/book" class="primary">
+                            Reserve a spot
+                        </v-btn>
+                        <v-btn to="/dashboard" outlined>
+                            Manage marinas
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -82,9 +89,12 @@
                             <v-card-actions>
                                 <v-chip class="primary">4 new notifications</v-chip>
                                 <v-spacer></v-spacer>
-            
-                                <v-btn icon>
-                                    <v-icon>{{icons.arrowRight}}</v-icon>
+    
+                                <v-btn icon @click="toBookings(index)">
+                                    <v-icon>{{icons.clipboardList}}</v-icon>
+                                </v-btn>
+                                <v-btn icon @click="toDashboard(index)">
+                                    <v-icon>{{icons.viewDashboard}}</v-icon>
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -133,7 +143,7 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import {photoLink} from "../../assets/helperFunctions";
-    import {mdiArrowRight, mdiCheck, mdiClose, mdiPencil} from "@mdi/js";
+    import {mdiArrowRight, mdiCheck, mdiClipboardList, mdiClose, mdiPencil, mdiViewDashboard} from "@mdi/js";
     export default {
         name: "Profile",
         components: {
@@ -189,6 +199,8 @@
                     check: mdiCheck,
                     pencil: mdiPencil,
                     close: mdiClose,
+                    viewDashboard: mdiViewDashboard,
+                    clipboardList: mdiClipboardList,
                 },
             }
         },
@@ -201,6 +213,14 @@
             toLink(link) {
                 return photoLink(link);
             },
+            toBookings(index) {
+                this.$store.commit('Marina/SELECT_MARINA', index);
+                this.$router.push('/bookings');
+            },
+            toDashboard(index) {
+                this.$store.commit('Marina/SELECT_MARINA', index);
+                this.$router.push('/dashboard');
+            }
         },
         async mounted() {
             await this.updateUserInfo();

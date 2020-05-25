@@ -43,6 +43,23 @@
                         {{ selected.length ? `${selected.length} selected` : '' }}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
+                    <v-menu v-if="!selected.length && getAll.length>1">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn icon v-on="on" v-bind="attrs">
+                                <v-icon>{{icons.clipboardMultipleOutline}}</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-subheader>My marinas</v-subheader>
+                            <v-list-item
+                                    v-for="(marina, index) in getAll"
+                                    :key="index"
+                                    @click="changeMarina(index)"
+                            >
+                                <v-list-item-title>{{marina.name}}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                     <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
                         <v-icon>{{icons.dotsVertical}}</v-icon>
                     </v-btn>
@@ -65,12 +82,11 @@
                     <v-list-item-group
                             v-model="selected"
                             :multiple="multiple"
-                            v-scroll:#list="onScrollList"
                     >
-                        <template v-for="(item, index) in (filtered ? filteredApplications : applications)">
+                        <template v-for="(item, index) in (filtered ? filteredBookings : bookings)">
                             <v-list-item
                                     :key="item.id"
-                                    @click="openApplication(index)"
+                                    @click="openBooking(index)"
                             >
                                 <template
                                         v-slot:default="{active}"
@@ -86,13 +102,15 @@
                                     </v-list-item-avatar>
                                     
                                     <v-list-item-content>
-                                        <v-list-item-title v-text="item.title"></v-list-item-title>
-                                        <v-list-item-subtitle class="text--primary" v-text="item.attachments.length+' attachments'"></v-list-item-subtitle>
-                                        <v-list-item-subtitle v-text="item.description"></v-list-item-subtitle>
+                                        <v-list-item-title >{{item.startDate}}/{{item.endDate}}</v-list-item-title>
+                                        <v-list-item-subtitle class="text--primary">Place: {{item.berthPlace.name}}</v-list-item-subtitle>
+                                        <v-list-item-subtitle>
+                                            {{item.renter.firstName+' '+item.renter.lastName+': '+item.ship.model.producer+' '+item.ship.model.model}}
+                                        </v-list-item-subtitle>
                                     </v-list-item-content>
                                     
                                     <v-list-item-action>
-                                        <v-list-item-action-text v-text="item.ago"></v-list-item-action-text>
+                                        <v-list-item-action-text>{{item.ago}}</v-list-item-action-text>
                                         <v-chip
                                                 label
                                                 dark
@@ -103,17 +121,17 @@
                             </v-list-item>
                             
                             <v-divider
-                                    v-if="index + 1 < applications.length"
+                                    v-if="index + 1 < bookings.length"
                                     :key="index"
                             ></v-divider>
                         </template>
                     </v-list-item-group>
                 </v-list>
             </v-col>
-            <v-col class="py-0">
+            <v-col sm="7" class="py-0">
                 <BookingCard
                         v-if="isComponent"
-                        :height="applicationCardHeight"
+                        :height="bookingCardHeight"
                 ></BookingCard>
                 <v-dialog
                         v-if="isDialog"
@@ -135,7 +153,7 @@
     import {mapGetters, mapActions} from 'vuex';
     import {
         mdiCheckboxBlankCircleOutline,
-        mdiCheckboxMarkedCircleOutline,
+        mdiCheckboxMarkedCircleOutline, mdiClipboardMultipleOutline,
         mdiClose,
         mdiDotsVertical, mdiMagnify,
         mdiThumbDownOutline,
@@ -143,14 +161,19 @@
     } from "@mdi/js";
     
     export default {
-        name: "Requests",
+        name: "Bookings",
         components: {
             BookingCard: ()=>import("../../components/MarinaBookingRequestsComponents/BookingCard"),
         },
         computed: {
-            ...mapGetters('Moderator', {
+            ...mapGetters('Marina', ['getCurrent', 'getAll']),
+            ...mapGetters('Bookings', {
                 bookings: 'getBookings',
+                booking:'getCurrentBooking'
             }),
+            marina() {
+                return this.getAll[this.getCurrent];
+            },
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
@@ -169,21 +192,21 @@
                 return !this.isMobile && this.show;
             },
             filtered(){
-                return this.filteredApplications.length>0;
+                return this.filteredBookings.length>0;
             },
             search: {
                 get() {
                     return this.searchQuery;
                 },
                 set(value) {
-                    let searcStr = value.toString()
-                    this.searchQuery = searcStr;
+                    let searchStr = value.toString()
+                    this.searchQuery = searchStr;
 
                     if (value.toString().length<1)
-                        this.filteredApplications = [];
+                        this.filteredBookings = [];
                     else { console.log(value);
-                        this.filteredApplications = this.applications.filter(({title})=>{
-                            let res=title.toString().toLowerCase().includes(searcStr.toLowerCase());
+                        this.filteredBookings = this.bookings.filter(({title})=>{
+                            let res=title.toString().toLowerCase().includes(searchStr.toLowerCase());
                             console.log(res, title);
                             return res;
                         })
@@ -194,18 +217,19 @@
         data: function () {
             return {
                 searchQuery: null,
-                filteredApplications: [],
+                filteredBookings: [],
                 selectedValue: [],
                 show: false,
                 dialog: false,
                 multiple: false,
                 listHeight: null,
-                applicationCardHeight: null,
+                bookingCardHeight: null,
                 loadingApproveMultiple: false,
                 loadingRejectMultiple: false,
                 offsetTop: 0,
                 filterMenu: false,
                 icons: {
+                    clipboardMultipleOutline: mdiClipboardMultipleOutline,
                     magnify: mdiMagnify,
                     close: mdiClose,
                     dotsVertical: mdiDotsVertical,
@@ -217,21 +241,20 @@
             }
         },
         methods: {
-            ...mapActions('Moderator', ['fetchApplications', 'updateCurrent', 'approve', 'reject']),
-            ...mapActions('Marina', ['fetchMarina']),
-            onDialogClose() {
+            ...mapActions('Bookings', ['fetchBookings', 'updateCurrent', 'approve', 'reject']),
+            ...mapActions('Marina', ['fetchMyMarinas']),
+            async onDialogClose() {
                 this.dialog=false;
                 this.show=false;
                 this.multiple = false;
+                await this.updateCurrent(null);
             },
-            async openBooking() {
-                // if (id === this.$store.state.Moderator.current || this.multiple) return;
-                // let resp1 = await this.updateCurrent(id);
-                // let resp2 = await this.fetchMarina(this.applications[id].berthId);
-                // if (resp1 && resp2) {
-                //     if(this.isMobile) this.dialog = true;
-                //     else this.show = true;
-                // }
+            async openBooking(id) {
+                if (id === this.$store.state.Bookings.current || this.multiple) return;
+                if (await this.updateCurrent(id)) {
+                    if(this.isMobile) this.dialog = true;
+                    else this.show = true;
+                }
             },
             statusColor(status) {
                 switch (status) {
@@ -248,10 +271,10 @@
             onRejectMultiple() {
                 this.loadingRejectMultiple = true;
                 this.selected.forEach((index)=>{
-                    this.reject(this.applications[index].id);
+                    this.reject(this.bookings[index].id);
                 });
                 setTimeout(async ()=>{
-                    await this.fetchBookings();
+                    await this.fetchBookings(this.marina.id);
                     this.multiple=false;
                     this.selected=[];
                     this.loadingRejectMultiple = false;
@@ -263,7 +286,7 @@
                     this.approve(this.bookings[index].id)
                 });
                 setTimeout(async ()=> {
-                    await this.fetchBookings();
+                    await this.fetchBookings(this.marina.id);
                     this.multiple=false;
                     this.selected=[];
                     this.loadingApproveMultiple = false;
@@ -271,13 +294,30 @@
 
             },
             updateHeight() {
-                let h = document.getElementById('toolbar').style.height.substr(0,2);
+                let toolbar = document.getElementById('toolbar');
+                if (!toolbar) return;
+                let h = toolbar.style.height.substr(0,2);
                 this.listHeight = (window.innerHeight - 84 - h) + "px";
-                this.applicationCardHeight = (window.innerHeight - 84) + "px";
+                this.bookingCardHeight = (window.innerHeight - 84) + "px";
             },
+            async changeMarina(index) {
+                this.$store.commit('Marina/SELECT_MARINA', index);
+                await this.updateBookings();
+            },
+            async updateBookings() {
+                await this.fetchBookings(this.marina.id);
+                if (this.bookings.length === 0) {
+                    this.$store.dispatch("snackbar", `No bookings for ${this.marina.name} yet.`)
+                }
+            }
         },
         async created() {
-            await this.fetchApplications();
+            if (!this.getAll.length)
+                await this.fetchMyMarinas();
+            if (this.marina.id)
+                await this.updateBookings();
+            else
+                this.$store.dispatch("snackbar", `You have yet no marinas.`)
         },
     }
 </script>

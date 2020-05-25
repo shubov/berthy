@@ -11,11 +11,7 @@ import BerthyAPI from "../../services/berthy-api";
 
 // State initial object
 const initialState = () => ({
-    bookings: [
-        {
-            createdAt: null,
-        }
-    ],
+    bookings: [],
     length: 0,
     lastUpdate: null,
     current: null,
@@ -35,10 +31,10 @@ const state = initialState();
 
 // VUEX GETTERS
 const getters = {
-    getApplications(state) {
+    getBookings(state) {
         return state.bookings;
     },
-    getCurrentApplication(state){
+    getCurrentBooking(state){
         return state.bookings[state.current];
     }
 };
@@ -54,12 +50,12 @@ const actions = {
         commit("SET_CURRENT", id);
         return true;
     },
-    async fetchApplications({state,commit}) {
+    async fetchBookings({commit}, marinaID) {
         commit('FETCHING');
-        let response = await BerthyAPI.post('management/berths/bookings', state.filter);
+        let response = await BerthyAPI.get(`bookings/berths/${marinaID}`);
         if (response.data) {
             if (response.data.success) {
-                commit('UPDATE_APPLICATIONS', response.data.data);
+                commit('UPDATE_BOOKINGS', response.data.data);
                 commit('UPDATE_TIMES');
                 return true;
             } else {
@@ -68,10 +64,8 @@ const actions = {
         }
         return false;
     },
-    async approve({state, commit}, id) {
-        let response = await BerthyAPI.post(`management/berths/bookings/${id}/approve`, {
-            decision: state.decision
-        });
+    async approve({commit}, id) {
+        let response = await BerthyAPI.put(`bookings/${id}/approve`);
         if (response.data) {
             if (response.data.success) {
                 commit("APPROVE");
@@ -82,10 +76,8 @@ const actions = {
         }
         return false;
     },
-    async reject({state, commit}, id) {
-        let response = await BerthyAPI.post(`management/berths/bookings/${id}/reject`, {
-            decision: state.decision
-        });
+    async reject({commit}, id) {
+        let response = await BerthyAPI.put(`bookings/${id}/reject`);
         if (response.data) {
             if (response.data.success) {
                 commit("REJECT");
@@ -117,11 +109,15 @@ const mutations = {
         state.error = true;
         state.message = msg;
     },
-    UPDATE_BOOKINGS(state, {items, totalCount}) {
+    APPROVE() {
+    },
+    REJECT() {
+    },
+    UPDATE_BOOKINGS(state, data) {
         state.success = true;
         state.error = false;
-        state.applications = items;
-        state.length = totalCount;
+        state.bookings = data;
+        state.length = data.length;
         state.lastUpdate = Date.now();
     },
     SET_CURRENT(state, index) {

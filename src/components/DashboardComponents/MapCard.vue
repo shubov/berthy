@@ -11,6 +11,7 @@
     <v-card
             id='map-card'
             style="height: inherit"
+            :options="{dragging: dragging}"
     >
         <l-map
                 ref="map"
@@ -49,7 +50,7 @@
     
     export default {
         name: "MapCard",
-        props: ['height', 'latitude', 'longitude'],
+        props: ['latitude', 'longitude', 'dragging'],
         components: {
             LMap, LTileLayer, LMarker, LTooltip,
         },

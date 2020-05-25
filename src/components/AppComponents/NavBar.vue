@@ -56,7 +56,7 @@
                 menu: this.$vuetify.breakpoint.smAndUp,
                 pages: [
                     { title: 'Dashboard', path: "/dashboard",icon: mdiViewDashboard },
-                    { title: 'Requests', path: "requests",icon: mdiClipboardList },
+                    { title: 'Bookings', path: "bookings",icon: mdiClipboardList },
                     { title: 'Messages', path: "messages",icon: mdiForum },
                     { title: 'Team', path: "team",icon: mdiAccountGroup},
                     { title: 'Marina Settings', path: "/settings", icon: mdiCog },

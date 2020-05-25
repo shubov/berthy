@@ -25,11 +25,11 @@
             <v-btn x-large icon color="info" class="pulsation"
                    v-if="isGeoOn"
                    @click.stop="stopWatching"
-            ><v-icon>{{icons.compass}}</v-icon></v-btn>
+            ><v-icon large>{{icons.compass}}</v-icon></v-btn>
             <v-btn x-large icon
                    v-else
                    @click.stop="watchGeolocation"
-            ><v-icon>{{icons.compassOutline}}</v-icon></v-btn>
+            ><v-icon large>{{icons.compassOutline}}</v-icon></v-btn>
         </l-control>
         
         <l-control position="bottomright">
@@ -164,7 +164,6 @@
         border-radius: 4px;
         background-color: #fff;
         border-bottom: 1px solid #ccc;
-        padding: 17px 16px 15px 16px;
     }
     .pulsation {
         animation: animate 3s linear infinite;

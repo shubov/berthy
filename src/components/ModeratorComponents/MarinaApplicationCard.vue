@@ -190,7 +190,6 @@
         methods: {
             ...mapActions('Moderator', ['approve', 'reject', 'start', 'fetchApplications']),
             ...mapActions('Amenities', ['availableAmenities']),
-            ...mapActions('File', ['downloadFile']),
             display(value) {
                 return value? value : '—';
             },

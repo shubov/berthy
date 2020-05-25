@@ -283,13 +283,13 @@ const routes =
             }
         },
         {
-            path: '/requests',
+            path: '/bookings',
             name: 'Booking requests',
             components: {
                 appbar: appBar,
                 navbar: pagesWithNavBar.includes('Booking requests') ? navbar : null,
                 footer: footer,
-                content: () => import('../views/Dockmaster/Requests'),
+                content: () => import('../views/Dockmaster/Bookings'),
             },
             meta: {
                 title: projectName + ' - Booking requests',

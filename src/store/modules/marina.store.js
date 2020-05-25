@@ -64,7 +64,7 @@ const actions = {
             if (response.data.success) {
                 commit('SET_MY_MARINAS', response.data.data);
                 if(getters.getNumOfMarinas)
-                    await dispatch('selectMarina', 0);
+                    await dispatch('selectMarina', null);
                 return true;
             } else {
                 commit('ERROR', response.data.error.message);
@@ -96,7 +96,7 @@ const actions = {
         return false;
     },
 
-    selectMarina({commit, rootGetters}, index) {
+    async selectMarina({commit, rootGetters}, index) {
         setIcons(state.marinas[index].amenities, rootGetters);
         commit('SELECT_MARINA', index);
     }
@@ -134,7 +134,15 @@ const mutations = {
         state.message = msg;
     },
     SELECT_MARINA(state, index) {
-        state.current = index;
+        if (index == null) {
+            let ls = JSON.parse(localStorage.getItem('current_marina'));
+            if (ls != null && ls > -1 && ls < state.marinas.length)
+                state.current = ls;
+            else state.current = 0;
+        } else {
+            state.current = index;
+        }
+        localStorage.setItem('current_marina', state.current);
     }
 };
 

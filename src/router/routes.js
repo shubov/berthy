@@ -387,7 +387,7 @@ const routes =
                 content: () => import('../views/Boater/Trips'),
             },
             props: {
-                paymentSuccesful: null,
+                paymentSuccessful: null,
             },
             meta: {
                 title: projectName + ' - TripsComponents',
@@ -433,7 +433,7 @@ const routes =
             redirect: {
                 name: 'Trips',
                 props: {
-                    paymentSuccesful: false,
+                    paymentSuccessful: false,
                 }
             }
         },
@@ -442,7 +442,7 @@ const routes =
             redirect: {
                 name: 'Trips',
                 props: {
-                    paymentSuccesful: true,
+                    paymentSuccessful: true,
                 }
             }
         },

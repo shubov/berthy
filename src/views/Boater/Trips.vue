@@ -23,12 +23,13 @@
 
 <script>
     import {mapActions, mapGetters} from "vuex";
-    import TripCard from "../../components/TripsComponents/TripCard";
 
     export default {
         name: "Trips",
         props: ['paymentSuccessful'],
-        components: {TripCard},
+        components: {
+            TripCard:()=>import("../../components/TripsComponents/TripCard"),
+        },
         computed: {
             ...mapGetters('Bookings', {
                 trips: 'getTrips',
@@ -49,6 +50,7 @@
                 await this.fetchTrips();
         },
         mounted() {
+            console.log(this.paymentSuccessful);
             if (this.paymentSuccessful != null) {
                 if (this.paymentSuccessful) {
                     this.$store.dispatch('Dialog/set', "Payment was succesful. Yor reservation proccess is now finished.")

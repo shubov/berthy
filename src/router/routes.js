@@ -386,11 +386,8 @@ const routes =
                 footer: footer,
                 content: () => import('../views/Boater/Trips'),
             },
-            props: {
-                paymentSuccessful: null,
-            },
             meta: {
-                title: projectName + ' - TripsComponents',
+                title: projectName + ' - Trips',
                 roles: new Array(roles.user),
                 metaTags: [
                     {
@@ -402,7 +399,7 @@ const routes =
                         content: 'My trips.'
                     }
                 ]
-            }
+            },
         },
         {
             path: '/404',
@@ -430,21 +427,51 @@ const routes =
         },
         {
             path: '/failurePayment',
-            redirect: {
-                name: 'Trips',
-                props: {
-                    paymentSuccessful: false,
-                }
-            }
+            name: 'Payment failure',
+            components: {
+                appbar: appBar,
+                navbar: null,
+                footer: footer,
+                content: () => import('../views/User/PaymentFailure'),
+            },
+            meta: {
+                title: projectName + ' - Payment failure',
+                roles: new Array(roles.user),
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Payment failure.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Payment failure.'
+                    }
+                ]
+            },
         },
         {
             path: '/successPayment',
-            redirect: {
-                name: 'Trips',
-                props: {
-                    paymentSuccessful: true,
-                }
-            }
+            name: 'Payment success',
+            components: {
+                appbar: appBar,
+                navbar: null,
+                footer: footer,
+                content: () => import('../views/User/PaymentSuccess'),
+            },
+            meta: {
+                title: projectName + ' - Payment success',
+                roles: new Array(roles.user),
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Payment success.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Payment success.'
+                    }
+                ]
+            },
         },
         {
             path: '*',

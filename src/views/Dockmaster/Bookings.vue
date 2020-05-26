@@ -14,7 +14,7 @@
             v-resize="updateHeight"
     >
         <v-row justify="start" align="start">
-            <v-col sm="5" class="py-0" >
+            <v-col cols="12" sm="5" class="py-0" >
                 <v-toolbar
                         class="elevation-0"
                         id="toolbar"
@@ -128,7 +128,7 @@
                     </v-list-item-group>
                 </v-list>
             </v-col>
-            <v-col sm="7" class="py-0">
+            <v-col cols="12" sm="7" class="py-0">
                 <BookingCard
                         v-if="isComponent"
                         :height="bookingCardHeight"
@@ -199,16 +199,14 @@
                     return this.searchQuery;
                 },
                 set(value) {
-                    let searchStr = value.toString()
-                    this.searchQuery = searchStr;
-
                     if (value.toString().length<1)
                         this.filteredBookings = [];
-                    else { console.log(value);
-                        this.filteredBookings = this.bookings.filter(({title})=>{
-                            let res=title.toString().toLowerCase().includes(searchStr.toLowerCase());
-                            console.log(res, title);
-                            return res;
+                    else {
+                        this.filteredBookings = this.bookings.filter(({renter, ship})=>{
+                            return this.strIncludes(renter.firstName, value)
+                                || this.strIncludes(renter.lastName, value)
+                                || this.strIncludes(ship.model.model, value)
+                                || this.strIncludes(ship.model.producer, value);
                         })
                     }
                 }
@@ -309,7 +307,10 @@
                 if (this.bookings.length === 0) {
                     this.$store.dispatch("snackbar", `No bookings for ${this.marina.name} yet.`)
                 }
-            }
+            },
+            strIncludes(value1, value2) {
+                return value1.toString().toLowerCase().includes(value2.toString().toLowerCase());
+            },
         },
         async created() {
             if (!this.getAll.length)

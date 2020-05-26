@@ -95,6 +95,9 @@ class WebStorage {
     removeDeviceId() {
         this.#storage.removeItem(deviceIdKey);
     }
+    clear(){
+        this.#storage.clear();
+    }
 }
 
 export default new WebStorage();

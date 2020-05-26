@@ -69,7 +69,7 @@
                 firstName: 'getFirstName',
                 lastName: 'getLastName',
                 phone: 'getPhone',
-                error: "getError"
+                error: "getErrorMessage"
             }),
         },
         data: function () {

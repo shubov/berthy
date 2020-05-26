@@ -12,7 +12,6 @@ import BerthyAPI from "../../services/berthy-api";
 // State initial object
 const initialState = () => ({
     ships: [],
-    numOfShips: 0,
     success: null,
     error: null,
     message: null,
@@ -50,9 +49,6 @@ const getters = {
     },
     getShip(state) {
         return state.ships[state.current];
-    },
-    getNumOfShips(state) {
-        return state.numOfShips;
     },
     getShipDto(state) {
         return {

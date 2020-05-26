@@ -10,7 +10,7 @@
 <template>
     <v-app>
         <router-view name="appbar"/>
-        <router-view name="navbar"/>
+        <router-view v-if="dockmaster" name="navbar"/>
         <router-view name="footer"/>
         <Snackbar></Snackbar>
         <Dialog></Dialog>
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         components: {
             Dialog: ()=>import("./components/AppComponents/Dialog"),
@@ -29,5 +31,10 @@
         data: () => ({
             name: "Main",
         }),
+        computed: {
+            ...mapGetters('User', [
+                'dockmaster'
+            ]),
+        }
     }
 </script>

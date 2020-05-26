@@ -9,7 +9,6 @@
 import store from '../store';
 
 const projectName = 'Berthy';
-const pagesWithNavBar = store.state.pagesWithNavBar;
 const roles = store.state.roles;
 
 const navbar = () => import('../components/AppComponents/NavBar');
@@ -23,7 +22,7 @@ const routes =
             name: 'Berthy',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Berthy') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Public/LandingPage'),
             },
@@ -47,12 +46,12 @@ const routes =
             name: 'Marina',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Marina') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/User/Marina'),
             },
             meta: {
-                roles: [roles.user, roles.moderator, roles.admin],
+                roles: [roles.user, roles.moderator],
                 title: projectName + ' - Marina',
                 metaTags: [
                     {
@@ -71,7 +70,7 @@ const routes =
             name: 'Sign Up',
             components: {
                 appbar: null,
-                navbar: pagesWithNavBar.includes('Sign Up') ? navbar : null,
+                navbar: null,
                 footer: null,
                 content: () => import('../views/Public/SignUp'),
             },
@@ -95,7 +94,7 @@ const routes =
             name: 'Sign In',
             components: {
                 appbar: null,
-                navbar: pagesWithNavBar.includes('Sign In') ? navbar : null,
+                navbar: null,
                 footer: null,
                 content: () => import('../views/Public/SignIn'),
             },
@@ -119,7 +118,7 @@ const routes =
             name: 'Frequently Asked Questions',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Frequently Asked Questions') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Public/FAQ'),
             },
@@ -143,13 +142,13 @@ const routes =
             name: 'Profile',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Profile') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/User/Profile'),
             },
             meta: {
                 title: projectName + ' - Profile',
-                roles: [roles.user, roles.moderator, roles.admin],
+                roles: [roles.user, roles.moderator],
                 metaTags: [
                     {
                         name: 'description',
@@ -164,15 +163,15 @@ const routes =
         },
         {
             path: '/moderator',
-            name: 'Marina Registrations',
+            name: 'Marina Applications',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Marina Registrations') ? navbar : null,
+                navbar: null,
                 footer: footer,
-                content: () => import('../views/Moderator/Requests'),
+                content: () => import('../views/Moderator/Applications'),
             },
             meta: {
-                title: projectName + ' - Marina Registrations',
+                title: projectName + ' - Marina Applications',
                 roles: [roles.moderator],
                 metaTags: [
                     {
@@ -191,7 +190,7 @@ const routes =
             name: 'Role',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Role') ? navbar : null,
+                navbar: null,
                 footer: footer,
                 content: () => import('../views/User/Role'),
             },
@@ -215,7 +214,7 @@ const routes =
             name: 'Marina Registration',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Marina Registration') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Dockmaster/MarinaRegistration'),
             },
@@ -239,7 +238,7 @@ const routes =
             name: 'Dashboard',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Dashboard') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Dockmaster/Dashboard'),
             },
@@ -263,13 +262,13 @@ const routes =
             name: 'Messages',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Messages') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/User/Messages'),
             },
             meta: {
                 title: projectName + ' - Messages',
-                roles: new Array(roles.user),
+                roles: [roles.user, roles.moderator],
                 metaTags: [
                     {
                         name: 'description',
@@ -287,7 +286,7 @@ const routes =
             name: 'Booking requests',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Booking requests') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Dockmaster/Bookings'),
             },
@@ -311,7 +310,7 @@ const routes =
             name: 'Team',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Team') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Dockmaster/Team'),
             },
@@ -335,7 +334,7 @@ const routes =
             name: 'Settings',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Settings') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Dockmaster/Settings'),
             },
@@ -359,7 +358,7 @@ const routes =
             name: 'Book',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('Book') ? navbar : null,
+                navbar: null,
                 footer: footer,
                 content: () => import('../views/Boater/Book'),
             },
@@ -379,11 +378,38 @@ const routes =
             }
         },
         {
+            path: '/trips',
+            name: 'Trips',
+            components: {
+                appbar: appBar,
+                navbar: null,
+                footer: footer,
+                content: () => import('../views/Boater/Trips'),
+            },
+            props: {
+                paymentSuccesful: null,
+            },
+            meta: {
+                title: projectName + ' - TripsComponents',
+                roles: new Array(roles.user),
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'My trips.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'My trips.'
+                    }
+                ]
+            }
+        },
+        {
             path: '/404',
             name: 'NotFound',
             components: {
                 appbar: appBar,
-                navbar: pagesWithNavBar.includes('NotFound') ? navbar : null,
+                navbar: navbar,
                 footer: footer,
                 content: () => import('../views/Public/FourOFour'),
             },
@@ -400,6 +426,24 @@ const routes =
                         content: '404 - Not Found.'
                     }
                 ]
+            }
+        },
+        {
+            path: '/failurePayment',
+            redirect: {
+                name: 'Trips',
+                props: {
+                    paymentSuccesful: false,
+                }
+            }
+        },
+        {
+            path: '/successPayment',
+            redirect: {
+                name: 'Trips',
+                props: {
+                    paymentSuccesful: true,
+                }
             }
         },
         {

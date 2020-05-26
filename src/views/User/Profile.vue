@@ -187,10 +187,10 @@
             return {
                 dialogEditProfile: false,
                 disabled: true,
-                marinaImg: require("../../assets/marina.jpg"),
                 sailImg: require("../../assets/sailBoat.jpg"),
                 powerImg: require("../../assets/powerBoat.jpg"),
                 marinaLazy: require("../../assets/marina.webp"),
+                marinaImg: require("../../assets/marina.jpg"),
                 sailLazy: require("../../assets/sailBoat.webp"),
                 powerLazy: require("../../assets/powerBoat.webp"),
                 saving: false,

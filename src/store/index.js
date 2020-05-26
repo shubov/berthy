@@ -29,7 +29,9 @@ export default new Vuex.Store({
         },
         bg: {'background-image': `url(${require('../assets/background.jpg')})`},
         pagesWithBg: ['Sign In', 'Sign Up', "Role"],
-        pagesWithNavBar: ['Dashboard', 'Team', 'Settings', 'Booking requests', 'Messages', "Profile"],
+        pagesWithNavBar: [
+            'Dashboard', 'Team', 'Settings', 'Booking requests',
+            'Messages', "Profile"],
     }),
     mutations: {
         SET_SNACKBAR(state, value){

@@ -63,8 +63,9 @@ const actions = {
         if (response.data) {
             if (response.data.success) {
                 commit('SET_MY_MARINAS', response.data.data);
-                if(getters.getNumOfMarinas)
+                if(getters.getNumOfMarinas) {
                     await dispatch('selectMarina', null);
+                }
                 return true;
             } else {
                 commit('ERROR', response.data.error.message);
@@ -97,7 +98,7 @@ const actions = {
     },
 
     async selectMarina({commit, rootGetters}, index) {
-        setIcons(state.marinas[index].amenities, rootGetters);
+        if (state.marinas[index]) setIcons(state.marinas[index].amenities, rootGetters);
         commit('SELECT_MARINA', index);
     }
 };

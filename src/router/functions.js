@@ -16,6 +16,20 @@ const roles = {
     admin: 'ADMIN',
 };
 
+async function getUserRoles() {
+    let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+    if (userRoles.length === 0) {
+        await store.dispatch('User/updateAccountInfo');
+        userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
+    }
+    return userRoles;
+}
+
+function defaultPagesForRole(moderator, user, next) {
+    if (moderator) next('/moderator');
+    else if (user) next('/profile');
+}
+
 export default {
 
     updatePageTitleAndMeta(document, to, next) {
@@ -40,7 +54,16 @@ export default {
         let authRequired = to.meta.public !== true;
 
         if (!authRequired) {
-            next();
+            if (to.name!=="Sign In")
+                next();
+            else {
+                let userRoles = await getUserRoles();
+                defaultPagesForRole(
+                    userRoles.includes(roles.moderator),
+                    userRoles.includes(roles.user),
+                    next
+                );
+            }
         }
         else {
             let loggedIn = !!AuthService.checkAccessToken();
@@ -53,11 +76,7 @@ export default {
                     }
                 });
             else {
-                let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-                if (userRoles.length === 0) {
-                    await store.dispatch('User/updateAccountInfo');
-                    userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-                }
+                let userRoles = await getUserRoles();
                 let rolesNeeded = to.meta.roles;
 
                 let moderator = false;
@@ -73,8 +92,7 @@ export default {
                         }
                     }
                 }
-                if (moderator) next('/moderator')
-                else if (user) next('/profile');
+                defaultPagesForRole(moderator, user, next);
             }
         }
     }

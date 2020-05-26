@@ -17,81 +17,151 @@
             clipped-right
     >
         <v-btn
-                v-if="isMobile && isNavbarPresent"
+                v-if="isMobile && dockmaster"
                 @click="$parent.$emit('click-menu-icon')"
                 icon
         >
             <v-icon>{{icons.menu}}</v-icon>
         </v-btn>
-    
-        <router-link to="/">
-            <v-img
-                    id="berthy-logo"
-                    max-width="150"
-                    contain
-                    src="../../assets/berthy_logo.png"
-            ></v-img>
-        </router-link>
-        <v-toolbar-title class="ml-3">{{$route.name}}</v-toolbar-title>
+        <v-img
+                @click="toDefaultPage()"
+                id="berthy-logo"
+                max-width="150"
+                contain
+                src="../../assets/berthy_logo.png"
+        ></v-img>
+        <v-toolbar-title v-show="!isMobile" class="ml-3">{{$route.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        
-        <v-tooltip bottom>
+        <v-tooltip bottom v-if="isFaqIcon">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on" @click="toFaq()">
+                <v-btn icon v-bind="attrs" v-on="on" to="/faq">
                     <v-icon>{{icons.helpCircle}}</v-icon>
                 </v-btn>
             </template>
             <span>FAQ</span>
         </v-tooltip>
-    
-        <v-btn
-                v-if="!loggedIn"
-                to="/sign-in"
-                color="primary"
-        >Sign In</v-btn>
-        
-        <v-menu v-if="loggedIn">
+        <v-tooltip bottom v-if="isAccountIcon">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on">
+                <v-btn icon v-bind="attrs" v-on="on" to="/profile">
                     <v-icon>{{icons.account}}</v-icon>
                 </v-btn>
             </template>
-    
-            <v-list>
-                <v-list-item @click="onSwitch()">
-                    <v-list-item-title >Switch role</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="onProfileClick()">
-                    <v-list-item-title>Profile</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-menu>
-    
-        <v-tooltip bottom v-if="loggedIn">
+            <span>Profile</span>
+        </v-tooltip>
+        <v-btn v-if="isSignInBtn"
+                to="/sign-in"
+                color="primary"
+        >Sign In</v-btn>
+        <v-tooltip bottom v-if="isLogoutIcon">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-on="on" v-bind="attrs" @click="onSignOut">
+                <v-btn icon v-bind="attrs" v-on="on" @click="onSignOut()">
                     <v-icon>{{icons.logout}}</v-icon>
                 </v-btn>
             </template>
             <span>Sign Out</span>
         </v-tooltip>
+        <v-menu v-if="isRightMenuIcon" offset-y>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" v-on="on">
+                    <v-icon>{{icons.menu}}</v-icon>
+                </v-btn>
+            </template>
+    
+            <v-list v-if="boater">
+                <v-list-item to="/book">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.magnify}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Explore</v-list-item-title>
+                </v-list-item>
+                <v-list-item to="/trips">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.shipWheel}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Trips</v-list-item-title>
+                </v-list-item>
+                <v-list-item to="/messages">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.forum}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Chat</v-list-item-title>
+                </v-list-item>
+                <v-list-item to="/profile">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.account}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title >Profile</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="onSignOut">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.logout}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Sign Out</v-list-item-title>
+                </v-list-item>
+            </v-list>
+    
+            <v-list v-if="moderator">
+                <v-list-item to="/moderator">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.clipboardTextMultiple}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Applications</v-list-item-title>
+                </v-list-item>
+                <v-list-item to="/messages">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.forum}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Chat</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="onSignOut">
+                    <v-list-item-icon>
+                        <v-icon>{{icons.logout}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Sign Out</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
     </v-app-bar>
 </template>
 
 <script>
     import router from "../../router";
-    import { mdiMenu, mdiHelpCircle, mdiAccount, mdiLogout } from '@mdi/js'
+    import {
+        mdiMenu,
+        mdiHelpCircle,
+        mdiAccount,
+        mdiLogout,
+        mdiForum,
+        mdiMagnify,
+        mdiShipWheel,
+        mdiClipboardTextMultiple
+    } from '@mdi/js'
+    import {mapActions, mapGetters} from "vuex";
     export default {
         name: "AppBar",
         computed: {
-            loggedIn() {
-                return this.$store.getters['User/isLoggedIn'];
-            },
+            ...mapGetters('User', [
+                'isUser', 'isModerator', 'isDockmaster', 'isLoggedIn',
+                'dockmaster', 'boater', 'moderator'
+            ]),
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
-            isNavbarPresent() {
-                return this.$store.state.pagesWithNavBar.includes(this.$route.name);
+            
+            isFaqIcon() {
+                return !this.moderator;
+            },
+            isSignInBtn() {
+                return !this.isLoggedIn;
+            },
+            isAccountIcon() {
+                return this.dockmaster;
+            },
+            isLogoutIcon() {
+                return this.dockmaster;
+            },
+            isRightMenuIcon() {
+                return this.boater || this.moderator;
             }
         },
         data: function () {
@@ -101,10 +171,17 @@
                     helpCircle: mdiHelpCircle,
                     logout: mdiLogout,
                     menu: mdiMenu,
+                    forum: mdiForum,
+                    magnify: mdiMagnify,
+                    shipWheel: mdiShipWheel,
+                    clipboardTextMultiple: mdiClipboardTextMultiple
                 }
             }
         },
         methods: {
+            ...mapActions('User', [
+               'checkDockmaster'
+            ]),
             async onSignOut() {
                 try {
                     this.$auth.logout();
@@ -114,16 +191,24 @@
                     console.log('error', e);
                 }
             },
-            onSwitch() {
-                router.push('/roles');
-            },
-            onProfileClick() {
-                router.push('/profile')
-            },
-            toFaq() {
-                router.push('/faq');
+            toDefaultPage() {
+                if (this.boater) {
+                    router.push('/book');
+                    return;
+                }
+                if (this.dockmaster) {
+                    router.push('/dashboard');
+                    return;
+                }
+                if (this.moderator) {
+                    router.push('/moderator');
+                }
+                router.push('/');
             }
-        }
+        },
+        async created() {
+            await this.checkDockmaster();
+        },
     }
 </script>
 

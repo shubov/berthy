@@ -70,9 +70,21 @@ const getters = {
     isModerator(state) {
         return state.roles.includes("MODERATOR");
     },
-    getError(state) {
-        return state.error;
-    }
+    isDockmaster(state, getters, rootState, rootGetters) {
+        return rootGetters['Marina/getAll'].length > 0;
+    },
+    getErrorMessage(state) {
+        return state.message;
+    },
+    moderator(state, getters) {
+        return getters.isLoggedIn && getters.isModerator;
+    },
+    dockmaster(state, getters) {
+        return getters.isLoggedIn && getters.isDockmaster && !getters.isModerator;
+    },
+    boater(state, getters) {
+        return getters.isLoggedIn && !getters.isDockmaster && !getters.isModerator;
+    },
 };
 
 
@@ -97,14 +109,14 @@ const actions = {
     async updateUserInfo({commit,dispatch}) {
         commit("FETCHING");
         let response = await BerthyAPI.get("accounts/userInfo");
-        return dispatch('setUserInfo', response);
+        return await dispatch('setUserInfo', response);
     },
     async editUserInfo({commit,dispatch}, data) {
         commit("FETCHING");
         let response = await BerthyAPI.put("accounts/userInfo", data)
-        return dispatch('setUserInfo', response);
+        return await dispatch('setUserInfo', response);
     },
-    setUserInfo({commit}, response) {
+    async setUserInfo({commit}, response) {
         if (response.data) {
             if (response.data.success) {
                 commit('SET_USER_INFO', {
@@ -120,6 +132,11 @@ const actions = {
             }
         }
         return false;
+    },
+
+    async checkDockmaster({dispatch, getters}) {
+        if (!getters.isDockmaster)
+            await dispatch('Marina/fetchMyMarinas', null, {root: true});
     }
 };
 
@@ -161,7 +178,7 @@ const mutations = {
         state.success = true;
         state.error = false;
         state.message = null;
-    }
+    },
 };
 
 

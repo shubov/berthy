@@ -78,13 +78,13 @@
                     <v-row>
                         <v-col>
                             <v-date-picker
+                                    class="d-block"
                                     :value="[booking.startDate,booking.endDate]"
-                                    landscape
+                                    :landscape="!isMobile"
                                     disabled
-                                    :selected-items-text="`From:</br>
-                            ${booking.startDate.substr(5,5).replace('-','.')}</br>
-                            To:</br>
-                            ${booking.endDate.substr(5,5).replace('-','.')}`"
+                                    :selected-items-text="`
+                                    ${booking.startDate.substr(8,2)} -
+                                    ${booking.endDate.substr(8,2)}`"
                                     multiple
                                     readonly
                             ></v-date-picker>
@@ -177,6 +177,9 @@
             ...mapGetters('Bookings', {
                 booking: 'getCurrentBooking',
             }),
+            isMobile() {
+                return !this.$vuetify.breakpoint.smAndUp;
+            },
         },
         data: function () {
             return {

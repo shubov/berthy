@@ -140,12 +140,8 @@ class AuthService {
 
 
     logout() {
-        //Session Store reset
-        storage.removeAccessToken();
-        storage.removeRefreshToken();
-        storage.removeAccessExpiry();
-        storage.removeRefreshExpiry();
-        storage.removeDeviceId();
+        //Local Store reset
+        storage.clear();
         //VUEX RESET
         store.dispatch('reset', null, { root: true });
     }

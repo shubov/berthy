@@ -58,7 +58,7 @@
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn icon v-bind="attrs" v-on="on">
-                                <v-icon>{{icons.filterVariant}}t</v-icon>
+                                <v-icon>{{icons.filterVariant}}</v-icon>
                             </v-btn>
                         </template>
                         <ModeratorFilter
@@ -92,7 +92,7 @@
                     >
                         <template v-for="(item, index) in (filtered ? filteredApplications : applications)">
                             <v-list-item
-                                    :key="item.id"
+                                    :key="index+'application'"
                                     @click="openApplication(index)"
                             >
                                 <template
@@ -127,7 +127,7 @@
                         
                             <v-divider
                                     v-if="index + 1 < applications.length"
-                                    :key="index"
+                                    :key="index+'divider'"
                             ></v-divider>
                         </template>
                     </v-list-item-group>
@@ -166,7 +166,7 @@
     } from "@mdi/js";
     
     export default {
-        name: "Requests",
+        name: "Applications",
         components: {
             ModeratorFilter: ()=>import("../../components/ModeratorComponents/ModeratorFilter"),
             MarinaApplicationCard: ()=>import("../../components/ModeratorComponents/MarinaApplicationCard"),

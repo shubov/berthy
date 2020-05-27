@@ -7,7 +7,7 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 
-import router from "../router";
+//import router from "../router";
 import store from "../store"
 import axios from 'axios';
 import AuthService from '../services/auth.service';
@@ -24,12 +24,17 @@ BerthyAPI.interceptors.request.use(function (config) {
 });
 
 BerthyAPI.interceptors.response.use(function (response) {
-    if (!response.data.success && response.data.error.code===401) {
-        store.dispatch('snackbar', "Your session has expired");
-        router.push('/sign-in');
-    }
+    // if (!response.data.success
+    //     && response.data.error.code===401
+    //     && router.currentRoute.name !== 'Sign In')
+    // {
+    //     store.dispatch('snackbar', "Sign in to access the page");
+    //     router.push('/sign-in');
+    // }
     return response;
 }, function (error) {
+    if (!error.status)
+        store.dispatch('snackbar', "Network Error");
     return Promise.reject(error);
 });
 

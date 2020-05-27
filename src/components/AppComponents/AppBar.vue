@@ -136,12 +136,12 @@
         mdiShipWheel,
         mdiClipboardTextMultiple
     } from '@mdi/js'
-    import {mapActions, mapGetters} from "vuex";
+    import {mapGetters} from "vuex";
     export default {
         name: "AppBar",
         computed: {
             ...mapGetters('User', [
-                'isUser', 'isModerator', 'isDockmaster', 'isLoggedIn',
+                'isUser', 'isModerator', 'isLoggedIn',
                 'dockmaster', 'boater', 'moderator'
             ]),
             isMobile() {
@@ -179,9 +179,6 @@
             }
         },
         methods: {
-            ...mapActions('User', [
-               'checkDockmaster'
-            ]),
             async onSignOut() {
                 try {
                     this.$auth.logout();
@@ -205,9 +202,6 @@
                 }
                 router.push('/');
             }
-        },
-        async created() {
-            await this.checkDockmaster();
         },
     }
 </script>

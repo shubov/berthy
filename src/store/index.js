@@ -27,11 +27,13 @@ export default new Vuex.Store({
             moderator: 'MODERATOR',
             admin: 'ADMIN',
         },
+        usertypes: {
+            boater: 'BOATER',
+            dockmaster: 'DOCKMASTER',
+            newUser: 'NEW_USER',
+        },
         bg: {'background-image': `url(${require('../assets/background.jpg')})`},
         pagesWithBg: ['Sign In', 'Sign Up', "Role"],
-        pagesWithNavBar: [
-            'Dashboard', 'Team', 'Settings', 'Booking requests',
-            'Messages', "Profile"],
     }),
     mutations: {
         SET_SNACKBAR(state, value){

@@ -17,6 +17,8 @@ const initialState = () => ({
     email: null,
     id: null,
     kind: null,
+    hasBerths: false,
+    hasShips: false,
     permissions: [],
     roles: [],
     firstName: null,
@@ -40,12 +42,10 @@ const state = initialState();
 
 // VUEX GETTERS
 const getters = {
-    getRoles(state){
-        return state.roles;
+    getError(state) {
+        return state.message;
     },
-    isLoggedIn(state) {
-        return state.roles.length>0;
-    },
+
     getName(state) {
         return `${state.firstName} ${state.lastName}`;
     },
@@ -64,26 +64,28 @@ const getters = {
     getPhone(state) {
         return state.phNumber;
     },
+
     isUser(state) {
         return state.roles.includes("USER");
     },
     isModerator(state) {
         return state.roles.includes("MODERATOR");
     },
-    isDockmaster(state, getters, rootState, rootGetters) {
-        return rootGetters['Marina/getAll'].length > 0;
+    isLoggedIn(state) {
+        return state.roles.length>0;
     },
-    getErrorMessage(state) {
-        return state.message;
+    getRoles(state){
+        return state.roles;
     },
+
     moderator(state, getters) {
         return getters.isLoggedIn && getters.isModerator;
     },
     dockmaster(state, getters) {
-        return getters.isLoggedIn && getters.isDockmaster && !getters.isModerator;
+        return getters.isLoggedIn && !getters.isModerator && state.hasBerths;
     },
     boater(state, getters) {
-        return getters.isLoggedIn && !getters.isDockmaster && !getters.isModerator;
+        return getters.isLoggedIn && !getters.isModerator && state.hasShips && !state.hasBerths;
     },
 };
 
@@ -96,15 +98,8 @@ const actions = {
     async updateAccountInfo({commit}) {
         let response = await BerthyAPI.get("accounts/info");
         if (response.data.success) {
-            commit('SET_ACCOUNT_INFO', {
-                email: response.data.data.email,
-                id: response.data.data.id,
-                kind: response.data.data.kind,
-                permissions: response.data.data.permissions,
-                roles: response.data.data.roles
-            });
+            commit('SET_ACCOUNT_INFO', response.data.data);
         }
-
     },
     async updateUserInfo({commit,dispatch}) {
         commit("FETCHING");
@@ -119,13 +114,7 @@ const actions = {
     async setUserInfo({commit}, response) {
         if (response.data) {
             if (response.data.success) {
-                commit('SET_USER_INFO', {
-                    firstName: response.data.data.firstName,
-                    lastName: response.data.data.lastName,
-                    phCode: response.data.data.phCode,
-                    phNumber: response.data.data.phNumber,
-                    photo: response.data.data.photo
-                });
+                commit('SET_USER_INFO', response.data.data);
                 return true;
             } else {
                 commit('ERROR', response.data.error.message);
@@ -133,11 +122,6 @@ const actions = {
         }
         return false;
     },
-
-    async checkDockmaster({dispatch, getters}) {
-        if (!getters.isDockmaster)
-            await dispatch('Marina/fetchMyMarinas', null, {root: true});
-    }
 };
 
 
@@ -159,12 +143,15 @@ const mutations = {
         state.error = true;
         state.message = msg;
     },
-    SET_ACCOUNT_INFO(state, {email, id, kind, permissions, roles}){
+    SET_ACCOUNT_INFO(state, {email, id, kind, permissions, roles, hasBerths, hasShips}) {
         state.email = email;
         state.id = id;
         state.kind = kind;
         state.permissions = permissions;
         state.roles = roles;
+        state.hasBerths = hasBerths;
+        state.hasShips = hasShips;
+
         state.success = true;
         state.error = false;
         state.message = null;

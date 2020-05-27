@@ -10,6 +10,9 @@ import store from '../store';
 
 const projectName = 'Berthy';
 const roles = store.state.roles;
+const boater = store.state.usertypes.boater;
+const dockmaster = store.state.usertypes.dockmaster;
+const newUser = store.state.usertypes.newUser;
 
 const navbar = () => import('../components/AppComponents/NavBar');
 const footer = () => import('../components/AppComponents/FooterBar');
@@ -52,6 +55,7 @@ const routes =
             },
             meta: {
                 roles: [roles.user, roles.moderator],
+                usertype: [dockmaster, boater, newUser],
                 title: projectName + ' - Marina',
                 metaTags: [
                     {
@@ -148,7 +152,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Profile',
-                roles: [roles.user, roles.moderator],
+                roles: [roles.user],
+                usertype: [dockmaster, boater],
                 metaTags: [
                     {
                         name: 'description',
@@ -196,7 +201,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Role',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [newUser],
                 metaTags: [
                     {
                         name: 'description',
@@ -220,7 +226,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Marina Registration',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster, newUser],
                 metaTags: [
                     {
                         name: 'description',
@@ -244,7 +251,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Dashboard',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster],
                 metaTags: [
                     {
                         name: 'description',
@@ -269,6 +277,7 @@ const routes =
             meta: {
                 title: projectName + ' - Messages',
                 roles: [roles.user, roles.moderator],
+                usertype: [boater, dockmaster],
                 metaTags: [
                     {
                         name: 'description',
@@ -292,7 +301,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Booking requests',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster],
                 metaTags: [
                     {
                         name: 'description',
@@ -316,7 +326,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Team',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster],
                 metaTags: [
                     {
                         name: 'description',
@@ -340,7 +351,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Settings',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster],
                 metaTags: [
                     {
                         name: 'description',
@@ -364,7 +376,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Book',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [boater, newUser],
                 metaTags: [
                     {
                         name: 'description',
@@ -388,7 +401,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Trips',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [boater],
                 metaTags: [
                     {
                         name: 'description',
@@ -436,7 +450,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Payment failure',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster],
                 metaTags: [
                     {
                         name: 'description',
@@ -460,7 +475,8 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Payment success',
-                roles: new Array(roles.user),
+                roles: [roles.user],
+                usertype: [dockmaster],
                 metaTags: [
                     {
                         name: 'description',

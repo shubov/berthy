@@ -10,24 +10,38 @@
 import AuthService from '../services/auth.service';
 import store from '../store';
 
-const roles = {
-    user: 'USER',
-    moderator: 'MODERATOR',
-    admin: 'ADMIN',
-};
+const roles = store.state.roles;
+const boater = store.state.usertypes.boater;
+const dockmaster = store.state.usertypes.dockmaster;
+const newUser = store.state.usertypes.newUser;
 
-async function getUserRoles() {
-    let userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-    if (userRoles.length === 0) {
-        await store.dispatch('User/updateAccountInfo');
-        userRoles = JSON.parse(JSON.stringify(store.getters["User/getRoles"]));
-    }
-    return userRoles;
+
+// async function getUserRoles() {
+//     if (store.getters["User/getRoles"].length === 0) {
+//         await store.dispatch('User/updateAccountInfo');
+//     }
+// }
+//
+// function defaultPagesForRole(moderator, user, next) {
+//     if (moderator) next('/moderator');
+//     else if (user) next('/profile');
+// }
+
+function pushSignIn(next, to) {
+    next({
+        name: "Sign In",
+        query: {
+            redirect: to.path,
+        }
+    });
 }
 
-function defaultPagesForRole(moderator, user, next) {
-    if (moderator) next('/moderator');
-    else if (user) next('/profile');
+function checkUserType(to, usertype, defaultUserTypePage, next) {
+    if (to.meta.usertype && to.meta.usertype.includes(usertype)) {
+        next();
+    } else {
+        next(defaultUserTypePage);
+    }
 }
 
 export default {
@@ -50,53 +64,106 @@ export default {
     },
 
 
+    // async handleUnauthotirizedAccess(to, next) {
+    //     let authRequired = to.meta.public !== true;
+    //
+    //     if (!authRequired) {
+    //         if (to.name!=="Sign In")
+    //             next();
+    //         else {
+    //             let userRoles = await getUserRoles();
+    //             defaultPagesForRole(
+    //                 userRoles.includes(roles.moderator),
+    //                 userRoles.includes(roles.user),
+    //                 next
+    //             );
+    //         }
+    //     }
+    //     else {
+    //         let loggedIn = !!(await AuthService.checkAccessToken());
+    //
+    //         if (!loggedIn)
+    //             next({
+    //                 name: "Sign In",
+    //                 query: {
+    //                     redirect: to.path,
+    //                 }
+    //             });
+    //         else {
+    //             let userRoles = await getUserRoles();
+    //             if (userRoles==null) {
+    //                 next();
+    //                 return;
+    //             }
+    //             let rolesNeeded = to.meta.roles;
+    //
+    //             let moderator = false;
+    //             let user = false;
+    //
+    //             for (let i = 0; i < userRoles.length; i++) {
+    //                 moderator = moderator ? true : userRoles[i] === roles.moderator;
+    //                 user = user ? true : userRoles[i] === roles.user;
+    //                 for (let j = 0; j < rolesNeeded.length; j++) {
+    //                     if (rolesNeeded[j] === userRoles[i]) {
+    //                         next();
+    //                         return;
+    //                     }
+    //                 }
+    //             }
+    //             defaultPagesForRole(moderator, user, next);
+    //         }
+    //     }
+    // },
+
     async handleUnauthotirizedAccess(to, next) {
         let authRequired = to.meta.public !== true;
+        let loggedIn = !!AuthService.checkAccessToken();
+        if (store.getters["User/getRoles"].length === 0)
+            await store.dispatch('User/updateAccountInfo');
 
         if (!authRequired) {
-            if (to.name!=="Sign In")
-                next();
+            if (loggedIn && to.name==="Sign In")
+                next('/moderator');
             else {
-                let userRoles = await getUserRoles();
-                defaultPagesForRole(
-                    userRoles.includes(roles.moderator),
-                    userRoles.includes(roles.user),
-                    next
-                );
+                next();
             }
         }
         else {
-            let loggedIn = !!AuthService.checkAccessToken();
-
-            if (!loggedIn)
-                next({
-                    name: "Sign In",
-                    query: {
-                        redirect: to.path,
-                    }
-                });
+            if(!loggedIn) {
+                pushSignIn(next, to);
+            }
             else {
-                let userRoles = await getUserRoles();
-                if (userRoles==null) {
-                    next();
-                    return;
+                if (store.getters["User/getRoles"].length === 0) {
+                    pushSignIn(next, to);
                 }
-                let rolesNeeded = to.meta.roles;
-
-                let moderator = false;
-                let user = false;
-
-                for (let i = 0; i < userRoles.length; i++) {
-                    moderator = moderator ? true : userRoles[i] === roles.moderator;
-                    user = user ? true : userRoles[i] === roles.user;
-                    for (let j = 0; j < rolesNeeded.length; j++) {
-                        if (rolesNeeded[j] === userRoles[i]) {
+                else {
+                    if(store.getters['User/moderator']) {
+                        if (to.meta.roles.includes(roles.moderator)) {
                             next();
-                            return;
+                        }
+                        else {
+                            next('/moderator');
+                        }
+                    }
+                    else {
+                        if (!store.getters['User/isUser']) {
+                            pushSignIn(next, to);
+                        }
+                        else {
+                            if (store.getters['User/boater']) {
+                                checkUserType(to, boater, '/book', next)
+                            }
+                            else {
+                                if (store.getters['User/dockmaster']) {
+                                    checkUserType(to, dockmaster, '/dashboard', next)
+                                }
+                                else {
+                                    checkUserType(to, newUser, '/roles', next)
+                                }
+                            }
                         }
                     }
                 }
-                defaultPagesForRole(moderator, user, next);
             }
         }
     }

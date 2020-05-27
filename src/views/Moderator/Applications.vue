@@ -313,8 +313,8 @@
                 this.filterMenu = false;
             },
         },
-        async created() {
-            await this.fetchApplications();
+        mounted() {
+            this.fetchApplications();
         },
     }
 </script>

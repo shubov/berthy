@@ -50,6 +50,7 @@
             mapOptions: {
                 zoomSnap: 0.5,
                 boxZoom: false,
+                doubleClickZoom: false,
                 scrollWheelZoom: 'center',
             },
             lat: 0,

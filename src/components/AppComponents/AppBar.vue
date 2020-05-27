@@ -30,7 +30,7 @@
                 contain
                 src="../../assets/berthy_logo.png"
         ></v-img>
-        <v-toolbar-title v-show="!isMobile" class="ml-3">{{$route.name}}</v-toolbar-title>
+        <v-toolbar-title v-show="!isMobile" class="ml-8">{{$route.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-tooltip bottom v-if="isFaqIcon">
             <template v-slot:activator="{ on, attrs }">

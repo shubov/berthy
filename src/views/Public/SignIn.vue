@@ -28,7 +28,13 @@
                         :max-width="400"
                 >
                     <v-toolbar flat>
-                        <v-toolbar-title class="font-weight-light">Sign In</v-toolbar-title>
+                        <v-img
+                                id="berthy-logo"
+                                max-width="150"
+                                contain
+                                src="../../assets/berthy_logo_black.png"
+                        >
+                        </v-img>
                         <v-spacer></v-spacer>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">

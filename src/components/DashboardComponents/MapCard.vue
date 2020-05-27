@@ -11,7 +11,8 @@
     <v-card
             id='map-card'
             style="height: inherit"
-            :options="{dragging: dragging}"
+            :options="mapOptions"
+            :scrollWheelZoom="false"
     >
         <l-map
                 ref="map"
@@ -50,7 +51,7 @@
     
     export default {
         name: "MapCard",
-        props: ['latitude', 'longitude', 'dragging'],
+        props: ['latitude', 'longitude'],
         components: {
             LMap, LTileLayer, LMarker, LTooltip,
         },
@@ -63,6 +64,9 @@
             return {
                 url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 attribution: '',
+                mapOptions: {
+                    scrollWheelZoom: false
+                }
             };
         },
         mounted() {

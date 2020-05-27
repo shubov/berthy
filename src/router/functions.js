@@ -77,6 +77,10 @@ export default {
                 });
             else {
                 let userRoles = await getUserRoles();
+                if (userRoles==null) {
+                    next();
+                    return;
+                }
                 let rolesNeeded = to.meta.roles;
 
                 let moderator = false;

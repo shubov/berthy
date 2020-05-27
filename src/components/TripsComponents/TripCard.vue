@@ -113,7 +113,7 @@
                     case ('APPROVED'):
                         return 'Confirmed';
                     case ('PAYED'):
-                        return 'Payed';
+                        return 'Paid';
                 }
             },
             async onPay(id) {

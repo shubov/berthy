@@ -8,7 +8,14 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-card class="elevation-0" tile>
+    <v-card class="elevation-0 pt-6" tile>
+        <v-card-subtitle>Check the dates and the boat you selected again.
+            In case you don't have a boat, create one.
+            It is necessary for the dockmaster accepting your
+            reservation to know parameters of your boat.<br/>
+            Select one the docking spots available for you at {{marina.name}}.
+            Naming of the places is saved.
+        </v-card-subtitle>
         <v-card-text>
             <v-row>
                 <v-col cols="12" sm="6">

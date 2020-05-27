@@ -8,10 +8,10 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-container fluid v-resize="updateHeight">
+    <v-container fluid>
         <v-toolbar flat dense short>
             <v-toolbar-title>{{marina.name}}</v-toolbar-title>
-            <v-btn icon v-if="!draggable" @click="draggable=true">
+            <v-btn icon v-if="!draggable" @click="onDragEnable">
                 <v-icon>{{icons.arrowAll}}</v-icon>
             </v-btn>
             <v-btn icon v-else @click="saveLayout">
@@ -74,7 +74,7 @@
                 :is-mirrored="false"
                 :vertical-compact="true"
                 :margin="[10, 10]"
-                :use-css-transforms="true"
+                :use-css-transforms="false"
                 :responsive="true"
                 :breakpoints="breakpoints"
         >
@@ -85,14 +85,15 @@
                     :w="layout[0].w"
                     :h="layout[0].h"
                     :i="layout[0].i"
-                    class="elevation-1"
+                    :class="displayItems ? 'elevation-2' : 'info'"
             >
                 <MapCard
+                        v-if="displayItems"
                         :latitude="location.data.me ? location.data.me.lat : 0"
                         :longitude="location.data.me ? location.data.me.lng : 0"
-                        :dragging="!draggable"
                         :class="draggable ? 'ondrag' : ''"
                 ></MapCard>
+                <LayoutItemLabel v-else text="Location Map"></LayoutItemLabel>
             </grid-item>
             
             <grid-item
@@ -102,22 +103,24 @@
                     :w="layout[1].w"
                     :h="layout[1].h"
                     :i="layout[1].i"
-                    class="elevation-1"
+                    :class="displayItems ? 'elevation-2' : 'primary'"
             >
-                <chart
-                        ref="radialBarChart"
-                        type="radialBar"
-                        height="260px"
-                        width="260px"
-                        :options="{labels: ['Reserved']}"
-                        :series="[getReservedPercent]"
-                        :class="draggable ? 'ondrag' : ''"
-                ></chart>
-                <v-card-text class="text-center"><b>
-                    {{getReservedPlaceNum}}
-                </b> reserved / <b>
-                    {{getTotalPlaceNum}}
-                </b> total</v-card-text>
+                <v-container fill-height v-if="displayItems">
+                    <chart
+                            type="radialBar"
+                            height="260px"
+                            width="100%"
+                            :options="{labels: ['Reserved']}"
+                            :series="[getReservedPercent]"
+                            :class="draggable ? 'ondrag' : ''"
+                    ></chart>
+                    <v-card-text class="text-center"><b>
+                        {{getReservedPlaceNum}}
+                    </b> reserved / <b>
+                        {{getTotalPlaceNum}}
+                    </b> total</v-card-text>
+                </v-container>
+                <LayoutItemLabel v-else text="Reservation Percentage"></LayoutItemLabel>
             </grid-item>
             <grid-item
                     v-if="rating"
@@ -126,23 +129,26 @@
                     :w="layout[2].w"
                     :h="layout[2].h"
                     :i="layout[2].i"
-                    class="elevation-1"
+                    :class="displayItems ? 'elevation-2' : 'success'"
             >
-                <v-card-subtitle class="text-center">Rating</v-card-subtitle>
-                <v-card-text class="text-center display-1 font-weight-black">{{getTotalRating}}</v-card-text>
-                <v-card-text class="text-center py-0">
-                    <v-rating
-                            size="45px"
-                            :value="getTotalRating"
-                            color="yellow accent-4"
-                            half-increments
-                            readonly
-                    ></v-rating>
-                </v-card-text>
-                <v-card-text :class="'text-center '+getRatingTrend+'--text'">
-                    Last 30 days: <span>{{getLastMonthRating}}</span>
-                    <v-icon small>{{getRatingTrend==='green'? icons.trendingUp : icons.trendingDown}}</v-icon>
-                </v-card-text>
+                <v-container v-if="displayItems" fill-height>
+                    <v-card-subtitle class="text-center">Rating</v-card-subtitle>
+                    <v-card-text class="text-center display-1 font-weight-black">{{getTotalRating}}</v-card-text>
+                    <v-card-text class="text-center py-0">
+                        <v-rating
+                                size="45px"
+                                :value="getTotalRating"
+                                color="yellow accent-4"
+                                half-increments
+                                readonly
+                        ></v-rating>
+                    </v-card-text>
+                    <v-card-text :class="'text-center '+getRatingTrend+'--text'">
+                        Last 30 days: <span>{{getLastMonthRating}}</span>
+                        <v-icon small>{{getRatingTrend==='green'? icons.trendingUp : icons.trendingDown}}</v-icon>
+                    </v-card-text>
+                </v-container>
+                <LayoutItemLabel v-else text="Rating"></LayoutItemLabel>
             </grid-item>
             <grid-item
                     v-if="week"
@@ -151,20 +157,18 @@
                     :w="layout[3].w"
                     :h="layout[3].h"
                     :i="layout[3].i"
-                    class="elevation-1"
+                    :class="displayItems ? 'elevation-2' : 'warning'"
             >
-                <v-card-text>
-                    <chart
-                            ref="barChart"
-                            v-if="week"
-                            type="bar"
-                            height="370px"
-                            :width="barChartWidth"
-                            :options="barchartOptions"
-                            :series="barchartSeries"
-                            :class="draggable ? 'ondrag' : ''"
-                    ></chart>
-                </v-card-text>
+                <chart
+                        v-if="displayItems"
+                        type="bar"
+                        height="370px"
+                        width="100%"
+                        :options="barchartOptions"
+                        :series="barchartSeries"
+                        :class="draggable ? 'ondrag' : ''"
+                ></chart>
+                <LayoutItemLabel v-else text="Upcoming Week Reservations"></LayoutItemLabel>
             </grid-item>
             <grid-item
                     v-if="yearRevenue"
@@ -173,20 +177,18 @@
                     :w="layout[4].w"
                     :h="layout[4].h"
                     :i="layout[4].i"
-                    class="elevation-1"
+                    :class="displayItems ? 'elevation-2' : 'secondary'"
             >
-                <v-card-text>
-                    <chart
-                            ref="lineChart"
-                            v-if="yearRevenue"
-                            type="line"
-                            height="350px"
-                            width="570px"
-                            :options="lineChartOptions"
-                            :series="lineChartSeries"
-                            :class="draggable ? 'ondrag' : ''"
-                    ></chart>
-                </v-card-text>
+                <chart
+                        v-if="displayItems"
+                        type="line"
+                        height="350px"
+                        width="100%"
+                        :options="lineChartOptions"
+                        :series="lineChartSeries"
+                        :class="draggable ? 'ondrag' : ''"
+                ></chart>
+                <LayoutItemLabel v-else text="Year Revenue"></LayoutItemLabel>
             </grid-item>
         </grid-layout>
     </v-container>
@@ -195,17 +197,17 @@
 
 <script>
     import VueGridLayout from 'vue-grid-layout';
-    import MapCard from "../../components/DashboardComponents/MapCard";
     import {mdiArrowAll, mdiPlusCircle, mdiTrendingUp, mdiTrendingDown, mdiCheck} from "@mdi/js";
     import {mapActions, mapGetters} from "vuex";
+    
     export default {
         name: "Dashboard",
         components: {
+            LayoutItemLabel: ()=>import("../../components/DashboardComponents/LayoutItemLabel"),
             chart: ()=>import('vue-apexcharts'),
-            MapCard,
+            MapCard: ()=>import("../../components/DashboardComponents/MapCard"),
             GridLayout: VueGridLayout.GridLayout,
             GridItem: VueGridLayout.GridItem,
-            
         },
         computed: {
             ...mapGetters('Marina', ['getCurrent', 'getAll']),
@@ -231,64 +233,35 @@
                 return this.getAll[this.getCurrent];
             },
             rating: {
-                get() {
-                    return this.rating_trend!==undefined;
-                },
-                async set() {
-                    this.$store.commit('Dashboard/RATING_TREND');
-                    await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
-                },
+                get() { return this.rating_trend !== undefined },
+                async set() { await this.setFunction('Dashboard/RATING_TREND') },
             },
             yearRevenue: {
-                get() {
-                    return this.year_revenue!==undefined;
-                },
-                async set() {
-                    this.$store.commit('Dashboard/YEAR_REVENUE');
-                    await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
-                },
+                get() { return this.year_revenue !== undefined},
+                async set() { await this.setFunction('Dashboard/YEAR_REVENUE') },
             },
             reserved: {
-                get() {
-                    return this.reserved_percent!==undefined;
-                },
-                async set() {
-                    this.$store.commit('Dashboard/RESERVED_PERCENT');
-                    await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
-                },
+                get() { return this.reserved_percent !== undefined },
+                async set() { await this.setFunction('Dashboard/RESERVED_PERCENT') },
             },
             week: {
-                get() {
-                    return this.week_reserved_percent!==undefined;
-                },
-                async set() {
-                    this.$store.commit('Dashboard/WEEK_RESERVED_PERCENT');
-                    await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
-                },
+                get() { return this.week_reserved_percent !== undefined },
+                async set() { await this.setFunction('Dashboard/WEEK_RESERVED_PERCENT') },
             },
             geolocation: {
-                get() {
-                    return this.location!==undefined;
-                },
-                async set() {
-                    this.$store.commit('Dashboard/LOCATION');
-                    await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
-                },
+                get() { return this.location !== undefined },
+                async set() { await this.setFunction('Dashboard/LOCATION') },
             },
             map: {
-                get() {
-                    return this.place_booking_map!==undefined;
-                },
-                async set() {
-                    this.$store.commit('Dashboard/PLACE_BOOKING_MAP');
-                    await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
-                },
+                get() { return this.place_booking_map !== undefined },
+                async set() { await this.setFunction('Dashboard/PLACE_BOOKING_MAP') },
             },
         },
         data: function() {
             return {
                 marinaID: 28,
-                barChartWidth: null,
+                displayItems: false,
+                draggable: false,
                 icons: {
                     plusCircle: mdiPlusCircle,
                     arrowAll: mdiArrowAll,
@@ -296,7 +269,6 @@
                     trendingDown: mdiTrendingDown,
                     check: mdiCheck,
                 },
-                draggable: false,
                 layout: [
                     {x:0,y:0,w:4,h:11,i:0},
                     {x:4,y:0,w:2,h:11,i:1},
@@ -304,12 +276,6 @@
                     {x:0,y:6,w:4,h:14,i:3},
                     {x:8,y:6,w:4,h:14,i:4},
                     {x:4,y:6,w:2,h:9,i:5},
-                ],
-                responsive: [
-                    {breakpoint: this.$vuetify.breakpoint.thresholds.xs},
-                    {breakpoint: this.$vuetify.breakpoint.thresholds.sm},
-                    {breakpoint: this.$vuetify.breakpoint.thresholds.md},
-                    {breakpoint: this.$vuetify.breakpoint.thresholds.lg},
                 ],
                 breakpoints: {
                     xxs: 0,
@@ -322,53 +288,45 @@
         },
         methods: {
             ...mapActions('Marina', ['fetchMyMarinas']),
-            updateHeight() {
-                console.log(this.breakpoints);
-                let cols = this.$vuetify.breakpoint.xlOnly ? 12 :
-                    this.$vuetify.breakpoint.lgOnly ? 10 :
-                        this.$vuetify.breakpoint.mdOnly ? 6 :
-                            this.$vuetify.breakpoint.smOnly ? 4 : 2;
-                let navbar = !this.$vuetify.breakpoint.mdAndUp ? 20 : 76
-                let col = (window.innerWidth - navbar) / cols;
-                console.log(cols, col, navbar);
-                console.log(this.breakpoints);
-                let width = this.layout[3].w > cols ? cols : this.layout[3].w;
-                console.log(col * width);
-                this.barChartWidth = col * width + 'px';
+            onDragEnable() {
+                this.draggable = true;
+                this.displayItems = false;
+            },
+            setFunction(commit) {
+                this.displayItems=false;
+                this.$store.commit(commit);
+                setTimeout(()=>{
+                    //await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
+                    if (!this.draggable) this.displayItems=true;
+                },0);
+            },
+            commitLayoutPosition(commit, i) {
+                this.$store.commit(commit, {
+                    x: this.layout[i].x,
+                    y: this.layout[i].y,
+                });
             },
             async saveLayout() {
-                this.draggable=false;
-                this.$store.commit('Dashboard/POS_RATING_TREND', {
-                    x: this.layout[2].x,
-                    y: this.layout[2].y,
-                });
-                this.$store.commit('Dashboard/POS_YEAR_REVENUE', {
-                    x: this.layout[5].x,
-                    y: this.layout[5].y,
-                });
-                this.$store.commit('Dashboard/POS_RESERVED_PERCENT', {
-                    x: this.layout[1].x,
-                    y: this.layout[1].y,
-                });
-                this.$store.commit('Dashboard/POS_WEEK_RESERVED_PERCENT', {
-                    x: this.layout[3].x,
-                    y: this.layout[3].y,
-                });
-                this.$store.commit('Dashboard/POS_LOCATION', {
-                    x: this.layout[0].x,
-                    y: this.layout[0].y,
-                });
-                // this.$store.commit('Dashboard/POS_PLACE_BOOKING_MAP', {
-                //     x: this.layout[5].x,
-                //     y: this.layout[5].y,
-                // });
-                await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
+                this.draggable = false;
+                this.displayItems = true;
+                
+                this.commitLayoutPosition('Dashboard/POS_LOCATION', 0);
+                this.commitLayoutPosition('Dashboard/POS_RESERVED_PERCENT', 1);
+                this.commitLayoutPosition('Dashboard/POS_RATING_TREND', 2);
+                this.commitLayoutPosition('Dashboard/POS_WEEK_RESERVED_PERCENT', 3);
+                this.commitLayoutPosition('Dashboard/POS_YEAR_REVENUE', 4);
+                this.commitLayoutPosition('Dashboard/POS_PLACE_BOOKING_MAP', 5);
+                
+                //await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
             },
         },
-        async created() {
-            if (!this.getAll.length)
-                await this.fetchMyMarinas();
-        }
+        // async created() {
+        //     if (this.getAll.length < 1)
+        //         await this.fetchMyMarinas();
+        // },
+        mounted() {
+            this.displayItems = true;
+        },
     }
 </script>
 

@@ -85,7 +85,7 @@
                     :w="layout[0].w"
                     :h="layout[0].h"
                     :i="layout[0].i"
-                    :class="displayItems ? 'elevation-2' : 'info'"
+                    class="elevation-1"
             >
                 <MapCard
                         v-if="displayItems"
@@ -103,7 +103,7 @@
                     :w="layout[1].w"
                     :h="layout[1].h"
                     :i="layout[1].i"
-                    :class="displayItems ? 'elevation-2' : 'primary'"
+                    class="elevation-1"
             >
                 <v-container fill-height v-if="displayItems">
                     <chart
@@ -129,25 +129,13 @@
                     :w="layout[2].w"
                     :h="layout[2].h"
                     :i="layout[2].i"
-                    :class="displayItems ? 'elevation-2' : 'success'"
+                    class="elevation-1"
             >
-                <v-container v-if="displayItems" fill-height>
-                    <v-card-subtitle class="text-center">Rating</v-card-subtitle>
-                    <v-card-text class="text-center display-1 font-weight-black">{{getTotalRating}}</v-card-text>
-                    <v-card-text class="text-center py-0">
-                        <v-rating
-                                size="45px"
-                                :value="getTotalRating"
-                                color="yellow accent-4"
-                                half-increments
-                                readonly
-                        ></v-rating>
-                    </v-card-text>
-                    <v-card-text :class="'text-center '+getRatingTrend+'--text'">
-                        Last 30 days: <span>{{getLastMonthRating}}</span>
-                        <v-icon small>{{getRatingTrend==='green'? icons.trendingUp : icons.trendingDown}}</v-icon>
-                    </v-card-text>
-                </v-container>
+                <RatingCard
+                        v-if="displayItems"
+                        :getTotalRating="getTotalRating"
+                        :getRatingTrend="getRatingTrend"
+                ></RatingCard>
                 <LayoutItemLabel v-else text="Rating"></LayoutItemLabel>
             </grid-item>
             <grid-item
@@ -157,7 +145,7 @@
                     :w="layout[3].w"
                     :h="layout[3].h"
                     :i="layout[3].i"
-                    :class="displayItems ? 'elevation-2' : 'warning'"
+                    class="elevation-1"
             >
                 <chart
                         v-if="displayItems"
@@ -177,7 +165,7 @@
                     :w="layout[4].w"
                     :h="layout[4].h"
                     :i="layout[4].i"
-                    :class="displayItems ? 'elevation-2' : 'secondary'"
+                    class="elevation-1"
             >
                 <chart
                         v-if="displayItems"
@@ -199,10 +187,12 @@
     import VueGridLayout from 'vue-grid-layout';
     import {mdiArrowAll, mdiPlusCircle, mdiTrendingUp, mdiTrendingDown, mdiCheck} from "@mdi/js";
     import {mapActions, mapGetters} from "vuex";
+    import RatingCard from "../../components/DashboardComponents/RatingCard";
     
     export default {
         name: "Dashboard",
         components: {
+            RatingCard,
             LayoutItemLabel: ()=>import("../../components/DashboardComponents/LayoutItemLabel"),
             chart: ()=>import('vue-apexcharts'),
             MapCard: ()=>import("../../components/DashboardComponents/MapCard"),
@@ -326,7 +316,7 @@
         // },
         mounted() {
             this.displayItems = true;
-        },
+        }
     }
 </script>
 

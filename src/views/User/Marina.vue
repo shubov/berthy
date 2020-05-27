@@ -25,22 +25,13 @@
                                 <p class="text-left display-2">{{marina.name}}</p>
                             </v-col>
                         </v-row>
-                        <v-row no-gutters>
-                            <v-col>
-                                <v-rating
-                                        class="d-inline"
-                                        style="margin-left: -6px"
-                                        :value="marina.avgRating"
-                                        background-color="grey"
-                                        color="yellow accent-4"
-                                        half-increments
-                                        hover
-                                        readonly
-                                ></v-rating>
-                                <span class="grey--text text--lighten-2 caption mr-2">({{ marina.avgRating }})</span>
-                            </v-col>
-                        </v-row>
                         <v-row align="center" justify="center" no-gutters>
+                            <v-col cols="12" class="mb-2">
+                                <v-icon class="contactsIcons">{{icons.star}}</v-icon>
+                                <p class="d-inline text-left subtitle-1 font-weight-medium">
+                                    {{marina.avgRating}} {{reviewsLength ? ` (${reviewsLength} reviews)` : ''}}
+                                </p>
+                            </v-col>
                             <v-col cols="12" class="mb-2">
                                 <v-icon class="contactsIcons">{{icons.latitude}}</v-icon>
                                 <p class="d-inline text-left subtitle-1 font-weight-medium">
@@ -53,10 +44,10 @@
                                     {{lng.dir}} {{lng.deg}}° {{lng.min}}' {{lng.sec}}''
                                 </p>
                             </v-col>
-                            <v-col cols="12" class="mb-2">
+                            <v-col cols="12" class="mb-2" v-if="address">
                                 <v-icon class="contactsIcons">{{icons.compassOutline}}</v-icon>
                                 <p class="d-inline text-left subtitle-1 font-weight-medium">
-                                    Moscow, Russia
+                                    {{address}}
                                 </p>
                             </v-col>
                             <v-col cols="12" class="mb-2">
@@ -65,19 +56,22 @@
                                     {{marina.radio}}
                                 </p>
                             </v-col>
-                            <v-col cols="12">
+                            <v-col cols="12" v-if="marina.site">
                                 <v-icon class="contactsIcons">{{icons.linkVariant}}</v-icon>
                                 <a target="_blank"
                                    class="d-inline text-left subtitle-1 font-weight-medium"
                                    :href="marina.site"
                                 >
-                                    {{marina.site}}
+                                    {{marina.site.toString().length>37
+                                    ? (marina.site.toString().substr(0,34) + '...')
+                                    : marina.site}}
                                 </a>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col cols="12">
                                 <v-dialog
+                                        v-if="boater || newUser"
                                         v-model="dialogReservation"
                                         :fullscreen="!$vuetify.breakpoint.mdAndUp"
                                         max-width="700px"
@@ -200,11 +194,99 @@
                             {{ a.value }}
                         </v-chip>
                     </v-col>
+                    <v-col
+                            cols="12"
+                            sm="6"
+                    >
+                        <p class="text-left title">Reviews</p>
+                        <v-toolbar class="elevation-0 tile">
+                            <span class="mr-5">
+                                Rating: {{marina.avgRating}} {{reviewsLength ? ` (${reviewsLength} reviews)` : ''}}
+                            </span>
+                            <v-rating
+                                    style="margin-left: -9px;padding-bottom: 18px;"
+                                    x-large
+                                    half-increments
+                                    :value="marina.avgRating"
+                                    readonly
+                                    hover
+                            ></v-rating>
+                            <v-spacer></v-spacer>
+                            <v-dialog v-model="dialogReview"
+                                      :fullscreen="isMobile"
+                                      max-width="500px"
+                                      persistent
+                            >
+                                <template v-slot:activator="{on}">
+                                    <v-btn
+                                            class="primary"
+                                            v-on="on"
+                                    >Write a review</v-btn>
+                                </template>
+                                <v-toolbar color="primary" dark>
+                                    <v-toolbar-title>Add your review for {{marina.name}}</v-toolbar-title>
+                                    <v-spacer></v-spacer>
+                                    <v-btn icon @click="dialogReview=false">
+                                        <v-icon>{{icons.close}}</v-icon>
+                                    </v-btn>
+                                </v-toolbar>
+                                <ReviewForm
+                                        :id="marina.id"
+                                        @close-review-form="onCloseReviewForm"
+                                ></ReviewForm>
+                            </v-dialog>
+                        </v-toolbar>
+                        <v-list>
+                            <v-list-item-group>
+                                <template v-for="(item, index) in reviews">
+                                    <v-hover
+                                            v-slot:default="{ hover }"
+                                            open-delay="300"
+                                            :key="index"
+                                    >
+                                        <v-list-item three-line>
+                                            <v-list-item-avatar>
+                                                <v-img :src="item.reviewer.photoLink"></v-img>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>{{item.reviewer.firstName}} {{item.reviewer.lastName}}</v-list-item-title>
+                                                <v-list-item-subtitle>
+                                                    <v-icon small>{{icons.star}}</v-icon>
+                                                    {{item.rating}}
+                                                </v-list-item-subtitle>
+                                                <v-list-item-subtitle>{{item.text}}</v-list-item-subtitle>
+                                            </v-list-item-content>
+                                            <v-list-item-action>
+                                                <v-list-item-action-text>
+                                                    {{item.dateTime}}
+                                                </v-list-item-action-text>
+                                                <v-btn
+                                                        v-show="hover && userID === item.reviewer.accountId"
+                                                        icon
+                                                       @click="onDeleteReview(item.id)">
+                                                    <v-icon color="primary">{{icons.delete}}</v-icon>
+                                                </v-btn>
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-hover>
+                                </template>
+                                <v-list-item v-if="reviewsLength<1">
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            No reviews yet...
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-list-item-group>
+                        </v-list>
+                    </v-col>
                 </v-row>
             </v-col>
         </v-row>
         <v-dialog v-model="dialogShip"
                   :fullscreen="isMobile"
+                  max-width="900px"
+                  persistent
         >
             <v-toolbar color="primary" dark>
                 <v-toolbar-title>Add your boat</v-toolbar-title>
@@ -213,26 +295,27 @@
                     <v-icon>{{icons.close}}</v-icon>
                 </v-btn>
             </v-toolbar>
-            <ShipForm></ShipForm>
+            <ShipForm @close-ship-form="dialogShip=false"></ShipForm>
         </v-dialog>
     </v-container>
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+    import {mapActions, mapGetters} from 'vuex';
     import {photoLink} from "../../assets/helperFunctions";
     import {
         mdiCalendarCheck,
         mdiClose,
-        mdiCompassOutline, mdiLatitude,
+        mdiCompassOutline, mdiDelete, mdiLatitude,
         mdiLinkVariant, mdiLongitude,
         mdiMapMarkerOutline, mdiMinus,
-        mdiRadioHandheld
+        mdiRadioHandheld, mdiStar
     } from "@mdi/js";
     
     export default {
         name: "Marina",
         components: {
+            ReviewForm: ()=> import("../../components/MarinaPageComponents/ReviewForm"),
             ShipForm: ()=>import("../../components/BookComponents/ShipForm"),
             ReservationCard: ()=> import("../../components/BookComponents/ReservationCard"),
             PublicMarinaMap: ()=>import("../../components/MarinaPageComponents/PublicMarinaMap"),
@@ -243,7 +326,9 @@
                 this.$store.dispatch("Marina/fetchMarina", id)
                     .then(response=>{
                         if(response) {
-                            document.title = this.$store.getters['Marina/getPublicMarina'].name;
+                            document.title = this.marina.name;
+                            this.fetchReviews(id);
+                            this.getAddress();
                         } else {
                             this.$router.push('/404');
                         }
@@ -268,15 +353,26 @@
                     calendarCheck: mdiCalendarCheck,
                     close: mdiClose,
                     mapMarkerOutline: mdiMapMarkerOutline,
+                    star: mdiStar,
+                    delete: mdiDelete
                 },
                 dialog: false,
                 dialogShip: false,
+                dialogReview: false,
                 dialogReservation: false,
             }
         },
         computed: {
             ...mapGetters('Marina', {
                 marina: 'getPublicMarina',
+                reviews: 'getReviews',
+                reviewsLength: 'getReviewsLength',
+                address: 'getPublicMarinaAddress'
+            }),
+            ...mapGetters('User', {
+                userID: 'getID',
+                boater: 'boater',
+                newUser: 'newUser',
             }),
             lat(){
                 return this.convertToDMS(this.marina.lat, false);
@@ -289,6 +385,11 @@
             },
         },
         methods: {
+            ...mapActions('Marina', {
+                fetchReviews: 'getMarinaReviews',
+                deleteReview: "deleteReview",
+                getAddress: 'getPublicMarinaAddress'
+            }),
             convertToDMS(D1, lng){
                 const D = D1<0?-D1:D1;
                 const M=0|(D%1)*60e7;
@@ -311,6 +412,20 @@
                 }
                 document.getElementById('map').style.height = h + 'px';
             },
+            onCloseReviewForm() {
+                this.dialogReview = false;
+                this.fetchReviews(this.marina.id);
+            },
+            async onDeleteReview(reviewID) {
+                if(await this.deleteReview({
+                    reviewID: reviewID,
+                    marinaID: this.marina.id
+                })) {
+                    this.$store.dispatch('Dialog/set', 'Your review has been deleted!');
+                } else {
+                    this.$store.dispatch('snackbar','Something went wrong.');
+                }
+            }
         },
     }
 </script>

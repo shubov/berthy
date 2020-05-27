@@ -15,7 +15,7 @@
             <v-col>
                 <v-card tile class="elevation-0">
                     <v-card-text>
-                        <v-row align="start" justify="start" no-gutters>
+                        <v-row align="start" justify="center" no-gutters>
                             <v-col>
                                 <v-avatar
                                         style="float: left"
@@ -25,13 +25,10 @@
                                     <v-img :src="photo ? photo : ''"/>
                                 </v-avatar>
                                 <p class="subtitle-1 font-weight-bold mb-0">
-                                    {{type}}
+                                    {{type}} {{subtitle}}
                                 </p>
                                 <p class="display-3 font-weight-black mb-0">
                                     {{name}}
-                                </p>
-                                <p class="subtitle-1 font-weight-bold mb-0">
-                                    {{subtitle}}
                                 </p>
                                 
                             </v-col>
@@ -43,8 +40,9 @@
                                   max-width="600px"
                         >
                             <template v-slot:activator="{on}">
-                                <v-btn icon v-on="on">
+                                <v-btn text v-on="on">
                                     <v-icon>{{icons.pencil}}</v-icon>
+                                    Edit Account
                                 </v-btn>
                             </template>
                             <v-toolbar color="primary" dark>
@@ -56,24 +54,18 @@
                             </v-toolbar>
                             <EditProfileCard @close-edit-profile="dialogEditProfile=false"></EditProfileCard>
                         </v-dialog>
-                        <v-btn to="/book" class="primary">
-                            Reserve a spot
-                        </v-btn>
-                        <v-btn to="/dashboard" outlined>
-                            Manage marinas
-                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12" md="6">
+            <v-col v-if="dockmaster">
                 <v-row>
                     <v-col cols="12"><p class="font-weight-black title">My Marinas</p></v-col>
                     <v-col
                             v-for="(marina, index) in marinas"
                             :key="index"
-                            cols="6"
+                            cols="12" sm="6" md="4" lg="3"
                     >
                         <v-card class="elevation-1">
                             <v-img
@@ -102,13 +94,13 @@
                 </v-row>
                
             </v-col>
-            <v-col cols="12" md="6">
+            <v-col v-if="boater">
                 <v-row>
                     <v-col cols="12"><p class="font-weight-black title">My Boats</p></v-col>
                     <v-col
                             v-for="(ship, index) in ships"
                             :key="index"
-                            cols="6"
+                            cols="12" sm="6" md="4" lg="3"
                     >
                         <v-card class="elevation-1">
                             <v-img
@@ -153,7 +145,8 @@
             ...mapGetters('User', {
                 email: 'getEmail',
                 name: 'getName',
-                user: 'isUser',
+                boater: 'boater',
+                dockmaster: 'dockmaster',
                 firstName: 'getFirstName',
                 lastName: 'getLastName',
                 moderator: 'isModerator',
@@ -168,7 +161,8 @@
                 ships: 'getShips',
             }),
             type() {
-                if (this.user) return 'User profile'
+                if (this.boater) return 'Boater profile'
+                if (this.dockmaster) return 'Dockmaster profile'
                 if (this.moderator) return 'Moderator profile'
                 return 'Profile';
             },
@@ -176,11 +170,17 @@
                 return !this.$vuetify.breakpoint.mdAndUp;
             },
             subtitle() {
-                let m = this.marinas.length;
-                let b = this.ships.length;
-                let mtext = m===1 ? 'marina' : 'marinas';
-                let btext = b===1 ? 'boat' : 'boats';
-                return `${m} ${mtext}, ${b} ${btext}`
+                if (this.dockmaster) {
+                    let m = this.marinas.length;
+                    let mtext = m===1 ? 'marina' : 'marinas';
+                    return `${m} ${mtext}`
+                }
+                if (this.boater) {
+                    let b = this.ships.length;
+                    let btext = b===1 ? 'boat' : 'boats';
+                    return `${b} ${btext}`
+                }
+                return 'No boats and marinas'
             }
         },
         data: function () {
@@ -224,9 +224,9 @@
         },
         async mounted() {
             await this.updateUserInfo();
-            if (!this.marinas.length)
+            if (this.dockmaster && !this.marinas.length)
                 await this.fetchMyMarinas();
-            if (!this.ships.length)
+            if (this.boater && !this.ships.length)
                 await this.updateShips();
         },
     }

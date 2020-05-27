@@ -64,6 +64,9 @@ const getters = {
     getPhone(state) {
         return state.phNumber;
     },
+    getID(state) {
+        return state.id;
+    },
 
     isUser(state) {
         return state.roles.includes("USER");
@@ -86,6 +89,9 @@ const getters = {
     },
     boater(state, getters) {
         return getters.isLoggedIn && !getters.isModerator && state.hasShips && !state.hasBerths;
+    },
+    newUser(state, getters) {
+        return getters.isLoggedIn && !getters.isModerator && !state.hasShips && !state.hasBerths;
     },
 };
 

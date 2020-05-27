@@ -310,13 +310,15 @@
                 //await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
             },
         },
-        // async created() {
-        //     if (this.getAll.length < 1)
-        //         await this.fetchMyMarinas();
-        // },
+        async created() {
+            if (this.getAll.length < 1)
+                await this.fetchMyMarinas();
+        },
         mounted() {
-            this.displayItems = true;
-        }
+            setTimeout(()=>{
+                this.displayItems = true;
+            }, 0);
+        },
     }
 </script>
 

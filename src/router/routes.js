@@ -451,7 +451,7 @@ const routes =
             meta: {
                 title: projectName + ' - Payment failure',
                 roles: [roles.user],
-                usertype: [dockmaster],
+                usertype: [boater],
                 metaTags: [
                     {
                         name: 'description',
@@ -476,7 +476,7 @@ const routes =
             meta: {
                 title: projectName + ' - Payment success',
                 roles: [roles.user],
-                usertype: [dockmaster],
+                usertype: [boater],
                 metaTags: [
                     {
                         name: 'description',

@@ -9,16 +9,22 @@
 
 import BerthyAPI from "../../services/berthy-api";
 import {setIcons} from "../../assets/helperFunctions";
+import axios from "axios";
 
 // State initial object
 const initialState = () => ({
-    publicMarina: {},
     marinas: [],
     numOfMarinas: 0,
     current: null,
+
     success: null,
     error: null,
     message: null,
+
+    reviews: [],
+    reviewsLength: null,
+    publicMarinaAddress: null,
+    publicMarina: {},
 });
 
 
@@ -41,13 +47,31 @@ const getters = {
     getCurrent(state) {
         return state.current;
     },
+
     getPublicMarina(state){
         return state.publicMarina;
     },
     getPublicMarinaName(state) {
         let name = state.publicMarina.name;
         return name ? name : 'Marina';
-    }
+    },
+    getPublicMarinaLat(state) {
+        let lat = state.publicMarina.lat;
+        return lat ? lat : null;
+    },
+    getPublicMarinaLng(state) {
+        let lng = state.publicMarina.lng;
+        return lng ? lng : null;
+    },
+    getPublicMarinaAddress () {
+        return state.publicMarinaAddress;
+    },
+    getReviews(state){
+        return state.reviews;
+    },
+    getReviewsLength(state){
+        return state.reviewsLength;
+    },
 };
 
 
@@ -100,6 +124,66 @@ const actions = {
     async selectMarina({commit, rootGetters}, index) {
         if (state.marinas[index]) setIcons(state.marinas[index].amenities, rootGetters);
         commit('SELECT_MARINA', index);
+    },
+
+    async getMarinaReviews({commit}, id) {
+        commit('FETCHING');
+        let response = await BerthyAPI.post(`berths/${id}/reviews/filter`, {
+            pageNum: 0,
+            pageSize: 10,
+        });
+        if (response.data) {
+            if (response.data.success) {
+                commit('SET_REVIEWS', response.data.data);
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
+        return false;
+    },
+
+    async sendReview({commit}, {id, text, rating}) {
+        commit('FETCHING');
+        let response = await BerthyAPI.post(`berths/${id}/reviews`, {text,rating});
+        if (response.data) {
+            if (response.data.success) {
+                commit('ADD_REVIEW');
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
+        return false;
+    },
+    async deleteReview({commit}, {marinaID, reviewID}) {
+        commit('FETCHING');
+        let response = await BerthyAPI.delete(`berths/${marinaID}/reviews/${reviewID}`);
+        if (response.data) {
+            if (response.data.success) {
+                commit('DELETE_REVIEW');
+                return true;
+            } else {
+                commit('ERROR', response.data.error.message);
+            }
+        }
+        return false;
+    },
+    async getPublicMarinaAddress({commit, getters}) {
+        if (!getters.getPublicMarinaLat || !getters.getPublicMarinaLng) return;
+        commit('FETCHING');
+        let response = await axios.get(
+            `https://eu1.locationiq.com/v1/reverse.php?key=3d060ee2a41b88&lat=${
+                getters.getPublicMarinaLat
+            }&lon=${
+                getters.getPublicMarinaLng
+            }&format=json&zoom=14&accept-language=en`
+        );
+        if (response.status===200) {
+            commit('SET_MARINA_ADDRESS', response.data.display_name);
+        } else {
+            commit('ERROR');
+        }
     }
 };
 
@@ -144,6 +228,15 @@ const mutations = {
             state.current = index;
         }
         localStorage.setItem('current_marina', state.current);
+    },
+    SET_REVIEWS(state, data) {
+        state.reviews = data.items;
+        state.reviewsLength = data.totalCount;
+    },
+    ADD_REVIEW() {},
+    DELETE_REVIEW() {},
+    SET_MARINA_ADDRESS(state, address) {
+        state.publicMarinaAddress = address;
     }
 };
 

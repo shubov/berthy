@@ -19,31 +19,8 @@
                         class="elevation-0"
                         id="toolbar"
                 >
-                    <v-btn v-if="selected.length"
-                           icon
-                           :loading="loadingApproveMultiple"
-                           @click="onApproveMultiple()">
-                        <v-icon color="success">{{icons.thumbUpOutline}}</v-icon>
-                    </v-btn>
-                    <v-btn v-if="selected.length"
-                           icon
-                           :loading="loadingRejectMultiple"
-                           @click="onRejectMultiple()">
-                        <v-icon color="secondary">{{icons.thumbDownOutline}}</v-icon>
-                    </v-btn>
-                    <v-text-field
-                            hide-details
-                            :value="search"
-                            @input="search=$event"
-                            :prepend-icon="icons.magnify"
-                            single-line
-                            v-else
-                    ></v-text-field>
-                    <v-toolbar-title>
-                        {{ selected.length ? `${selected.length} selected` : '' }}
-                    </v-toolbar-title>
-                    <v-spacer></v-spacer>
                     <v-menu
+                            v-if="!selected.length"
                             v-model="filterMenu"
                             :close-on-content-click="false"
                     >
@@ -57,6 +34,33 @@
                                 @save-filter="onSaveFilter"
                         ></ModeratorFilter>
                     </v-menu>
+                    <v-btn v-if="selected.length"
+                           icon
+                           :loading="loadingApproveMultiple"
+                           @click="onApproveMultiple()">
+                        <v-icon color="success">{{icons.thumbUpOutline}}</v-icon>
+                    </v-btn>
+                    <v-btn v-if="selected.length"
+                           icon
+                           :loading="loadingRejectMultiple"
+                           @click="onRejectMultiple()">
+                        <v-icon color="secondary">{{icons.thumbDownOutline}}</v-icon>
+                    </v-btn>
+                    <v-text-field
+                            filled
+                            rounded
+                            dense
+                            placeholder="Search..."
+                            hide-details
+                            :value="search"
+                            @input="search=$event"
+                            single-line
+                            v-else
+                    ></v-text-field>
+                    <v-toolbar-title v-if="selected.length">
+                        {{`${selected.length} selected`}}
+                    </v-toolbar-title>
+                    <v-spacer v-if='selected.length'></v-spacer>
                     <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
                         <v-icon>{{icons.dotsVertical}}</v-icon>
                     </v-btn>

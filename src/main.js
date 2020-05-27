@@ -18,6 +18,7 @@ import AuthService from '@/services/auth.service';
 Vue.config.productionTip = false;
 Vue.prototype.$auth = AuthService;
 Vue.prototype.$berthy_blue = '#000033';
+Vue.prototype.$googleMapsApiKey=""
 
 //********************************** Sentry ********************************************
 import * as Sentry from '@sentry/browser';

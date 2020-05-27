@@ -42,6 +42,7 @@
         
         <v-dialog v-model="dialogShip"
                   :fullscreen="isMobile"
+                  max-width="900px"
         >
             <v-toolbar color="primary" dark>
                 <v-toolbar-title>Add your boat</v-toolbar-title>
@@ -52,7 +53,6 @@
             </v-toolbar>
             <ShipForm @close-ship-form="dialogShip=false"></ShipForm>
         </v-dialog>
-    
         <v-bottom-sheet
                 v-if="getSelected !=null"
                 v-model="bottomSheet"

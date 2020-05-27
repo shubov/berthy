@@ -19,35 +19,16 @@
                         class="elevation-0"
                         id="toolbar"
                 >
-                    <v-btn v-if="selected.length"
-                           icon
-                           :loading="loadingApproveMultiple"
-                           @click="onApproveMultiple()">
-                        <v-icon color="success">{{icons.thumbUpOutline}}</v-icon>
-                    </v-btn>
-                    <v-btn v-if="selected.length"
-                           icon
-                           :loading="loadingRejectMultiple"
-                           @click="onRejectMultiple()">
-                        <v-icon color="secondary">{{icons.thumbDownOutline}}</v-icon>
-                    </v-btn>
-                    <v-text-field
-                            hide-details
-                            :value="search"
-                            @input="search=$event"
-                            :prepend-icon="icons.magnify"
-                            single-line
-                            v-else
-                    ></v-text-field>
-                    <v-toolbar-title>
-                        {{ selected.length ? `${selected.length} selected` : '' }}
-                    </v-toolbar-title>
-                    <v-spacer></v-spacer>
                     <v-menu v-if="!selected.length && getAll.length>1">
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn icon v-on="on" v-bind="attrs">
-                                <v-icon>{{icons.clipboardMultipleOutline}}</v-icon>
-                            </v-btn>
+                        <template v-slot:activator="{ on: menu, attrs }">
+                            <v-tooltip bottom>
+                                <template v-slot:activator="{ on: tooltip }">
+                                    <v-btn icon v-on="{ ...tooltip, ...menu }" v-bind="attrs">
+                                        <v-icon>{{icons.clipboardMultipleOutline}}</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Switch to another marina</span>
+                            </v-tooltip>
                         </template>
                         <v-list>
                             <v-subheader>My marinas</v-subheader>
@@ -60,9 +41,37 @@
                             </v-list-item>
                         </v-list>
                     </v-menu>
+                    <v-text-field
+                            v-if="!selected.length"
+                            hide-details
+                            filled
+                            dense
+                            placeholder="Search..."
+                            rounded
+                            :value="search"
+                            @input="search=$event"
+                            single-line
+                    ></v-text-field>
                     <v-btn icon v-if="!selected.length" @click="multiple = !multiple">
                         <v-icon>{{icons.dotsVertical}}</v-icon>
                     </v-btn>
+                    
+                    <v-btn v-if="selected.length"
+                           icon
+                           :loading="loadingApproveMultiple"
+                           @click="onApproveMultiple()">
+                        <v-icon color="success">{{icons.thumbUpOutline}}</v-icon>
+                    </v-btn>
+                    <v-btn v-if="selected.length"
+                           icon
+                           :loading="loadingRejectMultiple"
+                           @click="onRejectMultiple()">
+                        <v-icon color="secondary">{{icons.thumbDownOutline}}</v-icon>
+                    </v-btn>
+                    <v-toolbar-title v-if="selected.length">
+                        {{`${selected.length} selected`}}
+                    </v-toolbar-title>
+                    <v-spacer v-if="selected.length"></v-spacer>
                     <v-btn
                             v-if="selected.length"
                             icon
@@ -83,7 +92,7 @@
                             v-model="selected"
                             :multiple="multiple"
                     >
-                        <template v-for="(item, index) in (filtered ? filteredBookings : bookings)">
+                        <template v-for="(item, index) in bookingsToShow">
                             <v-list-item
                                     :key="item.id"
                                     @click="openBooking(index)"
@@ -125,6 +134,13 @@
                                     :key="index"
                             ></v-divider>
                         </template>
+                        <v-list-item v-show="bookingsToShow.length<1">
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    No bookings found...
+                                </v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list-item-group>
                 </v-list>
             </v-col>
@@ -193,6 +209,9 @@
             },
             filtered(){
                 return this.filteredBookings.length>0;
+            },
+            bookingsToShow() {
+              return this.filtered ? this.filteredBookings : this.bookings;
             },
             search: {
                 get() {

@@ -64,9 +64,9 @@
             </v-menu>
         </v-card-text>
         <v-card-actions>
-            <v-btn class="primary" @click="$emit('close-filter')">Close</v-btn>
+            <v-btn @click="$emit('close-filter')">Close</v-btn>
             <v-spacer></v-spacer>
-            <v-btn class="primary" @click="onDefaultFilter">Default</v-btn>
+            <v-btn @click="onDefaultFilter">Default</v-btn>
             <v-btn class="primary"  @click="saveFilter">Filter</v-btn>
         </v-card-actions>
     </v-card>

@@ -182,8 +182,7 @@
             async onSignOut() {
                 try {
                     this.$auth.logout();
-                    if (this.$route.meta.public !== true) router.go('/');
-                    else router.go();
+                    if (this.$route.meta.public !== true) router.go('/sign-in');
                 } catch (e) {
                     console.log('error', e);
                 }

@@ -23,10 +23,14 @@
         </v-img>
         <v-card-actions>
             <v-btn
-                    class="primary"
+                    color="primary"
                     :to="`/marina/${marina.id}`"
                     target="_blank"
-            >More Info</v-btn>
+            >
+                <v-icon>{{icons.calendarCheck}}</v-icon>
+                Reserve
+            </v-btn>
+            <v-spacer></v-spacer>
         </v-card-actions>
     </v-card>
 </template>
@@ -34,6 +38,7 @@
 <script>
     import { photoLink } from "../../assets/helperFunctions";
     import {mapGetters} from "vuex";
+    import {mdiCalendarCheck} from "@mdi/js";
 
     export default {
         name: "SearchMarinaCard",
@@ -47,6 +52,7 @@
             return {
                 marinaImg: require("../../assets/marina.jpg"),
                 marinaLazy: require("../../assets/marina.webp"),
+                icons:{calendarCheck: mdiCalendarCheck},
             }
         },
         computed: {

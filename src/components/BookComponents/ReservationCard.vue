@@ -8,8 +8,8 @@
   ----------------------------------------------------------------------------->
 
 <template>
-    <v-card class="elevation-0 pt-6" tile>
-        <v-card-subtitle>Check the dates and the boat you selected again.
+    <v-card class="elevation-0" tile>
+        <v-card-subtitle class="pt-6">Check the dates and the boat you selected again.
             In case you don't have a boat, create one.
             It is necessary for the dockmaster accepting your
             reservation to know parameters of your boat.<br/>
@@ -234,7 +234,9 @@
                     if(await this.$store.dispatch('Reservation/book')) {
                         this.$emit('close-reg-form');
                         this.shipName = (await this.getShipById(this.ship)).name;
-                        this.$store.dispatch('Dialog/set',this.confirmationMessage);
+                        this.$nextTick(()=>{
+                            this.$store.dispatch('Dialog/set',this.confirmationMessage);
+                        });
                     } else {
                         this.$store.dispatch('snackbar','Fill all the fields to make a reservation.');
                     }

@@ -38,8 +38,9 @@
                 Pay €{{trip.serviceFee}}
             </v-btn>
             <v-btn
-                    v-if="trip.status!=='REJECTED'"
-                    @click="onCancel(trip.id)"
+                    text
+                    v-if="trip.status!=='REJECTED' && trip.status!=='CANCELLED'"
+                    @click.once="onCancel"
             >
                 Cancel
             </v-btn>
@@ -54,7 +55,7 @@
                     <v-spacer></v-spacer>
                     <v-btn
                             text
-                            @click="paymentDialog=false"
+                            @click.once="paymentDialog=false"
                     >Cancel</v-btn>
                     <v-btn
                             color="primary"
@@ -102,6 +103,8 @@
                         return 'blue lighten-3';
                     case ('PAYED'):
                         return 'green lighten-3';
+                    case ('CANCELLED'):
+                        return 'grey';
                 }
             },
             statusLabel(status) {
@@ -114,6 +117,15 @@
                         return 'Confirmed';
                     case ('PAYED'):
                         return 'Paid';
+                    case ('CANCELLED'):
+                        return 'Cancelled';
+                }
+            },
+            async onCancel(){
+                if (await this.cancel(this.trip.id)) {
+                    await this.$store.dispatch("Dialog/set", `Your reservation has been cancelled.`)
+                } else {
+                    await this.$store.dispatch("snackbar", `Something is wrong cancelling your reservation.`)
                 }
             },
             async onPay(id) {

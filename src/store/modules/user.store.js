@@ -59,7 +59,9 @@ const getters = {
         return state.lastName;
     },
     getPhoto(state) {
-        return state.photo.fileLink;
+        if (state.photo)
+            return state.photo.fileLink;
+        else return null;
     },
     getEmail(state) {
         return state.email;

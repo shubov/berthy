@@ -47,10 +47,11 @@ const getters = {
     },
 
     getName(state) {
-        if (state.firstName && state.lastName)
-            return `${state.firstName} ${state.lastName}`
+        if (state.firstName || state.lastName)
+            return `${state.firstName ? state.firstName : ''}
+            ${state.lastName ? state.lastName : ''}`
         else
-            return '';
+            return null;
     },
     getFirstName(state) {
         return state.firstName;
@@ -117,8 +118,9 @@ const actions = {
         let response = await BerthyAPI.get("accounts/userInfo");
         return await dispatch('setUserInfo', response);
     },
-    async editUserInfo({commit,dispatch}, data) {
+    async editUserInfo({state,commit,dispatch}, data) {
         commit("FETCHING");
+        if (state.photo.fileLink) data.photo = state.photo;
         let response = await BerthyAPI.put("accounts/userInfo", data)
         return await dispatch('setUserInfo', response);
     },
@@ -132,6 +134,11 @@ const actions = {
             }
         }
         return false;
+    },
+    async uploadPhoto({commit, dispatch, rootGetters}, {file, commitType}) {
+        await dispatch('File/uploadFile', file, {root:true});
+        if (rootGetters['File/isUploaded'])
+            commit(commitType, rootGetters['File/getFile']);
     },
 };
 
@@ -177,6 +184,9 @@ const mutations = {
         state.error = false;
         state.message = null;
     },
+    ADD_PHOTO(state, photo) {
+        state.photo = photo;
+    }
 };
 
 

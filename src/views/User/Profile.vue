@@ -15,22 +15,31 @@
             <v-col>
                 <v-card tile class="elevation-0">
                     <v-card-text>
-                        <v-row align="start" justify="center" no-gutters>
+                        <v-row align="center" justify="center" no-gutters>
                             <v-col>
                                 <v-avatar
                                         style="float: left"
                                         size="116px"
                                         class="mr-4"
+                                        color="#00000099"
                                 >
-                                    <v-img :src="photo ? photo : ''"/>
+                                    <v-img v-if="photo" :src="photo"/>
+                                    <span v-else-if="name" class="display-3 white--text">{{name.substr(0,1)}}</span>
+                                    <v-icon v-else dark>{{icons.accountCircle}}</v-icon>
                                 </v-avatar>
-                                <p class="subtitle-1 font-weight-bold mb-0">
-                                    {{subtitle}}
-                                </p>
-                                <p class="display-3 font-weight-black mb-0">
-                                    {{name}}
-                                </p>
-                                
+                                <v-row style="float: left">
+                                    <v-col>
+                                        <p class="subtitle-1 font-weight-bold mb-0">
+                                            {{subtitle}}
+                                        </p>
+                                        <p class="display-3 font-weight-black mb-0">
+                                            {{name ? name : 'Name Surname'}}
+                                        </p>
+                                        <p class="subtitle-1 font-weight-bold mb-0">
+                                            {{phone ? phone : 'Phone number'}}
+                                        </p>
+                                    </v-col>
+                                </v-row>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -173,6 +182,7 @@
     import {mapGetters, mapActions} from 'vuex';
     import {photoLink} from "../../assets/helperFunctions";
     import {
+        mdiAccountCircle,
         mdiArrowRight,
         mdiCheck,
         mdiClipboardList,
@@ -196,7 +206,7 @@
                 firstName: 'getFirstName',
                 lastName: 'getLastName',
                 moderator: 'isModerator',
-                photo: 'getPhoto',
+                photoUser: 'getPhoto',
                 phone: 'getPhone',
                 error: "getError",
                 isLoggedIn: 'isLoggedIn',
@@ -210,6 +220,17 @@
             ...mapGetters('Bookings', {
                 bookings: 'getBookings',
             }),
+            photo() {
+                if (this.photoUser) {
+                    if (this.photoUser.substr(0,10)==='/api/files') {
+                        return this.toLink(this.photoUser);
+                    } else {
+                        return this.photoUser;
+                    }
+                } else {
+                    return null;
+                }
+            },
             isMobile() {
                 return !this.$vuetify.breakpoint.mdAndUp;
             },
@@ -246,7 +267,8 @@
                     close: mdiClose,
                     viewDashboard: mdiViewDashboard,
                     clipboardList: mdiClipboardList,
-                    plusCircleOutline: mdiPlusCircleOutline
+                    plusCircleOutline: mdiPlusCircleOutline,
+                    accountCircle: mdiAccountCircle,
                 },
                 newBookings: [],
             }
@@ -270,7 +292,7 @@
             toDashboard(index) {
                 this.$store.commit('Marina/SELECT_MARINA', index);
                 this.$router.push('/dashboard');
-            }
+            },
         },
         async mounted() {
             await this.updateUserInfo();

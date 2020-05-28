@@ -20,6 +20,7 @@
             <v-text-field
                     class="mt-5"
                     ref="firstName"
+                    label="First name"
                     hide-details
                     @input="userEdit.firstName=$event"
                     :value="userEdit.firstName"
@@ -30,6 +31,7 @@
             <v-text-field
                     class="mt-5"
                     ref="lastName"
+                    label="Family name"
                     hide-details
                     @input="userEdit.lastName=$event"
                     :value="userEdit.lastName"
@@ -41,12 +43,31 @@
                     class="mt-5"
                     ref="phNumber"
                     hide-details
+                    label="Phone number"
                     @input="userEdit.phNumber=$event"
                     :value="userEdit.phNumber"
                     :placeholder="phone ? phone : 'Phone'"
                     filled
                     rounded
             ></v-text-field>
+            <v-file-input
+                    class="mt-5"
+                    v-model="photo"
+                    filled
+                    hide-details
+                    rounded
+                    label="User photo"
+                    :clearable="true"
+                    accept="image/*"
+                    :loading="photoLoading"
+                    @click:clear="$store.commit('User/ADD_PHOTO', null)"
+            >
+                <template v-slot:selection>
+                     <span v-if="photo">
+                        {{fileNameDisplay(photo.fileName, $vuetify.breakpoint.mdOnly ? 30 : 40)}}
+                    </span>
+                </template>
+            </v-file-input>
         </v-card-text>
         <v-card-actions>
             <v-btn @click="onSave()" class="primary" :loading="saving">
@@ -71,6 +92,21 @@
                 phone: 'getPhone',
                 error: "getErrorMessage"
             }),
+            photo: {
+                get() {
+                    return this.$store.state.User.photo;
+                },
+                async set(file) {
+                    this.photoLoading = true;
+                    if (file instanceof File && this.isImage(file))
+                        await this.$store.dispatch('User/uploadPhoto',
+                            {
+                                file: file,
+                                commitType: 'ADD_PHOTO'
+                            });
+                    this.photoLoading = false;
+                }
+            },
         },
         data: function () {
             return {
@@ -80,6 +116,7 @@
                     phNumber: null,
                 },
                 saving: false,
+                photoLoading: false,
                 icons: {
                     check: mdiCheck,
                 },
@@ -93,7 +130,7 @@
                     if (await this.editUserInfo({
                         firstName: this.userEdit.firstName ? this.userEdit.firstName : this.firstName,
                         lastName: this.userEdit.lastName ? this.userEdit.lastName : this.lastName,
-                        phNumber: this.userEdit.phNumber ? this.userEdit.phNumber : this.phNumber,
+                        phNumber: this.userEdit.phNumber ? this.userEdit.phNumber : this.phone,
                     })) {
                         this.userEdit = {
                             firstName: null,
@@ -119,6 +156,12 @@
                 }
                 return res;
             },
+            isImage(file) {
+                return !!file.type.match('image.*');
+            },
+            fileNameDisplay(fileName, length) {
+                return fileName.length > length ? fileName.substr(0,length)+'...' : fileName;
+            }
         },
     }
 </script>

@@ -110,7 +110,11 @@
                                                 style="float: left; border-bottom-left-radius: 4px; border-top-left-radius: 4px"
                                                 tile
                                         >
-                                            <v-img :src="booking.renter.photo.fileLink ? booking.renter.photo.fileLink:''"></v-img>
+                                            <v-img
+                                                    v-if="booking.renter.photo.fileLink"
+                                                    :src="userAvatar(booking.renter.photo.fileLink)"
+                                            ></v-img>
+                                            <v-icon v-else dark>{{icons.accountCircle}}</v-icon>
                                         </v-avatar>
                                         <v-list-item color="rgba(0, 0, 0, .4)">
                                             <v-list-item-content>
@@ -166,7 +170,7 @@
 
 <script>
     import {mapActions, mapGetters} from "vuex";
-    import {mdiClose, mdiThumbDownOutline, mdiThumbUpOutline} from "@mdi/js";
+    import {mdiAccountCircle, mdiClose, mdiThumbDownOutline, mdiThumbUpOutline} from "@mdi/js";
     import {photoLink} from "../../assets/helperFunctions";
 
     export default {
@@ -187,6 +191,7 @@
                     close: mdiClose,
                     thumbUpOutline: mdiThumbUpOutline,
                     thumbDownOutline: mdiThumbDownOutline,
+                    accountCircle: mdiAccountCircle,
                 },
                 sailImg: require("../../assets/sailBoat.jpg"),
                 powerImg: require("../../assets/powerBoat.jpg"),
@@ -244,6 +249,17 @@
             },
             toLink(link) {
                 return photoLink(link);
+            },
+            userAvatar(link) {
+                if (link) {
+                    if (link.substr(0,10)==='/api/files') {
+                        return this.toLink(link);
+                    } else {
+                        return link;
+                    }
+                } else {
+                    return null;
+                }
             },
         }
     }

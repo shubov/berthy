@@ -97,7 +97,6 @@
                 :margin="[10, 10]"
                 :use-css-transforms="true"
                 :responsive="true"
-                :preventCollision="true"
                 :breakpoints="breakpoints"
         >
             <grid-item

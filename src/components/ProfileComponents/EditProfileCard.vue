@@ -64,7 +64,7 @@
             >
                 <template v-slot:selection>
                      <span v-if="photo">
-                        {{fileNameDisplay(photo.fileName, $vuetify.breakpoint.mdOnly ? 30 : 40)}}
+                        {{fileNameDisplay(photo.fileLink, $vuetify.breakpoint.mdOnly ? 30 : 40)}}
                     </span>
                 </template>
             </v-file-input>

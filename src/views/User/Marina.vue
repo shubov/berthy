@@ -247,7 +247,7 @@
                                     >
                                         <v-list-item three-line>
                                             <v-list-item-avatar>
-                                                <v-img :src="item.reviewer.photoLink"></v-img>
+                                                <v-img :src="userAvatar(item.reviewer.photoLink)"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>{{item.reviewer.firstName}} {{item.reviewer.lastName}}</v-list-item-title>
@@ -403,6 +403,17 @@
             },
             toLink(link) {
                 return photoLink(link);
+            },
+            userAvatar(link) {
+                if (link) {
+                    if (link.substr(0,10)==='/api/files') {
+                        return this.toLink(link);
+                    } else {
+                        return link;
+                    }
+                } else {
+                    return null;
+                }
             },
             updateMapHeight() {
                 let h;

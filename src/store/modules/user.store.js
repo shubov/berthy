@@ -25,11 +25,7 @@ const initialState = () => ({
     lastName: null,
     phCode: null,
     phNumber: null,
-    photo: {
-        fileId: null,
-        fileLink: null,
-        fileName: null
-    },
+    photo: null,
 });
 
 
@@ -120,7 +116,7 @@ const actions = {
     },
     async editUserInfo({state,commit,dispatch}, data) {
         commit("FETCHING");
-        if (state.photo.fileLink) data.photo = state.photo;
+        if (state.photo) data.photo = state.photo;
         let response = await BerthyAPI.put("accounts/userInfo", data)
         return await dispatch('setUserInfo', response);
     },

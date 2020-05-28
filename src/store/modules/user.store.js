@@ -47,7 +47,10 @@ const getters = {
     },
 
     getName(state) {
-        return `${state.firstName} ${state.lastName}`;
+        if (state.firstName && state.lastName)
+            return `${state.firstName} ${state.lastName}`
+        else
+            return '';
     },
     getFirstName(state) {
         return state.firstName;

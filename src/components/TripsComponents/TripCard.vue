@@ -28,7 +28,37 @@
         <v-card-title>{{trip.berth.name}}</v-card-title>
         <v-card-subtitle>From {{trip.startDate}} to {{trip.endDate}}</v-card-subtitle>
         <v-card-actions>
-            <v-btn text>More Info</v-btn>
+            <v-dialog
+                    v-model="dialogDetails"
+                    max-width="900px"
+            >
+                <template v-slot:activator="{on}">
+                    <v-btn v-on="on" text>More Info</v-btn>
+                </template>
+                <v-toolbar
+                        class="elevation-0"
+                        color="primary" dark
+                >
+                    <v-toolbar-title>
+                        {{trip.berth.name}}
+                    </v-toolbar-title>
+                    <v-chip
+                            class="ml-2"
+                            label
+                            dark
+                            :color="statusColor(trip.status)"
+                    >{{statusLabel(trip.status)}}</v-chip>
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="dialogDetails=false">
+                        <v-icon>{{icons.close}}</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <TripDetails
+                        :booking="trip"
+                        @pay="onPay(trip.id)"
+                        @cancel="onCancel()"
+                ></TripDetails>
+            </v-dialog>
             <v-spacer></v-spacer>
             <v-btn
                     class="primary"
@@ -71,9 +101,13 @@
 <script>
     import {photoLink} from "../../assets/helperFunctions";
     import {mapActions} from "vuex";
+    import {mdiClose} from "@mdi/js";
 
     export default {
         name: "TripCard",
+        components: {
+            TripDetails: ()=> import("./TripDetails"),
+        },
         props: ['trip'],
         computed: {
         },
@@ -83,6 +117,10 @@
                 marinaImg: require("../../assets/marina.jpg"),
                 paymentDialog: false,
                 tinkoffLink: null,
+                dialogDetails: false,
+                icons: {
+                    close: mdiClose,
+                }
             }
         },
         methods: {

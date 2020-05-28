@@ -10,7 +10,29 @@
 <template>
     <v-container fluid>
         <v-toolbar flat dense short>
-            <v-toolbar-title>{{marina.name}}</v-toolbar-title>
+            <v-menu v-if="getAll.length>1">
+                <template v-slot:activator="{ on: menu, attrs }">
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on: tooltip }">
+                            <v-btn icon v-on="{ ...tooltip, ...menu }" v-bind="attrs">
+                                <v-icon>{{icons.clipboardMultipleOutline}}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Switch to another marina</span>
+                    </v-tooltip>
+                </template>
+                <v-list>
+                    <v-subheader>My marinas</v-subheader>
+                    <v-list-item
+                            v-for="(marina, index) in getAll"
+                            :key="index"
+                            @click="changeMarina(index)"
+                    >
+                        <v-list-item-title>{{marina.name}}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            <v-toolbar-title>{{marina ? marina.name : ''}}</v-toolbar-title>
             <v-btn icon v-if="!draggable" @click="onDragEnable">
                 <v-icon>{{icons.arrowAll}}</v-icon>
             </v-btn>
@@ -72,11 +94,9 @@
                 :is-draggable="draggable"
                 :is-resizable="false"
                 :is-mirrored="false"
-                :vertical-compact="true"
                 :margin="[10, 10]"
-                :use-css-transforms="false"
+                :use-css-transforms="true"
                 :responsive="true"
-                :breakpoints="breakpoints"
         >
             <grid-item
                     v-if="geolocation"
@@ -89,8 +109,8 @@
             >
                 <MapCard
                         v-if="displayItems"
-                        :latitude="location.data.me ? location.data.me.lat : 0"
-                        :longitude="location.data.me ? location.data.me.lng : 0"
+                        :latitude="location.data ? location.data.me.lat : 0"
+                        :longitude="location.data ? location.data.me.lng : 0"
                         :class="draggable ? 'ondrag' : ''"
                 ></MapCard>
                 <LayoutItemLabel v-else text="Location Map"></LayoutItemLabel>
@@ -105,7 +125,10 @@
                     :i="layout[1].i"
                     class="elevation-1"
             >
-                <v-container fill-height v-if="displayItems">
+                <v-container
+                        fill-height
+                        v-if="displayItems && getTotalPlaceNum && getReservedPlaceNum"
+                >
                     <chart
                             type="radialBar"
                             height="260px"
@@ -120,7 +143,8 @@
                         {{getTotalPlaceNum}}
                     </b> total</v-card-text>
                 </v-container>
-                <LayoutItemLabel v-else text="Reservation Percentage"></LayoutItemLabel>
+                <LayoutItemLabel v-else :text="(!getTotalPlaceNum || !getReservedPlaceNum)
+                ? 'Reservation Percentage (no data)': 'Reservation Percentage'"></LayoutItemLabel>
             </grid-item>
             <grid-item
                     v-if="rating"
@@ -132,11 +156,13 @@
                     class="elevation-1"
             >
                 <RatingCard
-                        v-if="displayItems"
+                        v-if="displayItems && getTotalRating && getLastMonthRating"
                         :getTotalRating="getTotalRating"
                         :getRatingTrend="getRatingTrend"
+                        :getLastMonthRating="getLastMonthRating"
                 ></RatingCard>
-                <LayoutItemLabel v-else text="Rating"></LayoutItemLabel>
+                <LayoutItemLabel v-else :text="(!getTotalRating || !getLastMonthRating)
+                ? 'Rating (no data)': 'Rating'"></LayoutItemLabel>
             </grid-item>
             <grid-item
                     v-if="week"
@@ -148,7 +174,7 @@
                     class="elevation-1"
             >
                 <chart
-                        v-if="displayItems"
+                        v-if="displayItems && barchartOptions && barchartSeries"
                         type="bar"
                         height="370px"
                         width="100%"
@@ -156,7 +182,8 @@
                         :series="barchartSeries"
                         :class="draggable ? 'ondrag' : ''"
                 ></chart>
-                <LayoutItemLabel v-else text="Upcoming Week Reservations"></LayoutItemLabel>
+                <LayoutItemLabel v-else :text="(!barchartOptions || !barchartSeries)
+                ? 'Upcoming Week Reservations (no data)': 'Upcoming Week Reservations'"></LayoutItemLabel>
             </grid-item>
             <grid-item
                     v-if="yearRevenue"
@@ -168,7 +195,7 @@
                     class="elevation-1"
             >
                 <chart
-                        v-if="displayItems"
+                        v-if="displayItems && lineChartSeries && lineChartOptions"
                         type="line"
                         height="350px"
                         width="100%"
@@ -176,7 +203,8 @@
                         :series="lineChartSeries"
                         :class="draggable ? 'ondrag' : ''"
                 ></chart>
-                <LayoutItemLabel v-else text="Year Revenue"></LayoutItemLabel>
+                <LayoutItemLabel v-else :text="(!lineChartSeries || !lineChartOptions)
+                ? 'Year Revenue (no data)': 'Year Revenue'"></LayoutItemLabel>
             </grid-item>
         </grid-layout>
     </v-container>
@@ -185,7 +213,14 @@
 
 <script>
     import VueGridLayout from 'vue-grid-layout';
-    import {mdiArrowAll, mdiPlusCircle, mdiTrendingUp, mdiTrendingDown, mdiCheck} from "@mdi/js";
+    import {
+        mdiArrowAll,
+        mdiPlusCircle,
+        mdiTrendingUp,
+        mdiTrendingDown,
+        mdiCheck,
+        mdiClipboardMultipleOutline
+    } from "@mdi/js";
     import {mapActions, mapGetters} from "vuex";
     import RatingCard from "../../components/DashboardComponents/RatingCard";
     
@@ -249,7 +284,6 @@
         },
         data: function() {
             return {
-                marinaID: 28,
                 displayItems: false,
                 draggable: false,
                 icons: {
@@ -258,14 +292,15 @@
                     trendingUp: mdiTrendingUp,
                     trendingDown: mdiTrendingDown,
                     check: mdiCheck,
+                    clipboardMultipleOutline: mdiClipboardMultipleOutline,
                 },
                 layout: [
                     {x:0,y:0,w:2,h:11,i:0},
-                    {x:4,y:0,w:2,h:11,i:1},
-                    {x:8,y:0,w:2,h:7,i:2},
-                    {x:0,y:6,w:4,h:13,i:3},
-                    {x:8,y:6,w:4,h:12,i:4},
-                    {x:4,y:6,w:2,h:9,i:5},
+                    {x:2,y:0,w:2,h:11,i:1},
+                    {x:4,y:0,w:2,h:7,i:2},
+                    {x:6,y:0,w:4,h:13,i:3},
+                    {x:10,y:0,w:4,h:12,i:4},
+                    {x:14,y:0,w:2,h:9,i:5},
                 ],
                 breakpoints: {
                     xxs: 0,
@@ -278,6 +313,7 @@
         },
         methods: {
             ...mapActions('Marina', ['fetchMyMarinas']),
+            ...mapActions('Dashboard', ['fetch']),
             onDragEnable() {
                 this.draggable = true;
                 this.displayItems = false;
@@ -285,8 +321,8 @@
             setFunction(commit) {
                 this.displayItems=false;
                 this.$store.commit(commit);
-                setTimeout(()=>{
-                    //await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
+                setTimeout(async ()=>{
+                    await this.$store.dispatch('Dashboard/changeSettings', this.marina.id);
                     if (!this.draggable) this.displayItems=true;
                 },0);
             },
@@ -307,17 +343,47 @@
                 this.commitLayoutPosition('Dashboard/POS_YEAR_REVENUE', 4);
                 this.commitLayoutPosition('Dashboard/POS_PLACE_BOOKING_MAP', 5);
                 
-                //await this.$store.dispatch('Dashboard/changeSettings', this.marinaID);
+                await this.$store.dispatch('Dashboard/changeSettings', this.marina.id);
             },
+            updateLayout(index, {column, row}) {
+                let newVal = this.layout[index];
+                newVal.x=column;
+                newVal.y=row;
+                this.$set(this.layout, index, newVal);
+            },
+            async changeMarina(index) {
+                this.$store.commit('Marina/SELECT_MARINA', index);
+                setTimeout(async () => {
+                    await this.updateDashboard();
+                },0);
+            },
+            async updateDashboard() {
+                this.displayItems = false;
+                if (await this.fetch(this.marina.id)) {
+                    setTimeout(() => {
+                        if (this.location)
+                            this.updateLayout(0, this.location.settings);
+                        if (this.reserved_percent)
+                            this.updateLayout(1, this.reserved_percent.settings);
+                        if (this.rating_trend)
+                            this.updateLayout(2, this.rating_trend.settings);
+                        if (this.week_reserved_percent)
+                            this.updateLayout(3, this.week_reserved_percent.settings);
+                        if (this.year_revenue)
+                            this.updateLayout(4, this.year_revenue.settings);
+                        setTimeout(() => {
+                            this.displayItems = true;
+                        }, 0);
+                    }, 0)
+                }
+            }
         },
         async created() {
             if (this.getAll.length < 1)
                 await this.fetchMyMarinas();
-        },
-        mounted() {
-            setTimeout(()=>{
-                this.displayItems = true;
-            }, 0);
+            setTimeout(async () => {
+                await this.updateDashboard();
+            },0);
         },
     }
 </script>

@@ -11,7 +11,7 @@
     <v-container>
         <v-row v-if="trips.length">
             <v-col
-                    cols="12" sm="2" md="3" lg="4"
+                    cols="12" sm="6" md="4" lg="3"
                     v-for="(trip, index) in trips"
                     :key="index"
             >

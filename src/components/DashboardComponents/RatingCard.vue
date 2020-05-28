@@ -32,7 +32,7 @@
 
     export default {
         name: "RatingCard",
-        props: ['getTotalRating', 'getRatingTrend'],
+        props: ['getTotalRating', 'getRatingTrend', 'getLastMonthRating'],
         data: function () {
             return {
                 icons: {

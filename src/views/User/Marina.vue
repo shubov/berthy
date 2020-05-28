@@ -11,6 +11,7 @@
     <v-container
             fluid
             fill-height
+            v-if="marina"
     >
         <v-row align="baseline" justify="center">
             <v-col cols="11">
@@ -62,8 +63,8 @@
                                    class="d-inline text-left subtitle-1 font-weight-medium"
                                    :href="marina.site"
                                 >
-                                    {{marina.site.toString().length>37
-                                    ? (marina.site.toString().substr(0,34) + '...')
+                                    {{marina.site.length>37
+                                    ? (marina.site.substr(0,34) + '...')
                                     : marina.site}}
                                 </a>
                             </v-col>
@@ -200,11 +201,11 @@
                     >
                         <p class="text-left title">Reviews</p>
                         <v-toolbar class="elevation-0 tile">
-                            <span class="mr-5">
+                            <span class="mr-5" v-show="!isMobile">
                                 Rating: {{marina.avgRating}} {{reviewsLength ? ` (${reviewsLength} reviews)` : ''}}
                             </span>
                             <v-rating
-                                    style="margin-left: -9px;padding-bottom: 18px;"
+                                    style="margin-left: -9px"
                                     x-large
                                     half-increments
                                     :value="marina.avgRating"
@@ -315,10 +316,10 @@
     export default {
         name: "Marina",
         components: {
-            ReviewForm: ()=> import("../../components/MarinaPageComponents/ReviewForm"),
+            ReviewForm: ()=> import("../../components/MarinaComponents/ReviewForm"),
             ShipForm: ()=>import("../../components/BookComponents/ShipForm"),
             ReservationCard: ()=> import("../../components/BookComponents/ReservationCard"),
-            PublicMarinaMap: ()=>import("../../components/MarinaPageComponents/PublicMarinaMap"),
+            PublicMarinaMap: ()=>import("../../components/MarinaComponents/PublicMarinaMap"),
         },
         async beforeCreate() {
             let id = this.$route.params.id;

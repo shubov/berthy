@@ -179,7 +179,7 @@
     export default {
         name: "Bookings",
         components: {
-            BookingCard: ()=>import("../../components/MarinaBookingRequestsComponents/BookingCard"),
+            BookingCard: ()=>import("../../components/MarinaBookingsComponents/BookingCard"),
         },
         computed: {
             ...mapGetters('Marina', ['getCurrent', 'getAll']),

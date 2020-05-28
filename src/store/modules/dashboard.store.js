@@ -478,61 +478,83 @@ const getters = {
     },
 
     barchartSeries(state, getters) {
-        let d = getters.week_reserved_percent;
-        if (d!==undefined) return [{
-            name: 'Week Reserved',
-            data: d.data.map(({percent})=>{
-                return percent.reservedPlaceNum
-            })
-        }]
-        else return false
+        if (getters.week_reserved_percent) {
+            let data = getters.week_reserved_percent.data;
+            if (data!==undefined) return [{
+                name: 'Week Reserved',
+                data: data.map(({percent})=>{
+                    return percent.reservedPlaceNum
+                })
+            }]
+            else return null
+        }
+        else return null
     },
     barchartOptions(state, getters) {
-        let d = getters.week_reserved_percent;
-        if (d!==undefined) return {
-            xaxis: {
-                categories: d.data.map(({date})=>{
-                    return date
-                })
+        if (getters.week_reserved_percent) {
+            let data = getters.week_reserved_percent.data;
+            if (data!==undefined) return {
+                xaxis: {
+                    categories: data.map(({date})=>{
+                        return date
+                    })
+                }
             }
+            else return null
         }
-        else return false
+        else return null
     },
     lineChartSeries(state, getters) {
-        let d = getters.year_revenue;
-        if (d!==undefined) return [{
-            name: 'Revenue',
-            data: d.data.map(({revenue})=>{
-                return revenue;
-            })
-        }]
-        else return false
+        if (getters.year_revenue) {
+            let data = getters.year_revenue.data;
+            if (data!=null) return [{
+                name: 'Revenue',
+                data: data.map(({revenue})=>{
+                    if (revenue==null) return null;
+                    return revenue;
+                })
+            }]
+            else return null
+        }
+        else return null
     },
     lineChartOptions(state, getters) {
-        let d = getters.year_revenue;
-        if (d!==undefined) return {
-            xaxis: {
-                categories: d.data.map(({month, year})=>{
-                    return `${month}-${year}`;
-                })
+        if (getters.year_revenue) {
+            let data = getters.year_revenue.data;
+            if (data!=null) return {
+                xaxis: {
+                    categories: data.map(({month})=>{
+                        return `${month.toString().substr(0,3)}`;
+                    })
+                }
             }
+            else return null
         }
-        else return false
+        else return null
     },
     getReservedPlaceNum(state, getters) {
-        return getters.reserved_percent.data.reservedPlaceNum;
+        if (getters.reserved_percent && getters.reserved_percent.data)
+            return getters.reserved_percent.data.reservedPlaceNum;
+        else return null;
     },
     getTotalPlaceNum(state, getters) {
-        return getters.reserved_percent.data.totalPlaceNum;
+        if (getters.reserved_percent && getters.reserved_percent.data)
+            return getters.reserved_percent.data.totalPlaceNum;
+        else return null;
+
     },
     getReservedPercent(state, getters) {
         return Math.floor(100* getters.getReservedPlaceNum / getters.getTotalPlaceNum);
     },
     getTotalRating(state, getters) {
-        return getters.rating_trend.data.totalRating;
+        if (getters.rating_trend && getters.rating_trend.data)
+            return getters.rating_trend.data.totalRating;
+        else return null;
     },
     getLastMonthRating(state, getters) {
-        return getters.rating_trend.data.lastMonthRating;
+        if (getters.rating_trend && getters.rating_trend.data)
+            return getters.rating_trend.data.lastMonthRating;
+        else return null;
     },
     getRatingTrend(state, getters) {
         return getters.getTotalRating < getters.getLastMonthRating

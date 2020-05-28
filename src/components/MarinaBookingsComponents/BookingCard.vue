@@ -31,7 +31,7 @@
                     label
                     dark
                     :color="statusColor(booking.status)"
-            >{{booking.status}}</v-chip>
+            >{{statusLabel(booking.status)}}</v-chip>
             <v-spacer></v-spacer>
             <v-btn v-show="showClose" icon @click="$emit('close')">
                 <v-icon>{{icons.close}}</v-icon>
@@ -118,7 +118,7 @@
                                                     {{booking.renter.firstName+' '+booking.renter.lastName}}
                                                 </v-list-item-title>
                                                 <v-list-item-subtitle>{{booking.renter.phNumber}}</v-list-item-subtitle>
-                                                <v-list-item-subtitle>Reservation created: {{(new Date(booking.createdAt)).toDateString()}}</v-list-item-subtitle>
+                                                <v-list-item-subtitle>Reservation created:<br/>{{(new Date(booking.createdAt)).toDateString()}}</v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </v-col>
@@ -222,8 +222,24 @@
                         return 'red lighten-3';
                     case ('APPROVED'):
                         return 'green lighten-3';
-                    case ('IN_PROGRESS'):
-                        return 'yellow ';
+                    case ('PAYED'):
+                        return 'primary';
+                    case ('CANCELLED'):
+                        return 'grey';
+                }
+            },
+            statusLabel(status) {
+                switch (status) {
+                    case ('NEW'):
+                        return 'New';
+                    case ('REJECTED'):
+                        return 'Rejected';
+                    case ('APPROVED'):
+                        return 'Confirmed';
+                    case ('PAYED'):
+                        return 'Paid';
+                    case ('CANCELLED'):
+                        return 'Cancelled';
                 }
             },
             toLink(link) {

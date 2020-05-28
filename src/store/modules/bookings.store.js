@@ -1,5 +1,3 @@
-import BerthyAPI from "../../services/berthy-api";
-
 /******************************************************************************
  * Copyright (c) - 2020 - Mikhail Shubov.                                     *
  * Berthy project. All Rights Reserved.                                       *
@@ -33,6 +31,7 @@ function times(booking) {
     booking.ago = res;
 }
 
+import BerthyAPI from "../../services/berthy-api";
 
 // State initial object
 const initialState = () => ({

@@ -9,7 +9,7 @@
 
 <template>
     <v-container
-            fluid
+            fluid v-if="isLoggedIn"
     >
         <v-row align="start" justify="center">
             <v-col>
@@ -25,7 +25,7 @@
                                     <v-img :src="photo ? photo : ''"/>
                                 </v-avatar>
                                 <p class="subtitle-1 font-weight-bold mb-0">
-                                    {{type}} {{subtitle}}
+                                    {{subtitle}}
                                 </p>
                                 <p class="display-3 font-weight-black mb-0">
                                     {{name}}
@@ -61,7 +61,15 @@
         <v-row>
             <v-col v-if="dockmaster">
                 <v-row>
-                    <v-col cols="12"><p class="font-weight-black title">My Marinas</p></v-col>
+                    <v-col cols="12">
+                        <p class="font-weight-black title d-inline">My Marinas</p>
+                        <v-btn
+                                icon
+                                style="padding-bottom: 3px;"
+                                to="/marina-registration">
+                            <v-icon>{{icons.plusCircleOutline}}</v-icon>
+                        </v-btn>
+                    </v-col>
                     <v-col
                             v-for="(marina, index) in marinas"
                             :key="index"
@@ -79,7 +87,14 @@
                             </v-img>
         
                             <v-card-actions>
-                                <v-chip class="primary">4 new notifications</v-chip>
+                                <v-chip
+                                        @click="toBookings(index)"
+                                        label
+                                        v-if="newBookings[index]"
+                                        color="blue lighten-3"
+                                >
+                                    {{newBookings[index]}} new booking{{newBookings[index]===1?'':'s'}}
+                                </v-chip>
                                 <v-spacer></v-spacer>
     
                                 <v-btn icon @click="toBookings(index)">
@@ -96,7 +111,15 @@
             </v-col>
             <v-col v-if="boater">
                 <v-row>
-                    <v-col cols="12"><p class="font-weight-black title">My Boats</p></v-col>
+                    <v-col cols="12">
+                        <p class="font-weight-black title d-inline">My Boats</p>
+                        <v-btn
+                                icon
+                                style="margin-bottom: 3px;"
+                                @click="dialogShip=true">
+                            <v-icon>{{icons.plusCircleOutline}}</v-icon>
+                        </v-btn>
+                    </v-col>
                     <v-col
                             v-for="(ship, index) in ships"
                             :key="index"
@@ -129,17 +152,40 @@
                 </v-row>
             </v-col>
         </v-row>
+        <v-dialog v-model="dialogShip"
+                  :fullscreen="isMobile"
+                  max-width="900px"
+                  persistent
+        >
+            <v-toolbar color="primary" dark>
+                <v-toolbar-title>Add your boat</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="dialogShip=false">
+                    <v-icon>{{icons.close}}</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <ShipForm @close-ship-form="dialogShip=false"></ShipForm>
+        </v-dialog>
     </v-container>
 </template>
 
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import {photoLink} from "../../assets/helperFunctions";
-    import {mdiArrowRight, mdiCheck, mdiClipboardList, mdiClose, mdiPencil, mdiViewDashboard} from "@mdi/js";
+    import {
+        mdiArrowRight,
+        mdiCheck,
+        mdiClipboardList,
+        mdiClose,
+        mdiPencil,
+        mdiPlusCircleOutline,
+        mdiViewDashboard
+    } from "@mdi/js";
     export default {
         name: "Profile",
         components: {
             EditProfileCard: ()=>import("../../components/ProfileComponents/EditProfileCard"),
+            ShipForm: ()=>import("../../components/BookComponents/ShipForm"),
         },
         computed: {
             ...mapGetters('User', {
@@ -152,7 +198,8 @@
                 moderator: 'isModerator',
                 photo: 'getPhoto',
                 phone: 'getPhone',
-                error: "getError"
+                error: "getError",
+                isLoggedIn: 'isLoggedIn',
             }),
             ...mapGetters('Marina', {
                 marinas: 'getAll'
@@ -160,12 +207,9 @@
             ...mapGetters('Ships', {
                 ships: 'getShips',
             }),
-            type() {
-                if (this.boater) return 'Boater profile'
-                if (this.dockmaster) return 'Dockmaster profile'
-                if (this.moderator) return 'Moderator profile'
-                return 'Profile';
-            },
+            ...mapGetters('Bookings', {
+                bookings: 'getBookings',
+            }),
             isMobile() {
                 return !this.$vuetify.breakpoint.mdAndUp;
             },
@@ -186,6 +230,7 @@
         data: function () {
             return {
                 dialogEditProfile: false,
+                dialogShip: false,
                 disabled: true,
                 sailImg: require("../../assets/sailBoat.jpg"),
                 powerImg: require("../../assets/powerBoat.jpg"),
@@ -201,7 +246,9 @@
                     close: mdiClose,
                     viewDashboard: mdiViewDashboard,
                     clipboardList: mdiClipboardList,
+                    plusCircleOutline: mdiPlusCircleOutline
                 },
+                newBookings: [],
             }
         },
         methods: {
@@ -209,6 +256,9 @@
             ...mapActions('Marina',['fetchMyMarinas']),
             ...mapActions('Ships', {
                     updateShips: 'fetchShips',
+            }),
+            ...mapActions('Bookings', {
+                fetchBookings: 'fetchBookings',
             }),
             toLink(link) {
                 return photoLink(link);
@@ -224,10 +274,25 @@
         },
         async mounted() {
             await this.updateUserInfo();
-            if (this.dockmaster && !this.marinas.length)
-                await this.fetchMyMarinas();
-            if (this.boater && !this.ships.length)
-                await this.updateShips();
+            
+            setTimeout(async ()=>{
+                console.log('dockmaster', this.dockmaster);
+                if (this.dockmaster) {
+                    if (!this.marinas.length) await this.fetchMyMarinas();
+                    setTimeout(async ()=>{
+                        for (let i=0; i<this.marinas.length; i++) {
+                            await this.fetchBookings(this.marinas[i].id);
+                            let j = 0;
+                            this.bookings.forEach(booking =>
+                                j = (booking.status === 'NEW') ? j+1 : j)
+                            this.newBookings.push(j);
+                        }
+                    }, 0);
+                }
+                if (this.boater && !this.ships.length) {
+                    await this.updateShips();
+                }
+            },0);
         },
     }
 </script>

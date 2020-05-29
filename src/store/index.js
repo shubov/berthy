@@ -32,7 +32,7 @@ export default new Vuex.Store({
             dockmaster: 'DOCKMASTER',
             newUser: 'NEW_USER',
         },
-        bg: {'background-image': `url(${require('../assets/background.jpg')})`},
+        bg: {'background-image': `url(${require('../assets/background.webp')})`},
         pagesWithBg: ['Sign In', 'Sign Up', "Role"],
     }),
     mutations: {

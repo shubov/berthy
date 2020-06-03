@@ -87,12 +87,12 @@ const actions = {
         }
         return false;
     },
-    async getChatMessages({commit}, id) {
+    async getChatMessages({commit}, {id, start, end}) {
         if (isNaN(id)) return false;
 
         let params = new URLSearchParams();
-        params.append("offsetEnd", '100');
-        params.append("offsetStart", '0');
+        params.append("offsetEnd", end);
+        params.append("offsetStart", start);
 
         let response = await BerthyAPI.get(`chats/${id}/messages`, {params});
         if (response.data) {

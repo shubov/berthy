@@ -24,21 +24,22 @@
                     </v-btn>
                 </v-toolbar>
                 <v-card
-                        id="messagesContainer"
+                        ref="messagesContainer"
                         :height="messagesContainerHeight"
                         class="overflow-y-auto py-0 elevation-0"
                         style="overflow: hidden"
                         tile
                 >
                     <v-card-text class="d-flex flex-column">
+                        <v-btn text align="center">Load more...</v-btn>
                         <div
-                                v-for="(m,i) in messages"
-                                :key="i+'w'"
+                                v-for="m in messages"
+                                :key="m.id"
                                 class="py-1"
                         >
                             <Avatar
                                     v-if="!isMyMsg(m) && current"
-                                    :key="i+'avatar'"
+                                    :key="m.id+'avatar'"
                                     :photo="current.participants[0].photoLink"
                                     size="30px"
                                     :name="current.title"
@@ -46,7 +47,8 @@
                             <div
                                     :class="isMyMsg(m)?'myMessage':'message'"
                                     :style="changeMessageWidth?'max-width: 220px':''"
-                                    :key="i+'message'"
+                                    :key="m.id+'message'"
+                                    :ref="m.offset"
                             >
                                 {{m.text}}
                             </div>
@@ -60,7 +62,7 @@
                 <v-card tile id="messageInput" class="elevation-0">
                     <v-card-text>
                         <v-text-field
-                                @focus="scroll"
+                                @focus="scrollBottom"
                                 @input="msg=$event"
                                 :value=msg
                                 @keyup.enter="addMessage"
@@ -111,7 +113,6 @@
         },
         methods: {
             ...mapActions('Chat', {
-                getChatMessages: 'getChatMessages',
                 sendMessage: 'sendMessage',
             }),
             updateHeight() {
@@ -127,23 +128,26 @@
                         text: this.msg,
                     });
                     setTimeout(()=>{
-                        this.scroll();
+                        this.scrollBottom();
                         this.msg='';
                     }, 0);
                 }
             },
             scroll() {
-                document.getElementById('messagesContainer').scrollTop = 200000;
+                this.$vuetify.goTo(this.$refs[this.current.accountOffset][0],{
+                    container: this.$refs.messagesContainer,
+                    duration: 0,
+                });
+            },
+            scrollBottom() {
+                this.$refs.messagesContainer.scrollTop = 200000;
             },
             isMyMsg(message) {
                 return message.participantId === this.myID;
             },
         },
-        created() {
-        
-        },
         mounted() {
-            this.scroll();
+            setTimeout(this.scroll, 1000);
         }
     }
 </script>

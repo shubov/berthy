@@ -110,7 +110,11 @@
                     this.show = value != null;
                     this.$store.commit('Chat/SET_CURRENT', this.chats[value]);
                     if (this.chats[value])
-                        await this.getChatMessages(this.chats[value].id)
+                        await this.getChatMessages({
+                            id: this.chats[value].id,
+                            start: this.chats[value].totalOffset - 20,
+                            end: this.chats[value].totalOffset
+                        });
                     this.selectedChatIndex = value;
                 }
             },

@@ -8,9 +8,11 @@
  *                                                                            *
  ******************************************************************************/
 
+import storage from '../../services/web-storage'
+
 // State initial object
 const initialState = () => ({
-    url: 'ws://uralchem-navigator.southcentralus.cloudapp.azure.com',
+    url: 'wss://egehackbot.cf:8080/socket?accessToken=',
     ws: null,
     connected: false,
     error: '',
@@ -51,8 +53,12 @@ const actions = {
     reset({ commit }) {
         commit('RESET');
     },
+    send({state}, data) {
+        state.ws.send(data);
+    },
     init({getters, dispatch, commit}){
-        let ws = new WebSocket(getters.getWsUrl);
+        if (!storage.getAccessToken()) return false;
+        let ws = new WebSocket(getters.getWsUrl+storage.getAccessToken());
         ws.onopen = function() {
             dispatch('onConnect');
         };
@@ -66,6 +72,7 @@ const actions = {
             dispatch('onError', message);
         };
         commit('INIT', ws);
+        return true;
     },
     onConnect({commit}) {
         commit('SOCKET_CONNECT');
@@ -73,10 +80,9 @@ const actions = {
     onDisconnect({commit}) {
         commit('SOCKET_DISCONNECT');
     },
-    onMessage({dispatch, commit}, payload) {
-        let {message, time, device} = JSON.parse(payload.data);
-        commit('SOCKET_MESSAGE', {message, time, device});
-        dispatch('Fleet/updateFleet', {message, time, device}, {root:true});
+    onMessage({dispatch}, payload) {
+        let message = JSON.parse(payload.data);
+        dispatch('Chat/onWebSocketMessage', message.data, {root: true});
     },
     onError({commit}, message) {
         commit('SOCKET_ERROR', message);

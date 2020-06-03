@@ -20,8 +20,6 @@ const initialState = () => ({
     messages: [],
     chats: [],
     current: null,
-
-    error: null,
 });
 
 
@@ -107,7 +105,7 @@ const actions = {
         }
         return false;
     },
-    async sendMessage({commit}, {id, text}) {
+    async sendMessage({dispatch, rootGetters, commit}, {id, text}) {
         if (isNaN(id)) return false;
         let response = await BerthyAPI.post(`chats/${id}/messages`, {
             type: "TEXT",
@@ -115,13 +113,38 @@ const actions = {
         });
         if (response.data) {
             if (response.data.success) {
-                commit('ADD_MESSAGE', response.data.data);
+                let index = await dispatch('getChatIndexById', id);
+                let msg = {
+                    chatId: id,
+                    message: {
+                        type: 'TEXT',
+                        text: text,
+                        sendDateTime: (new Date()).toISOString(),
+                        participantId: rootGetters['User/getID'],
+                        id: state.chats[index].lastMessage.id + 1,
+                        offset: state.chats[index].lastMessage.offset + 1,
+                    }
+                };
+                await dispatch('onWebSocketMessage', msg);
+                commit('UPDATE_CHAT_ACCOUNT_OFFSET', {index, offset: msg.message.offset})
                 return true;
             } else {
                 return response.data.error.message || response.data.error;
             }
         }
         return false;
+    },
+    getChatIndexById({state}, id) {
+        return state.chats.findIndex(chat => {
+            return chat.id===id;
+        })
+    },
+    async onWebSocketMessage({dispatch, commit}, data) {
+        if (state.current && (data.chatId === state.current.id)) {
+            commit('ADD_MESSAGE', data.message);
+        }
+        let index = await dispatch('getChatIndexById', data.chatId);
+        commit('UPDATE_CHAT', {index, message: data.message});
     },
     // async updateChatOffset({commit}, {id, offset}) {
     //     if (isNaN(id)) return false;
@@ -152,11 +175,21 @@ const mutations = {
             chat.ago = setTimes(chat.lastMessage.sendDateTime);
         })
     },
+    UPDATE_CHAT_TIMES(state) {
+        state.chats.forEach(chat => {
+            chat.ago = setTimes(chat.lastMessage.sendDateTime);
+        });
+    },
+    UPDATE_CHAT(state, {index, message}) {
+        state.chats[index].lastMessage = message;
+        state.chats[index].totalOffset = message.offset;
+        state.chats[index].ago = setTimes(message.sendDateTime);
+    },
     SET_MESSAGES(state, messages) {
         state.messages = messages;
     },
-    ADD_MESSAGE() {
-        //state.messages.push(message);
+    ADD_MESSAGE(state, message) {
+        state.messages.push(message);
     },
     ADD_CHAT(state, chat) {
         chat.ago = setTimes(chat.lastMessage.sendDateTime);
@@ -164,6 +197,9 @@ const mutations = {
     },
     SET_CURRENT(state, chat) {
         state.current = chat;
+    },
+    UPDATE_CHAT_ACCOUNT_OFFSET(state, {index, offset}) {
+        state.chats[index].accountOffset = offset;
     }
 };
 

@@ -51,7 +51,10 @@ export function setTimes(createdAt) {
             res = m + "m ago";
         }
     } else {
-        res = s + "s ago";
+        if (s<20)
+            res = 'now'
+        else
+            res = s + "s ago";
     }
     return res;
 }

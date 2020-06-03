@@ -60,6 +60,9 @@
                                         <v-list-item-subtitle>{{messagePreview(item.lastMessage)}}</v-list-item-subtitle>
                                     </v-list-item-content>
                                     <v-list-item-action>
+                                        <v-chip color="primary" small v-if="item.totalOffset - item.accountOffset > 0">
+                                            {{item.totalOffset - item.accountOffset}}
+                                        </v-chip>
                                         <v-list-item-action-text>
                                             {{item.ago}}
                                         </v-list-item-action-text>
@@ -137,6 +140,9 @@
                 'getAllMyChats',
                 'getChatMessages'
             ]),
+            ...mapActions('Sockets', {
+                initWebSocket:  'init',
+            }),
             updateHeight() {
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0, 2);
                 this.listHeight = (window.innerHeight - 84/*footer+appbar*/ - h_toolbar) + "px";
@@ -158,6 +164,7 @@
         },
         async created() {
             await this.getAllMyChats();
+            this.initWebSocket();
         }
     }
 </script>

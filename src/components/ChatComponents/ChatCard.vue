@@ -110,10 +110,10 @@
             }
         },
         methods: {
-            ...mapActions('Chat', [
-                'getChatMessages',
-                'sendMessage'
-            ]),
+            ...mapActions('Chat', {
+                getChatMessages: 'getChatMessages',
+                sendMessage: 'sendMessage',
+            }),
             updateHeight() {
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0,2);
                 this.messagesContainerHeight =
@@ -126,7 +126,6 @@
                         id: this.current.id,
                         text: this.msg,
                     });
-                    await this.getChatMessages(this.current.id);
                     setTimeout(()=>{
                         this.scroll();
                         this.msg='';
@@ -139,6 +138,9 @@
             isMyMsg(message) {
                 return message.participantId === this.myID;
             },
+        },
+        created() {
+        
         },
         mounted() {
             this.scroll();

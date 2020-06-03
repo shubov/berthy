@@ -87,7 +87,7 @@ const actions = {
         }
         return false;
     },
-    async getChatMessages({commit}, {id, start, end}) {
+    async getChatMessages({commit}, {id, start, end, append}) {
         if (isNaN(id)) return false;
 
         let params = new URLSearchParams();
@@ -97,7 +97,10 @@ const actions = {
         let response = await BerthyAPI.get(`chats/${id}/messages`, {params});
         if (response.data) {
             if (response.data.success) {
-                commit('SET_MESSAGES', response.data.data);
+                if (append)
+                    commit('APPEND_MESSAGES', response.data.data);
+                else
+                    commit('SET_MESSAGES', response.data.data);
                 return true;
             } else {
                 return response.data.error.message || response.data.error;
@@ -187,6 +190,9 @@ const mutations = {
     },
     SET_MESSAGES(state, messages) {
         state.messages = messages;
+    },
+    APPEND_MESSAGES(state, messages) {
+        state.messages.unshift(...messages);
     },
     ADD_MESSAGE(state, message) {
         state.messages.push(message);

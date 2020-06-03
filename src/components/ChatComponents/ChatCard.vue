@@ -30,12 +30,18 @@
                         style="overflow: hidden"
                         tile
                 >
-                    <v-card-text class="d-flex flex-column">
-                        <v-btn text align="center">Load more...</v-btn>
+                    <v-card-text class="d-flex flex-column py-0 my-1">
+                        <v-btn
+                                v-if="messages[0] && messages[0].offset != 1"
+                                :disabled="loadingMessages"
+                                @click="onLoadMore()"
+                                text
+                                align="center"
+                        >Load more...</v-btn>
                         <div
                                 v-for="m in messages"
                                 :key="m.id"
-                                class="py-1"
+                                class="pb-2"
                         >
                             <Avatar
                                     v-if="!isMyMsg(m) && current"
@@ -100,20 +106,25 @@
                 return !this.$vuetify.breakpoint.smAndUp;
             },
         },
-        data () {
+        data: function () {
             return {
                 icons: {
                     close: mdiClose,
                     send: mdiSend,
                 },
+                numOfMessages: 50,
                 msg: null,
+                start: null,
+                end: null,
                 messagesContainerHeight: 0,
                 changeMessageWidth: false,
+                loadingMessages: false,
             }
         },
         methods: {
             ...mapActions('Chat', {
                 sendMessage: 'sendMessage',
+                getChatMessages:'getChatMessages',
             }),
             updateHeight() {
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0,2);
@@ -122,19 +133,19 @@
                 this.changeMessageWidth = !this.isMobile && window.innerWidth < 697;
             },
             async addMessage(){
-                if (this.msg.trim().length) {
+                if (this.msg && this.msg.trim().length) {
                     await this.sendMessage({
                         id: this.current.id,
                         text: this.msg,
                     });
                     setTimeout(()=>{
-                        this.scrollBottom();
+                        this.scroll(this.current.accountOffset);
                         this.msg='';
                     }, 0);
                 }
             },
-            scroll() {
-                this.$vuetify.goTo(this.$refs[this.current.accountOffset][0],{
+            async scroll(offset) {
+                await this.$vuetify.goTo(this.$refs[offset][0],{
                     container: this.$refs.messagesContainer,
                     duration: 0,
                 });
@@ -145,9 +156,35 @@
             isMyMsg(message) {
                 return message.participantId === this.myID;
             },
+            onLoadMore() {
+                this.loadingMessages = true;
+                setTimeout(async ()=> {
+                    let id = this.current.id;
+                    this.end = this.start - 1;
+                    this.start = this. end - this.numOfMessages;
+                    this.start = this.start > 0 ? this.start : 0;
+                    await this.getChatMessages({
+                        id,
+                        start:this.start,
+                        end:this.end,
+                        append: true
+                    });
+                    await this.scroll(this.end+1);
+                    this.loadingMessages = false;
+                },0);
+                
+            },
         },
         mounted() {
-            setTimeout(this.scroll, 1000);
+            console.log('mounted');
+            let scrollInterval = setInterval(async ()=> {
+                if (this.$refs[this.current.accountOffset]) {
+                    await this.scroll(this.current.accountOffset);
+                    clearInterval(scrollInterval);
+                }
+            }, 100);
+            this.start = this.messages[0].offset;
+            this.end = this.messages[this.messages.length-1].offset;
         }
     }
 </script>

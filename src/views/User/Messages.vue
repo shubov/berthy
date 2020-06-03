@@ -82,7 +82,10 @@
             </v-col>
         </v-row>
         <v-dialog fullscreen v-model="chatDialog">
-            <ChatCard @close="onChatDialogClose"></ChatCard>
+            <ChatCard
+                    v-if="show"
+                    @close="onChatDialogClose"
+            ></ChatCard>
         </v-dialog>
     </v-container>
 </template>
@@ -107,15 +110,16 @@
                     return this.selectedChatIndex;
                 },
                 async set(value) {
-                    this.show = value != null;
                     this.$store.commit('Chat/SET_CURRENT', this.chats[value]);
                     if (this.chats[value])
                         await this.getChatMessages({
                             id: this.chats[value].id,
-                            start: this.chats[value].totalOffset - 20,
-                            end: this.chats[value].totalOffset
+                            start: this.chats[value].totalOffset - 50,
+                            end: this.chats[value].totalOffset,
+                            
                         });
                     this.selectedChatIndex = value;
+                    this.show = value != null;
                 }
             },
             isMobile() {

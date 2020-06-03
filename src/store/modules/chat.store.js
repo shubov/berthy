@@ -10,6 +10,10 @@
 import BerthyAPI from "../../services/berthy-api";
 import {setTimes} from "../../assets/helperFunctions";
 
+function chatTitle(person) {
+    let res = (person.firstName ? person.firstName+' ' : '') + (person.lastName ? person.lastName : '');
+    return (person.firstName || person.lastName) ? res : ('id' + person.id);
+}
 
 // State initial object
 const initialState = () => ({
@@ -144,6 +148,7 @@ const mutations = {
     UPDATE_CHATS(state, chats) {
         state.chats = chats;
         state.chats.forEach(chat => {
+            chat.title = chatTitle(chat.participants[0]);
             chat.ago = setTimes(chat.lastMessage.sendDateTime);
         })
     },

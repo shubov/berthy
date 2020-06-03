@@ -11,8 +11,13 @@
     <v-card class="elevation-0 pa-0 ma-0" v-resize="updateHeight">
         <v-row justify="center" align="start" class="mx-0">
             <v-col class="pa-0">
-                <v-toolbar class="elevation-0" id="toolbar">
-                    <v-toolbar-title>Person</v-toolbar-title>
+                <v-toolbar class="elevation-0" id="toolbar" v-if="current">
+                    <Avatar
+                            :photo="current.participants[0].photoLink"
+                            size="30px"
+                            :name="current.title"
+                    ></Avatar>
+                    <v-toolbar-title class="ml-4">{{current.title}}</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn v-show="isMobile" icon @click="$emit('close')">
                         <v-icon>{{icons.close}}</v-icon>
@@ -29,15 +34,15 @@
                         <div
                                 v-for="(m,i) in messages"
                                 :key="i+'w'"
-                                class="py-1 px-4"
+                                class="py-1"
                         >
-                            <v-avatar
-                                    v-if="!isMyMsg(m)"
+                            <Avatar
+                                    v-if="!isMyMsg(m) && current"
                                     :key="i+'avatar'"
+                                    :photo="current.participants[0].photoLink"
                                     size="30px"
-                            >
-                                <v-img src="https://picsum.photos/250/300?image=821"></v-img>
-                            </v-avatar>
+                                    :name="current.title"
+                            ></Avatar>
                             <div
                                     :class="isMyMsg(m)?'myMessage':'message'"
                                     :style="changeMessageWidth?'max-width: 220px':''"
@@ -76,9 +81,11 @@
 <script>
     import {mdiClose, mdiSend} from "@mdi/js";
     import {mapActions, mapGetters} from "vuex";
+    import Avatar from "../Avatar";
 
     export default {
         name: "ChatCard",
+        components: {Avatar},
         computed: {
             ...mapGetters('Chat', {
                 current: 'getCurrent',

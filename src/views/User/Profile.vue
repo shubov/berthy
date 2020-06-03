@@ -261,6 +261,7 @@
                 powerLazy: require("../../assets/powerBoat.webp"),
                 saving: false,
                 icons: {
+                    accountCircle: mdiAccountCircle,
                     arrowRight: mdiArrowRight,
                     check: mdiCheck,
                     pencil: mdiPencil,
@@ -268,7 +269,6 @@
                     viewDashboard: mdiViewDashboard,
                     clipboardList: mdiClipboardList,
                     plusCircleOutline: mdiPlusCircleOutline,
-                    accountCircle: mdiAccountCircle,
                 },
                 newBookings: [],
             }

@@ -45,10 +45,18 @@
                                         ripple
                                 >
                                     <v-list-item-avatar>
-                                        <img :src="item.participants[0].photoLink" alt="">
+                                        <v-img
+                                                v-if="item.participants[0].photoLink"
+                                                :src="avatarLink(item.participants[0].photoLink)"/>
+                                        <span
+                                                v-else-if="current.firstName"
+                                                class="display-3 white--text">
+                                            {{current.firstName.substr(0,1)}}
+                                        </span>
+                                        <v-icon v-else dark>{{icons.accountCircle}}</v-icon>
                                     </v-list-item-avatar>
                                     <v-list-item-content>
-                                        <v-list-item-title>{{fullName(item.participants[0])}}</v-list-item-title>
+                                        <v-list-item-title>{{item.title}}</v-list-item-title>
                                         <v-list-item-subtitle>{{messagePreview(item.lastMessage)}}</v-list-item-subtitle>
                                     </v-list-item-content>
                                     <v-list-item-action>
@@ -77,8 +85,9 @@
 </template>
 
 <script>
-    import {mdiMagnify} from "@mdi/js";
+    import {mdiAccountCircle, mdiMagnify} from "@mdi/js";
     import {mapActions, mapGetters} from "vuex";
+    import BerthyAPI from "../../services/berthy-api";
 
     export default {
         name: "Messages",
@@ -87,7 +96,8 @@
         },
         computed: {
             ...mapGetters('Chat', {
-                chats: 'getMyChats'
+                chats: 'getMyChats',
+                current: "getCurrent"
             }),
             selected: {
                 get() {
@@ -115,6 +125,7 @@
             return {
                 icons: {
                     magnify: mdiMagnify,
+                    accountCircle: mdiAccountCircle,
                 },
                 selectedChatIndex: null,
                 show: false,
@@ -130,16 +141,19 @@
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0, 2);
                 this.listHeight = (window.innerHeight - 84/*footer+appbar*/ - h_toolbar) + "px";
             },
-            fullName(person) {
-                let res = (person.firstName ? person.firstName+' ' : '') + (person.lastName ? person.lastName : '');
-                return (person.firstName || person.lastName) ? res : ('id' + person.id);
-            },
             messagePreview(message) {
                 return message.type==='TEXT' ? message.text : "not a text message"
             },
             onChatDialogClose() {
                 this.show = false;
                 this.selected = undefined;
+            },
+            avatarLink(link) {
+                if (link.substr(0,10)==='/api/files') {
+                    return BerthyAPI.defaults.baseURL.slice(0, -5) + '' + link;
+                } else {
+                    return link;
+                }
             }
         },
         async created() {

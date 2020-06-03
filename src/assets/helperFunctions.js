@@ -32,3 +32,26 @@ export function setIcons(amenities, rootGetters) {
 export function photoLink(link) {
     return BerthyAPI.defaults.baseURL.slice(0, -5) + '' + link;
 }
+
+export function setTimes(createdAt) {
+    let date = new Date(createdAt);
+    let delta =  new Date() - date;
+    let res;
+    let s = Math.floor(delta/1000);
+    if (s>59) {
+        let m = Math.floor(delta/60000);
+        if (m>59) {
+            let h = Math.floor(delta/3600000);
+            if (h>23) {
+                res = date.toDateString();
+            } else {
+                res = h + "h ago";
+            }
+        } else {
+            res = m + "m ago";
+        }
+    } else {
+        res = s + "s ago";
+    }
+    return res;
+}

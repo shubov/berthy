@@ -25,28 +25,28 @@
                         style="overflow: hidden"
                         tile
                 >
-                    <transition-group name="list-complete" tag="v-card-text" class="d-flex flex-column">
+                    <v-card-text class="d-flex flex-column">
                         <div
                                 v-for="(m,i) in messages"
                                 :key="i+'w'"
                                 class="py-1 px-4"
                         >
                             <v-avatar
-                                    v-if="i%2===0"
+                                    v-if="!isMyMsg(m)"
                                     :key="i+'avatar'"
                                     size="30px"
                             >
                                 <v-img src="https://picsum.photos/250/300?image=821"></v-img>
                             </v-avatar>
                             <div
-                                    :class="i%2===0?'message':'myMessage'"
+                                    :class="isMyMsg(m)?'myMessage':'message'"
                                     :style="changeMessageWidth?'max-width: 220px':''"
                                     :key="i+'message'"
                             >
-                                {{m}}
+                                {{m.text}}
                             </div>
                         </div>
-                    </transition-group>
+                    </v-card-text>
                 </v-card>
             </v-col>
         </v-row>
@@ -75,10 +75,18 @@
 
 <script>
     import {mdiClose, mdiSend} from "@mdi/js";
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "ChatCard",
         computed: {
+            ...mapGetters('Chat', {
+                current: 'getCurrent',
+                messages: 'getMessages'
+            }),
+            ...mapGetters('User', {
+                myID: 'getID'
+            }),
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
@@ -92,91 +100,38 @@
                 msg: null,
                 messagesContainerHeight: 0,
                 changeMessageWidth: false,
-                messages: ['1Hello', '2Hello', '3Hello', 'Hello', 'Hello', 'Hello', 'Hello', 'Hello', 'https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660 https://picsum.photos/250/300?image=660', 'Hello', '12Hello', '13Hello', '14Hello', '15Hello'],
-                items: [
-                    {
-                        header: 'Today',
-                    },
-                    { divider: true },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=660',
-                        title: 'Meeting @ Noon',
-                        subtitle:
-                            "<span class='font-weight-bold'>Spike Lee</span> &mdash; I'll be in your neighborhood",
-                    },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=821',
-                        title: 'Summer BBQ <span class="grey--text text--lighten-1"></span>',
-                        subtitle:
-                            "<span class='font-weight-bold'>to Operations support</span> &mdash; Wish I could come.",
-                    },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=783',
-                        title: 'Yes yes',
-                        subtitle:
-                            "<span class='font-weight-bold'>Bella</span> &mdash; Do you have Paris recommendations",
-                    },
-                    {
-                        header: 'Yesterday',
-                    },
-                    { divider: true },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=1006',
-                        title: 'Dinner tonight?',
-                        subtitle:
-                            "<span class='font-weight-bold'>LaToya</span> &mdash; Do you want to hang out?",
-                    },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=146',
-                        title: 'So long',
-                        subtitle:
-                            "<span class='font-weight-bold'>Nancy</span> &mdash; Do you see what time it is?",
-                    },
-                    {
-                        header: 'Last Week',
-                    },
-                    { divider: true },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=1008',
-                        title: 'Breakfast?',
-                        subtitle:
-                            "<span class='font-weight-bold'>LaToya</span> &mdash; Do you want to hang out?",
-                    },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=839',
-                        title:
-                            'Winter Porridge <span class="grey--text text--lighten-1"></span>',
-                        subtitle:
-                            "<span class='font-weight-bold'>cc: Daniel</span> &mdash; Tell me more...",
-                    },
-                    {
-                        avatar: 'https://picsum.photos/250/300?image=145',
-                        title: 'Oui oui',
-                        subtitle:
-                            "<span class='font-weight-bold'>Nancy</span> &mdash; Do you see what time it is?",
-                    },
-                ],
             }
         },
         methods: {
+            ...mapActions('Chat', [
+                'getChatMessages',
+                'sendMessage'
+            ]),
             updateHeight() {
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0,2);
                 this.messagesContainerHeight =
                     (window.innerHeight - 88 -h_toolbar - (this.isMobile?0:84)) + "px";
                 this.changeMessageWidth = !this.isMobile && window.innerWidth < 697;
             },
-            addMessage(){
+            async addMessage(){
                 if (this.msg.trim().length) {
-                    this.messages.push(this.msg);
+                    await this.sendMessage({
+                        id: this.current.id,
+                        text: this.msg,
+                    });
+                    await this.getChatMessages(this.current.id);
                     setTimeout(()=>{
                         this.scroll();
                         this.msg='';
-                    }, 300);
+                    }, 0);
                 }
             },
             scroll() {
                 document.getElementById('messagesContainer').scrollTop = 200000;
-            }
+            },
+            isMyMsg(message) {
+                return message.participantId === this.myID;
+            },
         },
         mounted() {
             this.scroll();

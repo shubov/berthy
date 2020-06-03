@@ -490,6 +490,31 @@ const routes =
             },
         },
         {
+            path: '/error',
+            name: 'Sign Up Error',
+            components: {
+                appbar: appBar,
+                navbar: null,
+                footer: footer,
+                content: () => import('../views/User/SignUpError'),
+            },
+            meta: {
+                title: projectName + ' - Sign Up Error',
+                roles: [roles.user],
+                usertype: [newUser, boater, dockmaster],
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Sign Up Error.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Sign Up Error.'
+                    }
+                ]
+            },
+        },
+        {
             path: '*',
             redirect: '/404'
         }

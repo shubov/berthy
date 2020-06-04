@@ -64,12 +64,27 @@ const actions = {
         }
         return false;
     },
-    async startChat({commit}, accountId) {
+    async startChat({state,commit, dispatch, rootGetters}, accountId) {
         if (isNaN(accountId)) return false;
+        await dispatch('getAllMyChats');
         let response = await BerthyAPI.post('chats', {accountId});
         if (response.data) {
             if (response.data.success) {
-                commit('ADD_CHAT');
+                let chat = response.data.data;
+                let index = await dispatch('getChatIndexById', chat.id);
+                if (index < 0) {
+                    let myID = rootGetters['User/getID'];
+                    commit('ADD_CHAT', {chat,myID});
+                }
+                else {
+                    commit('SET_CURRENT', state.chats[index]);
+                    await dispatch('getChatMessages',{
+                        id: state.chats[index].id,
+                        start: state.chats[index].totalOffset - 50,
+                        end: state.chats[index].totalOffset,
+
+                    });
+                }
                 return true;
             } else {
                 return response.data.error.message || response.data.error;
@@ -118,20 +133,29 @@ const actions = {
         });
         if (response.data) {
             if (response.data.success) {
-                let index = await dispatch('getChatIndexById', id);
-                let msg = {
-                    chatId: id,
-                    message: {
-                        type: 'TEXT',
-                        text: text,
-                        sendDateTime: (new Date()).toISOString(),
-                        participantId: rootGetters['User/getID'],
-                        id: state.chats[index].lastMessage.id + 1,
-                        offset: state.chats[index].lastMessage.offset + 1,
-                    }
-                };
-                await dispatch('onWebSocketMessage', msg);
-                commit('UPDATE_CHAT_ACCOUNT_OFFSET', {index, offset: msg.message.offset})
+                if (state.current.totalOffset > 0) {
+                    let index = await dispatch('getChatIndexById', id);
+                    let msg = {
+                        chatId: id,
+                        message: {
+                            type: 'TEXT',
+                            text: text,
+                            sendDateTime: (new Date()).toISOString(),
+                            participantId: rootGetters['User/getID'],
+                            id: state.chats[index].lastMessage.id + 1,
+                            offset: state.chats[index].lastMessage.offset + 1,
+                        }
+                    };
+                    await dispatch('onWebSocketMessage', msg);
+                    commit('UPDATE_CHAT_ACCOUNT_OFFSET', {index, offset: msg.message.offset});
+                } else {
+                    await dispatch('getAllMyChats');
+                    await dispatch('getChatMessages',{
+                        id: state.current.id,
+                        start: 0,
+                        end: 1,
+                    });
+                }
                 return true;
             } else {
                 return response.data.error.message || response.data.error;
@@ -206,7 +230,14 @@ const mutations = {
     ADD_MESSAGE(state, message) {
         state.messages.push(message);
     },
-    ADD_CHAT() {
+    ADD_CHAT(state, {chat, myID}) {
+        chat.ago = "new";
+        let index = chat.participants.findIndex(item => {
+            return item.accountId !== myID;
+        });
+        chat.avatar = chat.participants[index].photoLink;
+        chat.title = chatTitle(chat.participants[index]);
+        state.current = chat;
     },
     SET_CURRENT(state, chat) {
         state.current = chat;

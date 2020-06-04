@@ -190,6 +190,7 @@
         methods: {
             ...mapActions('Moderator', ['approve', 'reject', 'start', 'fetchApplications']),
             ...mapActions('Amenities', ['availableAmenities']),
+            ...mapActions('Chat', ['startChat']),
             display(value) {
                 return value? value : '—';
             },
@@ -200,8 +201,10 @@
                 return value ? value.length > 0 : false;
             },
             async onStart(id) {
-                 await this.start(id);
+                await this.start(id);
                 await this.fetchApplications();
+                await this.startChat(this.application.applicantId);
+                this.$router.push("/messages");
             },
             async onReject(id) {
                 await this.reject(id);

@@ -113,6 +113,7 @@ const mutations = {
     },
     SOCKET_ERROR(state, error) {
         state.error = error
+        state.connected = false
     }
 };
 

@@ -190,8 +190,10 @@
                     clearInterval(this.scrollInterval);
                 }
             }, 100);
-            this.start = this.messages[0].offset;
-            this.end = this.messages[this.messages.length-1].offset;
+            if (this.messages.length) {
+                this.start = this.messages[0].offset;
+                this.end = this.messages[this.messages.length-1].offset;
+            }
         },
         beforeDestroy() {
             clearInterval(this.scrollInterval);

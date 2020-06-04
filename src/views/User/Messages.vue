@@ -106,11 +106,15 @@
                 chats: 'getMyChats',
                 current: "getCurrent"
             }),
+            ...mapGetters('Sockets', [
+                'getConnectionStatus'
+            ]),
             selected: {
                 get() {
                     return this.selectedChatIndex;
                 },
                 async set(value) {
+                    this.show = false;
                     this.$store.commit('Chat/SET_CURRENT', this.chats[value]);
                     if (this.chats[value])
                         await this.getChatMessages({
@@ -176,10 +180,14 @@
             this.interval = setInterval(async ()=>{
                 if (this.$store.getters['User/getID']) {
                     clearInterval(this.interval);
-                    await this.getAllMyChats();
-                    this.initWebSocket();
+                    if (this.chats.length < 1)
+                        await this.getAllMyChats();
+                    if (!this.getConnectionStatus)
+                        this.initWebSocket();
                 }
             },50);
+            if (this.current)
+                this.show = true;
         },
         beforeDestroy() {
             clearInterval(this.interval);

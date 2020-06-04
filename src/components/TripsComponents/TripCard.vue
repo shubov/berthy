@@ -140,7 +140,7 @@
                     case ('APPROVED'):
                         return 'blue lighten-3';
                     case ('PAYED'):
-                        return 'green lighten-3';
+                        return 'green lighten-1';
                     case ('CANCELLED'):
                         return 'grey';
                 }

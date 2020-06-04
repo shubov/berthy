@@ -63,11 +63,11 @@
                                     </v-list-item-content>
                                 </v-list-item>
                                 <v-card-actions>
-                                    <v-btn large class="success" @click="onApprove(booking.id)">
+                                    <v-btn large dark color="green lighten-2" @click="onApprove(booking.id)">
                                         <v-icon>{{icons.thumbUpOutline}}</v-icon>
                                         Approve
                                     </v-btn>
-                                    <v-btn large class="secondary" @click="onReject(booking.id)">
+                                    <v-btn large dark color="red lighten-2" @click="onReject(booking.id)">
                                         <v-icon>{{icons.thumbDownOutline}}</v-icon>
                                         Reject
                                     </v-btn>
@@ -226,15 +226,15 @@
             statusColor(status) {
                 switch (status) {
                     case ('NEW'):
-                        return 'blue lighten-3';
+                        return 'yellow darken-1';
                     case ('REJECTED'):
                         return 'red lighten-3';
                     case ('APPROVED'):
-                        return 'green lighten-3';
+                        return 'blue lighten-3';
                     case ('PAYED'):
-                        return 'primary';
+                        return 'green lighten-3';
                     case ('CANCELLED'):
-                        return 'grey';
+                        return 'grey lighten-1';
                 }
             },
             statusLabel(status) {

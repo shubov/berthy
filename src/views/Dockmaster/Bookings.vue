@@ -124,7 +124,7 @@
                                                 label
                                                 dark
                                                 :color="statusColor(item.status)"
-                                        >{{item.status}}</v-chip>
+                                        >{{statusLabel(item.status)}}</v-chip>
                                     </v-list-item-action>
                                 </template>
                             </v-list-item>
@@ -276,13 +276,29 @@
             statusColor(status) {
                 switch (status) {
                     case ('NEW'):
-                        return 'blue lighten-3';
+                        return 'yellow darken-1';
                     case ('REJECTED'):
                         return 'red lighten-3';
                     case ('APPROVED'):
-                        return 'green lighten-3';
+                        return 'blue lighten-3';
                     case ('PAYED'):
-                        return 'primary ';
+                        return 'green lighten-3';
+                    case ('CANCELLED'):
+                        return 'grey lighten-1';
+                }
+            },
+            statusLabel(status) {
+                switch (status) {
+                    case ('NEW'):
+                        return 'New';
+                    case ('REJECTED'):
+                        return 'Rejected';
+                    case ('APPROVED'):
+                        return 'Confirmed';
+                    case ('PAYED'):
+                        return 'Paid';
+                    case ('CANCELLED'):
+                        return 'Cancelled';
                 }
             },
             onRejectMultiple() {

@@ -19,13 +19,14 @@
                             id="toolbar"
                             class="elevation-0"
                     >
-                        <v-toolbar-title>Messages</v-toolbar-title>
-                    
-                        <v-spacer></v-spacer>
-                    
-                        <v-btn icon>
-                            <v-icon>{{icons.magnify}}</v-icon>
-                        </v-btn>
+                        <v-text-field
+                                hide-details
+                                filled
+                                dense
+                                placeholder="Search..."
+                                rounded
+                                single-line
+                        ></v-text-field>
                     </v-toolbar>
                 
                     <v-list

@@ -25,6 +25,7 @@
                 </v-toolbar>
                 <v-card
                         ref="messagesContainer"
+                        id="messagesContainer"
                         :height="messagesContainerHeight"
                         class="overflow-y-auto py-0 elevation-0"
                         style="overflow: hidden"
@@ -68,7 +69,7 @@
                 <v-card tile id="messageInput" class="elevation-0">
                     <v-card-text>
                         <v-text-field
-                                @focus="scrollBottom"
+                                @focus="scroll(current.totalOffset)"
                                 @input="msg=$event"
                                 :value=msg
                                 @keyup.enter="addMessage"
@@ -117,6 +118,7 @@
                 start: null,
                 end: null,
                 messagesContainerHeight: 0,
+                messagesContainerHeightNum: null,
                 changeMessageWidth: false,
                 loadingMessages: false,
             }
@@ -128,8 +130,8 @@
             }),
             updateHeight() {
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0,2);
-                this.messagesContainerHeight =
-                    (window.innerHeight - 88 -h_toolbar - (this.isMobile?0:84)) + "px";
+                this.messagesContainerHeightNum = window.innerHeight - 88 -h_toolbar - (this.isMobile?0:84);
+                this.messagesContainerHeight = this.messagesContainerHeightNum + "px"
                 this.changeMessageWidth = !this.isMobile && window.innerWidth < 697;
             },
             async addMessage(){
@@ -138,20 +140,24 @@
                         id: this.current.id,
                         text: this.msg,
                     });
+                    this.msg='';
                     setTimeout(()=>{
                         this.scroll(this.current.accountOffset);
-                        this.msg='';
                     }, 0);
                 }
             },
             async scroll(offset) {
-                await this.$vuetify.goTo(this.$refs[offset][0],{
+                let scrollOff = this.$refs[offset][0];
+                if (offset+1 < this.current.totalOffset)
+                    scrollOff = this.$refs[offset+2][0];
+
+                await this.$vuetify.goTo(scrollOff,{
                     container: this.$refs.messagesContainer,
                     duration: 0,
                 });
-            },
-            scrollBottom() {
-                this.$refs.messagesContainer.scrollTop = 200000;
+                if (offset !== this.current.totalOffset)
+                    document.getElementById('messagesContainer').scrollTop
+                        -= this.messagesContainerHeightNum;
             },
             isMyMsg(message) {
                 return message.participantId === this.myID;
@@ -176,9 +182,9 @@
             },
         },
         mounted() {
-            console.log('mounted');
             let scrollInterval = setInterval(async ()=> {
-                if (this.$refs[this.current.accountOffset]) {
+                if (this.current.accountOffset
+                    && this.$refs[this.current.accountOffset]) {
                     await this.scroll(this.current.accountOffset);
                     clearInterval(scrollInterval);
                 }

@@ -125,6 +125,9 @@
                                                 <v-list-item-subtitle>Reservation created:<br/>{{(new Date(booking.createdAt)).toDateString()}}</v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
+                                        <v-list-item>
+                                            <v-btn text @click="onMessage">Message</v-btn>
+                                        </v-list-item>
                                     </v-col>
                                 </v-row>
                             </v-card>
@@ -202,6 +205,7 @@
         methods: {
             ...mapActions('Bookings', ['approve', 'reject', 'fetchBookings']),
             ...mapActions('File', ['downloadFile']),
+            ...mapActions('Chat', ['startChat']),
             display(value) {
                 return value? value : '—';
             },
@@ -261,6 +265,10 @@
                     return null;
                 }
             },
+            async onMessage() {
+                await this.startChat(this.booking.renter.accountId);
+                this.$router.push("/messages");
+            }
         }
     }
 </script>

@@ -13,7 +13,7 @@
             <v-col class="pa-0">
                 <v-toolbar class="elevation-0" id="toolbar" v-if="current">
                     <Avatar
-                            :photo="current.participants[0].photoLink"
+                            :photo="current.avatar"
                             size="30px"
                             :name="current.title"
                     ></Avatar>
@@ -47,7 +47,7 @@
                             <Avatar
                                     v-if="!isMyMsg(m) && current"
                                     :key="m.id+'avatar'"
-                                    :photo="current.participants[0].photoLink"
+                                    :photo="current.avatar"
                                     size="30px"
                                     :name="current.title"
                             ></Avatar>
@@ -121,6 +121,7 @@
                 messagesContainerHeightNum: null,
                 changeMessageWidth: false,
                 loadingMessages: false,
+                scrollInterval: null,
             }
         },
         methods: {
@@ -182,15 +183,18 @@
             },
         },
         mounted() {
-            let scrollInterval = setInterval(async ()=> {
+            this.scrollInterval = setInterval(async ()=> {
                 if (this.current.accountOffset
                     && this.$refs[this.current.accountOffset]) {
                     await this.scroll(this.current.accountOffset);
-                    clearInterval(scrollInterval);
+                    clearInterval(this.scrollInterval);
                 }
             }, 100);
             this.start = this.messages[0].offset;
             this.end = this.messages[this.messages.length-1].offset;
+        },
+        beforeDestroy() {
+            clearInterval(this.scrollInterval);
         }
     }
 </script>

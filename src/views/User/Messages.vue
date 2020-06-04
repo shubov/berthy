@@ -47,12 +47,12 @@
                                 >
                                     <v-list-item-avatar>
                                         <v-img
-                                                v-if="item.participants[0].photoLink"
-                                                :src="avatarLink(item.participants[0].photoLink)"/>
+                                                v-if="item.avatar"
+                                                :src="avatarLink(item.avatar)"/>
                                         <span
-                                                v-else-if="current.firstName"
+                                                v-else-if="item.title"
                                                 class="display-3 white--text">
-                                            {{current.firstName.substr(0,1)}}
+                                            {{item.title.substr(0,1)}}
                                         </span>
                                         <v-icon v-else dark>{{icons.accountCircle}}</v-icon>
                                     </v-list-item-avatar>

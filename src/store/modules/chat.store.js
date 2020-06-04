@@ -49,11 +49,14 @@ const actions = {
     reset({commit}) {
         commit('RESET');
     },
-    async getAllMyChats({commit}) {
+    async getAllMyChats({commit, rootGetters}) {
         let response = await BerthyAPI.get('chats');
         if (response.data) {
             if (response.data.success) {
-                commit('UPDATE_CHATS', response.data.data);
+                commit('UPDATE_CHATS', {
+                    chats: response.data.data,
+                    myID: rootGetters['User/getID'],
+                });
                 return true;
             } else {
                 return response.data.error.message || response.data.error;
@@ -61,12 +64,12 @@ const actions = {
         }
         return false;
     },
-    async startChat({commit}, accountID) {
-        if (isNaN(accountID)) return false;
-        let response = await BerthyAPI.post('chats', accountID);
+    async startChat({commit}, accountId) {
+        if (isNaN(accountId)) return false;
+        let response = await BerthyAPI.post('chats', {accountId});
         if (response.data) {
             if (response.data.success) {
-                commit('ADD_CHAT', response.data.data);
+                commit('ADD_CHAT');
                 return true;
             } else {
                 return response.data.error.message || response.data.error;
@@ -74,19 +77,18 @@ const actions = {
         }
         return false;
     },
-    async getChat({commit}, id) {
-        if (isNaN(id)) return false;
-        let response = await BerthyAPI.get(`chats/${id}`);
-        if (response.data) {
-            if (response.data.success) {
-                commit('ADD_CHAT', response.data.data);
-                return true;
-            } else {
-                return response.data.error.message || response.data.error;
-            }
-        }
-        return false;
-    },
+    // async getChat({commit}, id) {
+    //     if (isNaN(id)) return false;
+    //     let response = await BerthyAPI.get(`chats/${id}`);
+    //     if (response.data) {
+    //         if (response.data.success) {
+    //             return true;
+    //         } else {
+    //             return response.data.error.message || response.data.error;
+    //         }
+    //     }
+    //     return false;
+    // },
     async getChatMessages({commit}, {id, start, end, append}) {
         if (isNaN(id)) return false;
 
@@ -171,12 +173,20 @@ const mutations = {
             state[key] = newState[key]
         });
     },
-    UPDATE_CHATS(state, chats) {
+    UPDATE_CHATS(state, {chats, myID}) {
+        chats.forEach(chat => {
+            let index = chat.participants.findIndex(item => {
+                return item.accountId !==myID;
+            });
+            console.log(index);
+            chat.avatar = chat.participants[index].photoLink;
+            chat.title = chatTitle(chat.participants[index]);
+            if (chat.lastMessage)
+                chat.ago = setTimes(chat.lastMessage.sendDateTime);
+            else
+                chat.ago = 'new';
+        });
         state.chats = chats;
-        state.chats.forEach(chat => {
-            chat.title = chatTitle(chat.participants[0]);
-            chat.ago = setTimes(chat.lastMessage.sendDateTime);
-        })
     },
     UPDATE_CHAT_TIMES(state) {
         state.chats.forEach(chat => {
@@ -197,9 +207,7 @@ const mutations = {
     ADD_MESSAGE(state, message) {
         state.messages.push(message);
     },
-    ADD_CHAT(state, chat) {
-        chat.ago = setTimes(chat.lastMessage.sendDateTime);
-        //state.chats.push(chat);
+    ADD_CHAT() {
     },
     SET_CURRENT(state, chat) {
         state.current = chat;

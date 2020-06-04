@@ -176,9 +176,8 @@ const mutations = {
     UPDATE_CHATS(state, {chats, myID}) {
         chats.forEach(chat => {
             let index = chat.participants.findIndex(item => {
-                return item.accountId !==myID;
+                return item.accountId !== myID;
             });
-            console.log(index);
             chat.avatar = chat.participants[index].photoLink;
             chat.title = chatTitle(chat.participants[index]);
             if (chat.lastMessage)

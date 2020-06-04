@@ -7,13 +7,9 @@
  * Written by Mikhail Shubov <mpshubov@gmail.com>, 4 / 2020                   *
  ******************************************************************************/
 
-import Vue from 'vue'
 import VueRouter from 'vue-router';
 import routes from "./routes";
 import functions from "./functions";
-
-
-Vue.use(VueRouter);
 
 const router = new VueRouter({
     routes,

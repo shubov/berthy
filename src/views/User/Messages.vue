@@ -142,6 +142,7 @@
                 selectedChatIndex: null,
                 show: false,
                 listHeight: 0,
+                interval: null,
             }
         },
         methods: {
@@ -171,9 +172,17 @@
                 }
             }
         },
-        async created() {
-            await this.getAllMyChats();
-            this.initWebSocket();
+        async mounted() {
+            this.interval = setInterval(async ()=>{
+                if (this.$store.getters['User/getID']) {
+                    clearInterval(this.interval);
+                    await this.getAllMyChats();
+                    this.initWebSocket();
+                }
+            },50);
+        },
+        beforeDestroy() {
+            clearInterval(this.interval);
         }
     }
 </script>

@@ -8,11 +8,12 @@
  ******************************************************************************/
 
 import Vue from 'vue';
+import VueRouter from "vue-router";
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import App from './App.vue';
-import AuthService from '@/services/auth.service';
+import AuthService from './services/auth.service';
 //import "./components/_globals";
 
 Vue.config.productionTip = false;
@@ -42,6 +43,7 @@ const gauthOption = {
 Vue.use(GAuth, gauthOption);
 //************************ Google OAuth 2.0 ********************************************
 
+Vue.use(VueRouter);
 
 new Vue({
     router,

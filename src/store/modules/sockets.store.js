@@ -80,9 +80,17 @@ const actions = {
     onDisconnect({commit}) {
         commit('SOCKET_DISCONNECT');
     },
-    onMessage({dispatch}, payload) {
+    async onMessage({dispatch}, payload) {
         let message = JSON.parse(payload.data);
-        dispatch('Chat/onWebSocketMessage', message.data, {root: true});
+        if (message.event === "CHAT_MESSAGE") {
+            let title = await dispatch('Chat/onWebSocketMessage', message.data, {root: true});
+            title = title ? title+': ' : 'Message: ';
+            title += message.data.message.text;
+            dispatch('Snackbar/push', title, {root: true});
+        } else {
+            dispatch('Snackbar/push', null, {root: true});
+        }
+
     },
     onError({commit}, message) {
         commit('SOCKET_ERROR', message);
@@ -102,10 +110,10 @@ const mutations = {
         state.ws = ws;
     },
     SOCKET_CONNECT(state) {
-        state.connected = true
+        state.connected = true;
     },
     SOCKET_DISCONNECT(state) {
-        state.connected = false
+        state.connected = false;
     },
     SOCKET_MESSAGE(state, {message, time, device}) {
         state.time = time;

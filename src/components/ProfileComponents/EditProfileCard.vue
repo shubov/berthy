@@ -141,7 +141,7 @@
                         this.$emit('close-edit-profile');
                         await this.$store.dispatch("Dialog/set", 'Profile changes were saved successfully');
                     } else {
-                        await this.$store.dispatch("snackbar", this.error);
+                        await this.$store.dispatch("Snackbar/set", this.error);
                     }
                     this.saving = false;
                 },0)

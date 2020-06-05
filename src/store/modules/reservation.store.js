@@ -175,7 +175,7 @@ const actions = {
     watchGeolocation({commit, dispatch, getters}) {
         let watcher = navigator.geolocation.watchPosition(
             (position)=>dispatch('onGeolocationSuccess', position),
-            (error)=>dispatch('snackbar', error.message, {root: true}),
+            (error)=>dispatch('Snackbar/set', error.message, {root: true}),
             getters['getGeolocation']
         );
         commit("WATCH_GEOLOCATION", watcher);

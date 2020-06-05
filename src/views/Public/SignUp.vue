@@ -118,9 +118,9 @@
                         if (res === true) {
                             this.dialog = true;
                         } else if (res===false) {
-                            this.$store.dispatch("snackbar");
+                            this.$store.dispatch("Snackbar/set");
                         } else {
-                            this.$store.dispatch("snackbar", res);
+                            this.$store.dispatch("Snackbar/set", res);
                         }
                         this.submitting = false;
                     }, 0);

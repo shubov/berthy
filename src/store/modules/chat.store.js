@@ -168,12 +168,18 @@ const actions = {
             return chat.id===id;
         })
     },
-    async onWebSocketMessage({dispatch, commit}, data) {
+    async onWebSocketMessage({dispatch, getters, commit}, data) {
+        if (getters.getMyChats.length < 1)
+            await dispatch('getAllMyChats');
+
+
         if (state.current && (data.chatId === state.current.id)) {
             commit('ADD_MESSAGE', data.message);
         }
         let index = await dispatch('getChatIndexById', data.chatId);
         commit('UPDATE_CHAT', {index, message: data.message});
+        return state.chats[index].title;
+
     },
     // async updateChatOffset({commit}, {id, offset}) {
     //     if (isNaN(id)) return false;

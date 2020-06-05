@@ -137,6 +137,9 @@ export default {
                     pushSignIn(next, to);
                 }
                 else {
+                    if (!store.getters['Sockets/getConnectionStatus'])
+                        await store.dispatch('Sockets/init');
+
                     if(store.getters['User/moderator']) {
                         if (to.meta.roles.includes(roles.moderator)) {
                             next();

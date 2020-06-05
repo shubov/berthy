@@ -435,7 +435,7 @@
                 })) {
                     this.$store.dispatch('Dialog/set', 'Your review has been deleted!');
                 } else {
-                    this.$store.dispatch('snackbar','Something went wrong.');
+                    this.$store.dispatch('Snackbar/set','Something went wrong.');
                 }
             }
         },

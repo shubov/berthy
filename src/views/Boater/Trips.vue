@@ -55,7 +55,7 @@
                 if (this.paymentSuccessful) {
                     this.$store.dispatch('Dialog/set', "Payment was succesful. Yor reservation proccess is now finished.")
                 } else {
-                    this.$store.dispatch("snackbar", `Payment wasn't finished. Try again.`)
+                    this.$store.dispatch("Snackbar/set", `Payment wasn't finished. Try again.`)
                 }
             }
         }

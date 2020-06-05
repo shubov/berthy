@@ -9,18 +9,18 @@
 
 <template>
     <v-snackbar
-            v-model="snackbar"
-            color="error"
+            v-model="status"
+            :color="$store.state.Snackbar.color"
             :multi-line="!isMobile"
-            :timeout="60000"
+            :timeout="6000"
             :vertical="isMobile"
             top
     >
-        <p>{{ this.$store.state.snackbarMessage }}</p>
+        <p>{{ $store.state.Snackbar.message }}</p>
         <v-btn
                 dark
                 text
-                @click="snackbar = false"
+                @click="onClose"
         >
             Close
         </v-btn>
@@ -34,15 +34,25 @@
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
             },
-            snackbar:{
+            status:{
                 get(){
-                    return this.$store.state.snackbar;
+                    return this.$store.state.Snackbar.status;
                 },
                 set(value) {
-                    this.$store.commit('SET_SNACKBAR', value);
+                    this.$store.commit('Snackbar/SET_SNACKBAR', value);
                 }
             },
         },
+        methods: {
+            playSound() {
+                let src = require("../../assets/notification.mp3");
+                (new Audio(src)).play();
+            },
+            onClose() {
+                this.status = false;
+                this.playSound();
+            }
+        }
     }
 </script>
 

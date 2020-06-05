@@ -340,7 +340,7 @@
             async updateBookings() {
                 await this.fetchBookings(this.marina.id);
                 if (this.bookings.length === 0) {
-                    this.$store.dispatch("snackbar", `No bookings for ${this.marina.name} yet.`)
+                    this.$store.dispatch("Snackbar/set", `No bookings for ${this.marina.name} yet.`)
                 }
             },
             strIncludes(value1, value2) {
@@ -353,7 +353,7 @@
             if (this.marina.id)
                 await this.updateBookings();
             else
-                this.$store.dispatch("snackbar", `You have yet no marinas.`)
+                this.$store.dispatch("Snackbar/set", `You have yet no marinas.`)
         },
     }
 </script>

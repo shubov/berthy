@@ -454,7 +454,7 @@
                         this.$nextTick(()=>{
                             this.$store.dispatch('Dialog/set', this.name + ' boat was succesfully created');
                         });
-                    } else this.$store.dispatch('snackbar', 'Fill all the fields to create a boat');
+                    } else this.$store.dispatch('Snackbar/set', 'Fill all the fields to create a boat');
                     this.submitting = false;
                 }, 0);
             },

@@ -106,9 +106,6 @@
                 chats: 'getMyChats',
                 current: "getCurrent"
             }),
-            ...mapGetters('Sockets', [
-                'getConnectionStatus'
-            ]),
             selected: {
                 get() {
                     return this.selectedChatIndex;
@@ -154,9 +151,6 @@
                 'getAllMyChats',
                 'getChatMessages'
             ]),
-            ...mapActions('Sockets', {
-                initWebSocket:  'init',
-            }),
             updateHeight() {
                 let h_toolbar = document.getElementById('toolbar').style.height.substr(0, 2);
                 this.listHeight = (window.innerHeight - 84/*footer+appbar*/ - h_toolbar) + "px";
@@ -182,8 +176,6 @@
                     clearInterval(this.interval);
                     if (this.chats.length < 1)
                         await this.getAllMyChats();
-                    if (!this.getConnectionStatus)
-                        this.initWebSocket();
                 }
             },50);
             if (this.current)

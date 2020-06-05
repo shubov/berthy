@@ -238,7 +238,7 @@
                             this.$store.dispatch('Dialog/set',this.confirmationMessage);
                         });
                     } else {
-                        this.$store.dispatch('snackbar','Fill all the fields to make a reservation.');
+                        this.$store.dispatch('Snackbar/set','Fill all the fields to make a reservation.');
                     }
                     this.submitting = false;
                 }, 0);
@@ -249,7 +249,7 @@
                     this.places = this.marinas[0].places;
                 else {
                     this.places = [];
-                    await this.$store.dispatch('snackbar',
+                    await this.$store.dispatch('Snackbar/set',
                         'No places available at the marina for these dates and size of your boat');
                 }
             },

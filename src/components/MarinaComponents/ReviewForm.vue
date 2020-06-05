@@ -75,7 +75,7 @@
                             this.$store.dispatch('Dialog/set', 'Thank you for your opinion!');
                         });
                     } else {
-                        this.$store.dispatch('snackbar','Something went wrong. Try again.');
+                        this.$store.dispatch('Snackbar/set','Something went wrong. Try again.');
                     }
                     this.submitting = false;
                 }, 0);

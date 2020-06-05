@@ -163,13 +163,13 @@
                 if (await this.cancel(this.trip.id)) {
                     await this.$store.dispatch("Dialog/set", `Your reservation has been cancelled.`)
                 } else {
-                    await this.$store.dispatch("snackbar", `Something is wrong cancelling your reservation.`)
+                    await this.$store.dispatch("Snackbar/set", `Something is wrong cancelling your reservation.`)
                 }
             },
             async onPay(id) {
                 let link = await this.pay(id);
                 if (link === false) {
-                    await this.$store.dispatch("snackbar", `Something is wrong with the payment.`)
+                    await this.$store.dispatch("Snackbar/set", `Something is wrong with the payment.`)
                 } else {
                     this.tinkoffLink = link;
                     this.paymentDialog = true;

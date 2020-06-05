@@ -145,9 +145,9 @@
                 this.onFacebook = true;
                 setTimeout(async () => {
                     try {
-                        await this.$store.dispatch("snackbar", "Facebook login doesn't work. YET!");
+                        await this.$store.dispatch("Snackbar/set", "Facebook login doesn't work. YET!");
                     } catch (e) {
-                        await this.$store.dispatch("snackbar", e);
+                        await this.$store.dispatch("Snackbar/set", e);
                     } finally {
                         this.onFacebook = false;
                     }
@@ -163,11 +163,11 @@
                                     this.onSignInSuccess();
                                 }
                             } catch (e) {
-                                await this.$store.dispatch("snackbar", e);
+                                await this.$store.dispatch("Snackbar/set", e);
                             }
                         })
                         .catch(async (e) => {
-                            await this.$store.dispatch("snackbar", e);
+                            await this.$store.dispatch("Snackbar/set", e);
                         })
                         .finally(()=>this.onGoogle = false);
                 }, 0);
@@ -180,9 +180,9 @@
                             if (res === true) {
                                 this.onSignInSuccess();
                             } else if (res===false) {
-                                await this.$store.dispatch("snackbar");
+                                await this.$store.dispatch("Snackbar/set");
                             } else {
-                                await this.$store.dispatch("snackbar",
+                                await this.$store.dispatch("Snackbar/set",
                                     "Incorrect password. Please try again or click on the \"Forgot your password?\" link to reset it.");
                             }
                             this.onAuth = false;

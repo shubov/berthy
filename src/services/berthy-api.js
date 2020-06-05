@@ -28,13 +28,13 @@ BerthyAPI.interceptors.response.use(function (response) {
     //     && response.data.error.code===401
     //     && router.currentRoute.name !== 'Sign In')
     // {
-    //     store.dispatch('snackbar', "Sign in to access the page");
+    //     store.dispatch('Snackbar/set', "Sign in to access the page");
     //     router.push('/sign-in');
     // }
     return response;
 }, function (error) {
     if (!error.status)
-        store.dispatch('snackbar', "Network Error");
+        store.dispatch('Snackbar/set', "Network Error");
     return Promise.reject(error);
 });
 

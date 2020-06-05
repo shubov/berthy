@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import { mapGetters} from "vuex";
 
     export default {
         components: {
@@ -35,6 +35,6 @@
             ...mapGetters('User', [
                 'dockmaster'
             ]),
-        }
+        },
     }
 </script>

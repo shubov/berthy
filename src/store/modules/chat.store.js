@@ -126,43 +126,78 @@ const actions = {
         return false;
     },
     async sendMessage({dispatch, rootGetters, commit}, {id, text}) {
-        if (isNaN(id)) return false;
-        let response = await BerthyAPI.post(`chats/${id}/messages`, {
-            type: "TEXT",
-            text: text,
-        });
-        if (response.data) {
-            if (response.data.success) {
-                if (state.current.totalOffset > 0) {
-                    let index = await dispatch('getChatIndexById', id);
-                    let msg = {
-                        chatId: id,
-                        message: {
-                            type: 'TEXT',
-                            text: text,
-                            sendDateTime: (new Date()).toISOString(),
-                            participantId: rootGetters['User/getID'],
-                            id: state.chats[index].lastMessage.id + 1,
-                            offset: state.chats[index].lastMessage.offset + 1,
-                        }
-                    };
-                    await dispatch('onWebSocketMessage', msg);
-                    commit('UPDATE_CHAT_ACCOUNT_OFFSET', {index, offset: msg.message.offset});
-                } else {
-                    await dispatch('getAllMyChats');
-                    await dispatch('getChatMessages',{
-                        id: state.current.id,
-                        start: 0,
-                        end: 1,
-                    });
+        await dispatch('Sockets/send', {
+            event: "CHAT_MESSAGE",
+            data: {
+                chatId: id,
+                message: {
+                    type: 'TEXT',
+                    text: text,
                 }
-                return true;
-            } else {
-                return response.data.error.message || response.data.error;
             }
+        }, {root: true});
+        if (state.current.totalOffset > 0) {
+            let index = await dispatch('getChatIndexById', id);
+            let msg = {
+                chatId: id,
+                message: {
+                    type: 'TEXT',
+                    text: text,
+                    sendDateTime: (new Date()).toISOString(),
+                    participantId: rootGetters['User/getID'],
+                    id: state.chats[index].lastMessage.id + 1,
+                    offset: state.chats[index].lastMessage.offset + 1,
+                }
+            };
+            await dispatch('onWebSocketMessage', msg);
+            commit('UPDATE_CHAT_ACCOUNT_OFFSET', {index, offset: msg.message.offset});
+        } else {
+            await dispatch('getAllMyChats');
+            await dispatch('getChatMessages',{
+                id: state.current.id,
+                start: 0,
+                end: 1,
+            });
         }
-        return false;
     },
+    // async sendMessage({dispatch, rootGetters, commit}, {id, text}) {
+    //     if (isNaN(id)) return false;
+    //     let response = await BerthyAPI.post(`chats/${id}/messages`, {
+    //         type: "TEXT",
+    //         text: text,
+    //     });
+    //     if (response.data) {
+    //         if (response.data.success) {
+    //             if (state.current.totalOffset > 0) {
+    //                 let index = await dispatch('getChatIndexById', id);
+    //                 let msg = {
+    //                     chatId: id,
+    //                     message: {
+    //                         type: 'TEXT',
+    //                         text: text,
+    //                         sendDateTime: (new Date()).toISOString(),
+    //                         participantId: rootGetters['User/getID'],
+    //                         id: state.chats[index].lastMessage.id + 1,
+    //                         offset: state.chats[index].lastMessage.offset + 1,
+    //                     }
+    //                 };
+    //                 await dispatch('onWebSocketMessage', msg);
+    //                 commit('UPDATE_CHAT_ACCOUNT_OFFSET', {index, offset: msg.message.offset});
+    //             } else {
+    //                 await dispatch('getAllMyChats');
+    //                 await dispatch('getChatMessages',{
+    //                     id: state.current.id,
+    //                     start: 0,
+    //                     end: 1,
+    //                 });
+    //             }
+    //             return true;
+    //         } else {
+    //             return response.data.error.message || response.data.error;
+    //         }
+    //     }
+    //     return false;
+    // },
     getChatIndexById({state}, id) {
         return state.chats.findIndex(chat => {
             return chat.id===id;

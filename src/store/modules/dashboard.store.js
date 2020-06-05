@@ -541,7 +541,6 @@ const getters = {
         if (getters.reserved_percent && getters.reserved_percent.data)
             return getters.reserved_percent.data.totalPlaceNum;
         else return null;
-
     },
     getReservedPercent(state, getters) {
         return Math.floor(100* getters.getReservedPlaceNum / getters.getTotalPlaceNum);

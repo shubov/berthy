@@ -128,7 +128,7 @@
             >
                 <v-container
                         fill-height
-                        v-if="displayItems && getTotalPlaceNum && getReservedPlaceNum"
+                        v-if="displayItems && (getTotalPlaceNum!=null) && (getReservedPlaceNum!=null)"
                 >
                     <chart
                             type="radialBar"
@@ -144,7 +144,7 @@
                         {{getTotalPlaceNum}}
                     </b> total</v-card-text>
                 </v-container>
-                <LayoutItemLabel v-else :text="(!getTotalPlaceNum || !getReservedPlaceNum)
+                <LayoutItemLabel v-else :text="(getTotalPlaceNum==null || getReservedPlaceNum==null)
                 ? 'Reservation Percentage (no data)': 'Reservation Percentage'"></LayoutItemLabel>
             </grid-item>
             <grid-item

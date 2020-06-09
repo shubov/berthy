@@ -25,7 +25,7 @@ const routes =
             name: 'Berthy',
             components: {
                 appbar: appBar,
-                navbar: navbar,
+                navbar: null,
                 footer: footer,
                 content: () => import('../views/Public/LandingPage'),
             },

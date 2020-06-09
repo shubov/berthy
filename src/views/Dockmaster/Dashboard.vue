@@ -128,6 +128,7 @@
             >
                 <v-container
                         fill-height
+                        align="center"
                         v-if="displayItems && (getTotalPlaceNum!=null) && (getReservedPlaceNum!=null)"
                 >
                     <chart
@@ -282,6 +283,16 @@
                 get() { return this.place_booking_map !== undefined },
                 async set() { await this.setFunction('Dashboard/PLACE_BOOKING_MAP') },
             },
+            columnNum() {
+                let b = this.$vuetify.breakpoint;
+                let res = b.xlOnly ? 12
+                    : b.lgOnly ? 10
+                        : b.mdOnly ? 6
+                            : b.smOnly ? 4
+                                : b.xsOnly ? 2 : 12;
+                console.log(res);
+                return res;
+            }
         },
         data: function() {
             return {
@@ -297,11 +308,11 @@
                 },
                 layout: [
                     {x:0,y:0,w:2,h:11,i:0},
-                    {x:2,y:0,w:2,h:11,i:1},
-                    {x:4,y:0,w:2,h:7,i:2},
-                    {x:6,y:0,w:4,h:13,i:3},
-                    {x:10,y:0,w:4,h:12,i:4},
-                    {x:14,y:0,w:2,h:9,i:5},
+                    {x:0,y:11,w:2,h:11,i:1},
+                    {x:0,y:22,w:2,h:7,i:2},
+                    {x:0,y:29,w:4,h:13,i:3},
+                    {x:0,y:42,w:4,h:12,i:4},
+                    {x:0,y:54,w:2,h:9,i:5},
                 ],
                 breakpoints: {
                     xxs: 0,

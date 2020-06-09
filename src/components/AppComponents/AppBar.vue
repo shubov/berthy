@@ -32,14 +32,14 @@
         ></v-img>
         <v-toolbar-title v-show="!isMobile" class="ml-8">{{$route.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-tooltip bottom v-if="isFaqIcon">
-            <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on" to="/faq">
-                    <v-icon>{{icons.helpCircle}}</v-icon>
-                </v-btn>
-            </template>
-            <span>FAQ</span>
-        </v-tooltip>
+<!--        <v-tooltip bottom v-if="isFaqIcon">-->
+<!--            <template v-slot:activator="{ on, attrs }">-->
+<!--                <v-btn icon v-bind="attrs" v-on="on" to="/faq">-->
+<!--                    <v-icon>{{icons.helpCircle}}</v-icon>-->
+<!--                </v-btn>-->
+<!--            </template>-->
+<!--            <span>FAQ</span>-->
+<!--        </v-tooltip>-->
         <v-tooltip bottom v-if="isAccountIcon">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn icon v-bind="attrs" v-on="on" to="/profile">

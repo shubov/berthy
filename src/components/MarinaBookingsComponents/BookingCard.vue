@@ -111,7 +111,7 @@
                                                 tile
                                         >
                                             <v-img
-                                                    v-if="booking.renter.photo.fileLink"
+                                                    v-if="booking.renter.photo"
                                                     :src="userAvatar(booking.renter.photo.fileLink)"
                                             ></v-img>
                                             <v-icon v-else dark>{{icons.accountCircle}}</v-icon>

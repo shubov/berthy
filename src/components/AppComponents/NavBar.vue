@@ -44,7 +44,12 @@
 </template>
 
 <script>
-    import {mdiAccountGroup, mdiClipboardList, mdiCog, mdiForum, mdiViewDashboard} from "@mdi/js";
+    import {
+        //mdiAccountGroup,
+        mdiClipboardList,
+        //mdiCog,
+        mdiForum,
+        mdiViewDashboard} from "@mdi/js";
 
     export default {
         name: "NavBar",
@@ -58,8 +63,8 @@
                     { title: 'Dashboard', path: "/dashboard",icon: mdiViewDashboard },
                     { title: 'Bookings', path: "bookings",icon: mdiClipboardList },
                     { title: 'Messages', path: "messages",icon: mdiForum },
-                    { title: 'Team', path: "team",icon: mdiAccountGroup},
-                    { title: 'Marina Settings', path: "/settings", icon: mdiCog },
+                    // { title: 'Team', path: "team",icon: mdiAccountGroup},
+                    // { title: 'Marina Settings', path: "/settings", icon: mdiCog },
                 ]
             }
         },

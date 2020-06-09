@@ -38,7 +38,7 @@
                 @input="value.password=$event"
                 @click:append="show = !show"
         />
-        <router-link to="#">
+        <router-link to="/recovery">
             <p class="caption text-center">{{resetPassword}}</p>
         </router-link>
     </v-form>

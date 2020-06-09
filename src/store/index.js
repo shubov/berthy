@@ -31,7 +31,7 @@ export default new Vuex.Store({
             newUser: 'NEW_USER',
         },
         bg: {'background-image': `url(${require('../assets/background.webp')})`},
-        pagesWithBg: ['Sign In', 'Sign Up', "Role"],
+
     }),
     actions: {
         reset({commit}) {

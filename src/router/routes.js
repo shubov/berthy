@@ -515,6 +515,30 @@ const routes =
             },
         },
         {
+            path: '/recovery',
+            name: 'Recovery',
+            components: {
+                appbar: appBar,
+                navbar: null,
+                footer: footer,
+                content: () => import('../views/Public/Recovery'),
+            },
+            meta: {
+                title: projectName + ' - Recovery',
+                public: true,
+                metaTags: [
+                    {
+                        name: 'description',
+                        content: 'Password Recovery.'
+                    },
+                    {
+                        property: 'og:description',
+                        content: 'Password Recovery.'
+                    }
+                ]
+            },
+        },
+        {
             path: '*',
             redirect: '/404'
         }

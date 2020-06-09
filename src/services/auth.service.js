@@ -102,6 +102,17 @@ class AuthService {
         });
     }
 
+    login_facebook(code)
+    {
+        return this.authentication({
+            url: API_URL + 'login/facebook',
+            data:  {
+                code: code,
+                redirectUri: 'https://berthy.now.sh/sign-in'
+            }
+        });
+    }
+
 
     token_refresh() {
         if (!storage.getRefreshToken()

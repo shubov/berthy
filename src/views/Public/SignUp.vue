@@ -46,6 +46,7 @@
                         >
                         </v-img>
                         <v-spacer></v-spacer>
+                        <v-btn text to="/sign-in">Sign In</v-btn>
 <!--                        <v-tooltip bottom>-->
 <!--                            <template v-slot:activator="{ on }">-->
 <!--                                <v-btn-->

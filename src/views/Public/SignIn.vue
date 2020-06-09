@@ -117,8 +117,22 @@
     import {
         mdiFacebook, mdiHelpCircle
     } from "@mdi/js";
+    
     export default {
         name: "SignIn",
+        async created() {
+            let code = this.$route.query.code;
+            console.log(code);
+            if (code) {
+                try {
+                    if(await this.$auth.login_facebook(code)) {
+                        this.onSignInSuccess();
+                    }
+                } catch (e) {
+                    await this.$store.dispatch("Snackbar/set", "Try another way of signing in");
+                }
+            }
+        },
         components: {
             SignInForm: ()=>import("../../components/AuthComponents/SignInForm"),
         },
@@ -145,7 +159,12 @@
                 this.onFacebook = true;
                 setTimeout(async () => {
                     try {
-                        await this.$store.dispatch("Snackbar/set", "Facebook login doesn't work. YET!");
+                        window.location.href = `https://www.facebook.com/v7.0/dialog/oauth?`
+                        +`client_id=801415917049566`
+                        +`&redirect_uri=https://berthy.now.sh/sign-in`
+                        +`&state={st=state123abc,ds=123456789}`
+                        +`&response_type=code`
+                        +`&scope=email`;
                     } catch (e) {
                         await this.$store.dispatch("Snackbar/set", e);
                     } finally {

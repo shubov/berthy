@@ -18,6 +18,12 @@
                 <TripCard :trip="trip" :key="index"></TripCard>
             </v-col>
         </v-row>
+        <v-row v-else align="center" justify="center">
+            <v-col align="center">
+                <h3 class="text-center">You have no trips yet. Make your first booking!</h3>
+                <v-btn class="primary text-center"  to="/book">Book</v-btn>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

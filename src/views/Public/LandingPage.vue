@@ -31,12 +31,6 @@
 
 <style scoped>
     .text {
-        align-items:center;
-        background-color:rgb(174, 29, 0);
-        border-radius:4px;
-        border-color:rgb(174, 29, 0);
-        box-sizing:border-box;
         padding: 8px 0 8px 0;
-        color:rgb(255, 255, 255);
     }
 </style>

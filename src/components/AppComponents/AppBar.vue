@@ -142,7 +142,7 @@
         computed: {
             ...mapGetters('User', [
                 'isUser', 'isModerator', 'isLoggedIn',
-                'dockmaster', 'boater', 'moderator'
+                'dockmaster', 'boater', 'moderator', 'newUser'
             ]),
             isMobile() {
                 return !this.$vuetify.breakpoint.smAndUp;
@@ -158,7 +158,7 @@
                 return this.dockmaster;
             },
             isLogoutIcon() {
-                return this.dockmaster;
+                return this.dockmaster || this.newUser;
             },
             isRightMenuIcon() {
                 return this.boater || this.moderator;

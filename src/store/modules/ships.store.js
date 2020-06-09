@@ -124,7 +124,7 @@ const actions = {
             if (response.data.success) {
                 commit('SUCCESS');
                 await dispatch('fetchShips');
-                await dispatch("updateAccountInfo", null, {root: true});
+                await dispatch("User/updateAccountInfo", null, {root: true});
                 return true;
             } else {
                 commit('ERROR', response.data.error.message);

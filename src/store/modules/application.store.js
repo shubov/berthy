@@ -89,7 +89,7 @@ const actions = {
         let response = await BerthyAPI.post('berths/applications', data);
         if (response.data ? response.data.success: false) {
             commit('SUCCESS');
-            await dispatch("updateAccountInfo", null, {root: true});
+            await dispatch("User/updateAccountInfo", null, {root: true});
             return true;
         } else {
             commit('ERROR', response.data.error.message);

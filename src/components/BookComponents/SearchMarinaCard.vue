@@ -21,7 +21,7 @@
         >
             <v-card-title>{{marina.name}}</v-card-title>
         </v-img>
-        <v-card-actions>
+        <v-card-actions style="padding: 8px 0 0 0;">
             <v-btn
                     color="primary"
                     :to="`/marina/${marina.id}`"

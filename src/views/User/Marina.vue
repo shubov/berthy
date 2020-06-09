@@ -200,7 +200,7 @@
                             sm="6"
                     >
                         <p class="text-left title">Reviews</p>
-                        <v-toolbar class="elevation-0 tile">
+                        <v-toolbar class="elevation-0 tile mx-0 px-0">
                             <span class="mr-5" v-show="!isMobile">
                                 Rating: {{marina.avgRating}} {{reviewsLength ? ` (${reviewsLength} reviews)` : ''}}
                             </span>

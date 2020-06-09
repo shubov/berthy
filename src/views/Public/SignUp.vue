@@ -46,20 +46,20 @@
                         >
                         </v-img>
                         <v-spacer></v-spacer>
-                        <v-tooltip bottom>
-                            <template v-slot:activator="{ on }">
-                                <v-btn
-                                        href="/faq"
-                                        icon
-                                        large
-                                        target="_blank"
-                                        v-on="on"
-                                >
-                                    <v-icon>{{icons.helpCircle}}</v-icon>
-                                </v-btn>
-                            </template>
-                            <span>Source</span>
-                        </v-tooltip>
+<!--                        <v-tooltip bottom>-->
+<!--                            <template v-slot:activator="{ on }">-->
+<!--                                <v-btn-->
+<!--                                        href="/faq"-->
+<!--                                        icon-->
+<!--                                        large-->
+<!--                                        target="_blank"-->
+<!--                                        v-on="on"-->
+<!--                                >-->
+<!--                                    <v-icon>{{icons.helpCircle}}</v-icon>-->
+<!--                                </v-btn>-->
+<!--                            </template>-->
+<!--                            <span>Source</span>-->
+<!--                        </v-tooltip>-->
                     </v-toolbar>
                     <v-card-text class="pb-0 mb-0">
                         <SignUpForm ref="form" v-model="signUpData"></SignUpForm>

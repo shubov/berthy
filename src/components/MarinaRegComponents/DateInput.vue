@@ -129,10 +129,6 @@
                 type: Boolean,
                 default: false
             },
-            icons: {
-                checkCircle: mdiCheckCircle,
-                alertCircle: mdiAlertCircle,
-            }
         },
         computed: {
             start: {
@@ -159,6 +155,8 @@
             date: null,
             icons: {
                 calendar: mdiCalendar,
+                checkCircle: mdiCheckCircle,
+                alertCircle: mdiAlertCircle,
             }
         }),
     }

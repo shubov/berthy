@@ -500,8 +500,7 @@ const routes =
             },
             meta: {
                 title: projectName + ' - Sign Up Error',
-                roles: [roles.user],
-                usertype: [newUser, boater, dockmaster],
+                public: true,
                 metaTags: [
                     {
                         name: 'description',

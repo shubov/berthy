@@ -161,7 +161,7 @@
                 return this.dockmaster || this.newUser;
             },
             isRightMenuIcon() {
-                return this.boater || this.moderator;
+                return this.boater || this.moderator || this.newUser;
             }
         },
         data: function () {

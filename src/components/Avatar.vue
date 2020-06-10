@@ -10,11 +10,19 @@
 <template>
     <v-avatar
             :size="size"
-            color="#00000099"
+            :color="colors[2]"
     >
         <v-img v-if="photo" :src="avatarLink(photo)"/>
-        <span v-else-if="name" class="display-3 white--text">{{name.substr(0,1)}}</span>
-        <v-icon v-else dark>{{icons.accountCircle}}</v-icon>
+        <span
+                v-else-if="name"
+                class="title white--text font-weight-light"
+                :style="`font-size: ${size - 4}px`"
+        >
+            {{name.substr(0,1)}}
+        </span>
+        <v-icon v-else dark>
+            {{icons.accountCircle}}
+        </v-icon>
     </v-avatar>
 </template>
 
@@ -38,7 +46,14 @@
             return {
                 icons: {
                     accountCircle: mdiAccountCircle,
-                }
+                },
+                colors: [
+                    "#2A9D8F",
+                    "#264653",
+                    "#E9C46A",
+                    "#F4A261",
+                    "#E76F51",
+                ],
             }
         }
     }

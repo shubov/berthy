@@ -45,13 +45,15 @@
                                         :key="index"
                                         ripple
                                 >
-                                    <v-list-item-avatar>
+                                    <v-list-item-avatar
+                                            color="#E9C46A"
+                                    >
                                         <v-img
                                                 v-if="item.avatar"
                                                 :src="avatarLink(item.avatar)"/>
                                         <span
-                                                v-else-if="item.title"
-                                                class="display-3 white--text">
+                                                v-else-if="item.title[0] !== 'i'"
+                                                class="title white--text font-weight-light">
                                             {{item.title.substr(0,1)}}
                                         </span>
                                         <v-icon v-else dark>{{icons.accountCircle}}</v-icon>

@@ -12,7 +12,7 @@ import {setTimes} from "../../assets/helperFunctions";
 
 function chatTitle(person) {
     let res = (person.firstName ? person.firstName+' ' : '') + (person.lastName ? person.lastName : '');
-    return (person.firstName || person.lastName) ? res : ('id' + person.id);
+    return (person.firstName || person.lastName) ? res : ('id' + person.accountId);
 }
 
 // State initial object

@@ -23,13 +23,14 @@
         >
             <v-icon>{{icons.menu}}</v-icon>
         </v-btn>
-        <v-img
-                @click="toDefaultPage()"
-                id="berthy-logo"
-                max-width="150"
-                contain
-                src="../../assets/berthy_logo.png"
-        ></v-img>
+        <a href="/">
+            <v-img
+                    id="berthy-logo"
+                    max-width="150"
+                    contain
+                    src="../../assets/berthy_logo.png"
+            ></v-img>
+        </a>
         <v-toolbar-title v-show="!isMobile" class="ml-8">{{$route.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
 <!--        <v-tooltip bottom v-if="isFaqIcon">-->
@@ -161,7 +162,7 @@
                 return this.dockmaster || this.newUser;
             },
             isRightMenuIcon() {
-                return this.boater || this.moderator || this.newUser;
+                return this.boater || this.moderator;
             }
         },
         data: function () {

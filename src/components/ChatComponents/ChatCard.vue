@@ -49,7 +49,7 @@
                                     :key="m.id+'avatar'"
                                     :photo="current.avatar"
                                     size="30px"
-                                    :name="current.title"
+                                    :name="current.title[0] === 'i' ? null : current.title"
                             ></Avatar>
                             <div
                                     :class="isMyMsg(m)?'myMessage':'message'"

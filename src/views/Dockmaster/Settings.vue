@@ -137,12 +137,10 @@
         },
         mounted () {
             this.width = window.innerWidth;
-            console.log('MOUNT LISTENER ON')
             document.addEventListener('mouseup', this.mouseUp)
             document.addEventListener('mousemove', this.mouseMove)
         },
         beforeDestroy () {
-            console.log('MOUNT LISTENER OFF')
             document.removeEventListener('mouseup', this.mouseUp)
             document.removeEventListener('mousemove', this.mouseMove)
         },

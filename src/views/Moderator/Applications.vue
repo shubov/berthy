@@ -210,11 +210,12 @@
                    
                     if (value.toString().length<1)
                         this.filteredApplications = [];
-                    else { console.log(value);
+                    else {
                         this.filteredApplications = this.applications.filter(({title})=>{
-                            let res=title.toString().toLowerCase().includes(searcStr.toLowerCase());
-                            console.log(res, title);
-                            return res;
+                            return title
+                                .toString()
+                                .toLowerCase()
+                                .includes(searcStr.toLowerCase());
                         })
                     }
                 }
@@ -312,7 +313,7 @@
                 try {
                     await this.fetchApplications();
                 } catch (e) {
-                    console.log(e);
+                    await this.$store.dispatch("Snackbar/set", e.error || e);
                 }
                 this.filterMenu = false;
             },

@@ -56,7 +56,6 @@
                 await this.fetchTrips();
         },
         mounted() {
-            console.log(this.paymentSuccessful);
             if (this.paymentSuccessful != null) {
                 if (this.paymentSuccessful) {
                     this.$store.dispatch('Dialog/set', "Payment was succesful. Yor reservation proccess is now finished.")

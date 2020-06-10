@@ -443,7 +443,6 @@
                 return !!file.type.match('image.*');
             },
             isPdf(file) {
-                console.log(file.type);
                 return file.type==='application/pdf';
             },
             onSubmit(){

@@ -80,7 +80,6 @@
         methods: {
             onMenuClick(){
                 this.menu = !this.menu;
-                console.log(this.menu);
             }
         //     linkNavigation(path) {
         //         this.$router.push(path).catch(() => {});

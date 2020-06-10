@@ -122,7 +122,6 @@
         name: "SignIn",
         async created() {
             let code = this.$route.query.code;
-            console.log(code);
             if (code) {
                 try {
                     if(await this.$auth.login_facebook(code)) {
@@ -186,7 +185,8 @@
                             }
                         })
                         .catch(async (e) => {
-                            await this.$store.dispatch("Snackbar/set", e);
+                            if (e.error !== "popup_closed_by_user")
+                                await this.$store.dispatch("Snackbar/set", e.error || e);
                         })
                         .finally(()=>this.onGoogle = false);
                 }, 0);

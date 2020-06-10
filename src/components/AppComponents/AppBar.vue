@@ -185,7 +185,7 @@
                     this.$auth.logout();
                     if (this.$route.meta.public !== true) router.go('/sign-in');
                 } catch (e) {
-                    console.log('error', e);
+                    await this.$store.dispatch("Snackbar/set", e.error ||e);
                 }
             },
             toDefaultPage() {

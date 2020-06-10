@@ -62,7 +62,6 @@
                     return this.$store.state.Application[this.codeState];
                 },
                 set(value) {
-                    console.log(value);
                     this.$store.commit(this.codeMutation, value)
                 }
             },

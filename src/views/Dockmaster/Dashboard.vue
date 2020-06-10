@@ -239,11 +239,6 @@
             GridLayout: VueGridLayout.GridLayout,
             GridItem: VueGridLayout.GridItem,
         },
-        watch: {
-            layout(value) {
-                console.log(value);
-            },
-        },
         computed: {
             ...mapGetters('Marina', ['getCurrent', 'getAll']),
             ...mapGetters('Dashboard', [
@@ -293,13 +288,11 @@
             },
             columnNum() {
                 let b = this.$vuetify.breakpoint;
-                let res = b.xlOnly ? 12
+                return b.xlOnly ? 12
                     : b.lgOnly ? 10
                         : b.mdOnly ? 6
                             : b.smOnly ? 4
                                 : b.xsOnly ? 2 : 12;
-                console.log(res);
-                return res;
             }
         },
         data: function() {

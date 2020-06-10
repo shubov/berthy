@@ -334,8 +334,8 @@
                             this.$router.push('/404');
                         }
                     })
-                    .catch(error=>{
-                        console.log(error);
+                    .catch(async e=>{
+                        await this.$store.dispatch("Snackbar/set", e.error || e);
                         this.$router.push('/404');
                     })
             } else {

@@ -298,7 +298,6 @@
             await this.updateUserInfo();
             
             setTimeout(async ()=>{
-                console.log('dockmaster', this.dockmaster);
                 if (this.dockmaster) {
                     if (!this.marinas.length) await this.fetchMyMarinas();
                     setTimeout(async ()=>{

@@ -26,7 +26,7 @@ import * as Sentry from '@sentry/browser';
 import { Vue as VueIntegration } from '@sentry/integrations';
 if (process.env.NODE_ENV === 'production'){
     Sentry.init({
-        dsn: 'https://ebe70e3d42494fca8d2660baea73eaaf@o382880.ingest.sentry.io/5212428',
+        dsn: process.env.SENTRY_DSN,
         integrations: [new VueIntegration({Vue, attachProps: true, logErrors: true})],
     });
 }
@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production'){
 //************************ Google OAuth 2.0 ********************************************
 import GAuth from 'vue-google-oauth2';
 const gauthOption = {
-    clientId: '265366447857-s71rp9r5t5ff8qa2nqhfku21rq9kk929.apps.googleusercontent.com',
+    clientId: process.env.GAUTH_CLIENT_ID,
     scope: 'profile email',
     prompt: 'select_account',
 };

@@ -88,6 +88,8 @@
             </v-menu>
         </v-toolbar>
         <grid-layout
+                v-if="enableLayout"
+                ref="gridLayout"
                 :layout.sync="layout"
                 :col-num="12"
                 :row-height="20"
@@ -98,6 +100,7 @@
                 :use-css-transforms="true"
                 :responsive="true"
                 :breakpoints="breakpoints"
+                :cols="{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 1 }"
         >
             <grid-item
                     v-if="geolocation"
@@ -223,7 +226,7 @@
         mdiCheck,
         mdiClipboardMultipleOutline
     } from "@mdi/js";
-    import {mapActions, mapGetters} from "vuex";
+    import {mapGetters} from "vuex";
     import RatingCard from "../../components/DashboardComponents/RatingCard";
     
     export default {
@@ -235,6 +238,11 @@
             MapCard: ()=>import("../../components/DashboardComponents/MapCard"),
             GridLayout: VueGridLayout.GridLayout,
             GridItem: VueGridLayout.GridItem,
+        },
+        watch: {
+            layout(value) {
+                console.log(value);
+            },
         },
         computed: {
             ...mapGetters('Marina', ['getCurrent', 'getAll']),
@@ -296,6 +304,7 @@
         },
         data: function() {
             return {
+                enableLayout: false,
                 displayItems: false,
                 draggable: false,
                 icons: {
@@ -324,8 +333,6 @@
             }
         },
         methods: {
-            ...mapActions('Marina', ['fetchMyMarinas']),
-            ...mapActions('Dashboard', ['fetch']),
             onDragEnable() {
                 this.draggable = true;
                 this.displayItems = false;
@@ -371,7 +378,8 @@
             },
             async updateDashboard() {
                 this.displayItems = false;
-                if (await this.fetch(this.marina.id)) {
+                this.enableLayout = false;
+                if (await this.$store.dispatch('Dashboard/fetch', this.marina.id)) {
                     setTimeout(() => {
                         if (this.location)
                             this.updateLayout(0, this.location.settings);
@@ -384,19 +392,22 @@
                         if (this.year_revenue)
                             this.updateLayout(4, this.year_revenue.settings);
                         setTimeout(() => {
-                            this.displayItems = true;
+                            this.enableLayout = true;
+                            setTimeout(() => {
+                                this.displayItems = true;
+                            }, 0);
                         }, 0);
                     }, 0)
                 }
-            }
+            },
         },
-        async created() {
-            if (this.getAll.length < 1)
-                await this.fetchMyMarinas();
+        async beforeCreate() {
+            if (this.$store.getters['Marina/getAll'].length < 1)
+                await this.$store.dispatch('Marina/fetchMyMarinas');
             setTimeout(async () => {
                 await this.updateDashboard();
             },0);
-        },
+        }
     }
 </script>
 

@@ -14,7 +14,7 @@
             class="py-2"
             :style="$store.state.bg"
     >
-        <v-row align="center" justify="center" >
+        <v-row align="center" justify="center">
             <v-col
                     cols="12"
                     sm="8"

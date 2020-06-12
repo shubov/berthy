@@ -31,7 +31,12 @@ export default new Vuex.Store({
             newUser: 'NEW_USER',
         },
         bg: {
-            'background': `url(${require('../assets/background.webp')})`,
+            'position': 'absolute',
+            'top': '0',
+            'left': '0',
+            'background': `url(${require('../assets/background.jpg')}) no-repeat center center`,
+            'transform': 'scale(1.1)',
+            'background-size': 'cover',
             'background-repeat': 'no-repeat' ,
             '-o-background-size': 'cover',
             '-moz-background-size': 'cover',

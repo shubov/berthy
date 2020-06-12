@@ -30,7 +30,14 @@ export default new Vuex.Store({
             dockmaster: 'DOCKMASTER',
             newUser: 'NEW_USER',
         },
-        bg: {'background-image': `url(${require('../assets/background.webp')})`},
+        bg: {
+            'background-image': `url(${require('../assets/background.webp')})`,
+            'background-repeat': 'no-repeat' ,
+            'background-attachment': 'fixed',
+            '-o-background-size': 'cover',
+            '-moz-background-size': 'cover',
+            '-webkit-background-size': 'cover',
+        },
 
     }),
     actions: {

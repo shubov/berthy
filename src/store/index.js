@@ -31,11 +31,7 @@ export default new Vuex.Store({
             newUser: 'NEW_USER',
         },
         bg: {
-            'position': 'absolute',
-            'top': '0',
-            'left': '0',
-            'background': `url(${require('../assets/background.jpg')}) no-repeat center center`,
-            'transform': 'scale(1.1)',
+            'background': `url(${require('../assets/background.jpg')})`,
             'background-size': 'cover',
             'background-repeat': 'no-repeat' ,
             '-o-background-size': 'cover',

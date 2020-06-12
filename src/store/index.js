@@ -33,7 +33,6 @@ export default new Vuex.Store({
         bg: {
             'background': `url(${require('../assets/background.webp')})`,
             'background-repeat': 'no-repeat' ,
-            'background-attachment': 'scroll',
             '-o-background-size': 'cover',
             '-moz-background-size': 'cover',
             '-webkit-background-size': 'cover',

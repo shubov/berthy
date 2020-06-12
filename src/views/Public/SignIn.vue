@@ -28,13 +28,14 @@
                         :max-width="400"
                 >
                     <v-toolbar flat>
-                        <v-img
-                                id="berthy-logo"
-                                max-width="150"
-                                contain
-                                src="../../assets/berthy_logo_black.png"
-                        >
-                        </v-img>
+                        <a href="/">
+                            <v-img
+                                    id="berthy-logo"
+                                    max-width="150"
+                                    contain
+                                    src="../../assets/berthy_logo_black.png"
+                            ></v-img>
+                        </a>
                         <v-spacer></v-spacer>
 <!--                        <v-tooltip bottom>-->
 <!--                            <template v-slot:activator="{ on }">-->

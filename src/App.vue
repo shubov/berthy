@@ -14,7 +14,7 @@
         <router-view name="footer"/>
         <Snackbar></Snackbar>
         <Dialog></Dialog>
-        <v-content>
+        <v-content style="padding-bottom: 35px">
             <router-view name="content" :key="$route.fullPath"/>
         </v-content>
     </v-app>

@@ -12,7 +12,7 @@ import storage from '../services/web-storage'
 import store from '../store'
 
 
-const API_URL = 'https://egehackbot.cf:8080/api/auth/';
+const API_URL = process.env.VUE_APP_BERTHY_API+'auth/';
 
 
 class AuthService {

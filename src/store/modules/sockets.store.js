@@ -12,7 +12,7 @@ import storage from '../../services/web-storage'
 
 // State initial object
 const initialState = () => ({
-    url: 'wss://egehackbot.cf:8080/socket?accessToken=',
+    url: process.env.VUE_APP_BERTHY_WEB_SOCKET,
     ws: null,
     connected: false,
     error: '',
@@ -58,7 +58,10 @@ const actions = {
     },
     init({getters, dispatch, commit}){
         if (!storage.getAccessToken()) return false;
-        let ws = new WebSocket(getters.getWsUrl+storage.getAccessToken());
+        let ws = new WebSocket(getters.getWsUrl
+            +'?accessToken='
+            +storage.getAccessToken()
+        );
         ws.onopen = function() {
             dispatch('onConnect');
         };
